@@ -1,0 +1,84 @@
+<div class="outputs">
+
+  <header class="outputs__hero">
+    <span class="outputs__eyebrow">Pipeline Stage 11</span>
+    <h2>Construction Outputs</h2>
+    <p>
+      All completed construction analyses, ranked by composite score. Automatically populated
+      as layouts are accepted and promoted through the verification pipeline.
+    </p>
+  </header>
+
+  <div class="outputs__empty" *ngIf="cards().length === 0">
+    <p>No construction outputs yet.</p>
+    <p>Accept layouts through Simulation → Processing → Verification → Successes to populate this gallery.</p>
+  </div>
+
+  <div class="outputs__grid" *ngIf="cards().length > 0">
+    <article class="outputs__card" *ngFor="let card of cards()">
+
+      <div class="outputs__card-header">
+        <span class="outputs__rank">#{{ card.rank }}</span>
+        <span class="outputs__layout-id">{{ card.output.entry.artifact.layoutId }}</span>
+        <div class="outputs__score">
+          <span>Score</span>
+          <strong>{{ card.output.entry.score | number:'1.4-4' }}</strong>
+        </div>
+        <span [class]="'outputs__push-status outputs__push-status--' + pushService.statusFor(card.output.entry.artifact.layoutId)">
+          {{ pushService.statusFor(card.output.entry.artifact.layoutId) }}
+        </span>
+      </div>
+
+      <div class="outputs__thumbnail">
+        <svg [attr.viewBox]="'0 0 ' + svgWidth + ' ' + svgHeight"
+             [attr.width]="svgWidth"
+             [attr.height]="svgHeight"
+             class="outputs__mini-svg"
+             role="img"
+             [attr.aria-label]="'Layout thumbnail for ' + card.output.entry.artifact.layoutId">
+          <rect class="outputs__svg-bg" x="0" y="0"
+                [attr.width]="svgWidth" [attr.height]="svgHeight" />
+          <polygon
+            *ngFor="let cell of card.cells"
+            [attr.points]="cell.points"
+            [attr.fill]="cell.color"
+            [class]="'outputs__cell'
+              + (cell.generated ? ' outputs__cell--generated' : '')
+              + (cell.hallway ? ' outputs__cell--hallway' : '')"
+          />
+        </svg>
+      </div>
+
+      <div class="outputs__stats">
+        <div class="outputs__stat">
+          <span>Rooms</span>
+          <strong>{{ card.roomCount }}</strong>
+        </div>
+        <div class="outputs__stat">
+          <span>Area</span>
+          <strong>{{ card.totalAreaSqm | number:'1.1-1' }}&thinsp;m²</strong>
+        </div>
+        <div class="outputs__stat">
+          <span>Windows</span>
+          <strong>{{ card.windowCount }}</strong>
+        </div>
+        <div class="outputs__stat">
+          <span>Doors</span>
+          <strong>{{ card.doorCount }}</strong>
+        </div>
+      </div>
+
+      <div class="outputs__factors">
+        <div class="outputs__factor" *ngFor="let factor of scoreFactors(card.output)">
+          <span class="outputs__factor-label">{{ factor.label }}</span>
+          <div class="outputs__factor-track">
+            <div class="outputs__factor-fill" [style.width.%]="factor.value * 100"></div>
+          </div>
+          <span class="outputs__factor-value">{{ factor.value | percent:'1.0-0' }}</span>
+        </div>
+      </div>
+
+    </article>
+  </div>
+
+</div>

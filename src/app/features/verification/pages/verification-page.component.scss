@@ -1,0 +1,295 @@
+.vpage {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.25rem;
+}
+
+// ── Banner ──────────────────────────────────────────────────────────────
+.vpage__banner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.4rem;
+  border-radius: 1rem;
+  background: #fff3cd;
+  border: 1px solid #ffe08a;
+}
+
+.vpage__banner--accepted {
+  background: #d4edda;
+  border-color: #b2dfcc;
+}
+
+.vpage__banner--culled {
+  background: #f8d7da;
+  border-color: #f1b0b7;
+}
+
+.vpage__verdict {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #1a3a28;
+
+  .vpage__banner--culled & { color: #6b1c22; }
+}
+
+.vpage__banner-meta {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.88rem;
+  color: #445566;
+  flex-wrap: wrap;
+}
+
+// ── 4 Check inspection panels ────────────────────────────────────────────
+.vpage__check-panels {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 900px) {
+  .vpage__check-panels { grid-template-columns: 1fr; }
+}
+
+.vpage__check-panel {
+  border: 1px solid #dce8f0;
+  border-radius: 0.9rem;
+  padding: 1rem;
+  background: #f7fafc;
+}
+
+.vpage__check-panel--fail {
+  border-color: #f5c6cb;
+  background: #fff6f7;
+}
+
+.vpage__check-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.vpage__check-svg {
+  display: block;
+  width: 100%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  background: #f0f4f8;
+}
+
+// ── (legacy check-card kept for badge reuse) ─────────────────────────────
+.vpage__check-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.vpage__check-label {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #476070;
+}
+
+.vpage__check-badge {
+  padding: 0.15rem 0.6rem;
+  border-radius: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.vpage__check-badge--pass {
+  background: #d4edda;
+  color: #155724;
+}
+
+.vpage__check-badge--fail {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.vpage__check-failures {
+  margin: 0;
+  padding-left: 1rem;
+  list-style: disc;
+}
+
+.vpage__check-failure-item {
+  font-size: 0.83rem;
+  line-height: 1.5;
+  color: #5a1f24;
+
+  strong {
+    display: block;
+    font-weight: 600;
+  }
+
+  span {
+    color: #7a3038;
+    font-size: 0.8rem;
+  }
+}
+
+.vpage__check-ok {
+  margin: 0;
+  font-size: 0.83rem;
+  color: #276941;
+}
+
+// ── Inspector ────────────────────────────────────────────────────────────
+.vpage__section-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #476070;
+}
+
+.vpage__legend {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.vpage__legend-item {
+  padding: 0.15rem 0.65rem;
+  border-radius: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 2px solid;
+}
+
+.vpage__legend-item--def { border-color: #c0392b; color: #c0392b; background: rgba(192,57,43,0.08); }
+.vpage__legend-item--asp { border-color: #e67e22; color: #e67e22; background: rgba(230,126,34,0.08); }
+.vpage__legend-item--acc { border-color: #8e44ad; color: #8e44ad; background: rgba(142,68,173,0.08); }
+
+
+.vpage__svg-bg { fill: #f0f4f8; }
+
+.vpage__buildable {
+  fill: #e8f0f5;
+  stroke: #a0b8c8;
+  stroke-width: 1.5;
+}
+
+.vpage__cell {
+  stroke: #fff;
+  stroke-width: 0.8;
+  opacity: 0.9;
+}
+
+.vpage__cell--failing { opacity: 1; }
+
+.vpage__cell--dim { opacity: 0.35; }
+
+.vpage__cell-overlay {
+  pointer-events: none;
+}
+
+.vpage__cell-label {
+  font-size: 10px;
+  fill: #1a2a35;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+  font-weight: 600;
+}
+
+.vpage__cell-label--failing {
+  fill: #1a0000;
+  font-weight: 800;
+}
+
+.vpage__cell-tag {
+  font-size: 9px;
+  fill: #721c24;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+  font-weight: 700;
+}
+
+// ── Cell table ───────────────────────────────────────────────────────────
+.vpage__table-wrap {
+  background: #fff;
+  border: 1px solid #d8e0e7;
+  border-radius: 1rem;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.vpage__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+
+  th {
+    text-align: left;
+    padding: 0.45rem 0.6rem;
+    border-bottom: 2px solid #e2eaf0;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #476070;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid #f0f4f7;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+}
+
+.vpage__table-row--fail td {
+  background: #fff9f9;
+}
+
+.vpage__cell-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-right: 0.35rem;
+  border: 1px solid rgba(0,0,0,0.15);
+}
+
+.vpage__delta--bad {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.vpage__chip {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-right: 0.2rem;
+}
+
+.vpage__chip--ok   { background: #d4edda; color: #155724; }
+.vpage__chip--def  { background: rgba(192,57,43,0.15); color: #c0392b; }
+.vpage__chip--asp  { background: rgba(230,126,34,0.15); color: #e67e22; }
+.vpage__chip--acc  { background: rgba(142,68,173,0.15); color: #8e44ad; }
+.vpage__chip--gar  { background: rgba(22,160,133,0.15); color: #16a085; }
+.vpage__chip--slv  { background: rgba(243,156,18,0.15); color: #f39c12; }
+.vpage__chip--ovl  { background: rgba(146,43,33,0.15);  color: #922b21; }
+
+// ── Empty state ──────────────────────────────────────────────────────────
+.vpage__empty {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: #607d8b;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}

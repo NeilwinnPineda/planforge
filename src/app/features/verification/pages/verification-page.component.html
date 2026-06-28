@@ -1,0 +1,117 @@
+<section class="vpage">
+
+  <ng-container *ngIf="verificationResult() as vr; else noInput">
+
+    <!-- Verdict banner -->
+    <header class="vpage__banner" [class.vpage__banner--accepted]="vr.artifact.accepted" [class.vpage__banner--culled]="!vr.artifact.accepted">
+      <div class="vpage__verdict">{{ vr.artifact.accepted ? 'ACCEPTED' : 'CULLED' }}</div>
+      <div class="vpage__banner-meta">
+        <span>{{ vr.artifact.layoutId }}</span>
+        <span>{{ vr.artifact.cells.length }} cells</span>
+        <span *ngIf="!vr.artifact.accepted">{{ vr.artifact.cullReasons.length }} issue(s)</span>
+      </div>
+    </header>
+
+    <!-- 4 check inspection panels -->
+    <div class="vpage__check-panels">
+      <div
+        *ngFor="let panel of checkInspectorPanels()"
+        class="vpage__check-panel"
+        [class.vpage__check-panel--fail]="!panel.passed"
+      >
+        <div class="vpage__check-panel-header">
+          <strong class="vpage__check-label">{{ panel.label }}</strong>
+          <span class="vpage__check-badge"
+            [class.vpage__check-badge--pass]="panel.passed"
+            [class.vpage__check-badge--fail]="!panel.passed">
+            {{ panel.passed ? 'PASS' : 'FAIL' }}
+          </span>
+        </div>
+
+        <svg class="vpage__check-svg" [attr.viewBox]="'0 0 ' + previewWidth + ' ' + previewHeight" preserveAspectRatio="xMidYMid meet">
+          <rect x="0" y="0" [attr.width]="previewWidth" [attr.height]="previewHeight" class="vpage__svg-bg" />
+          <polygon [attr.points]="buildablePolygon()" class="vpage__buildable" />
+          <g *ngFor="let cell of panel.cells">
+            <polygon
+              [attr.points]="cell.polygon"
+              [attr.fill]="cell.color"
+              class="vpage__cell"
+              [class.vpage__cell--dim]="!cell.failing && !panel.passed"
+            />
+            <polygon
+              *ngIf="cell.failing"
+              [attr.points]="cell.polygon"
+              [attr.fill]="panel.strokeColor"
+              fill-opacity="0.22"
+              [attr.stroke]="panel.strokeColor"
+              stroke-width="2.5"
+              class="vpage__cell-overlay"
+            />
+            <text [attr.x]="cell.cx" [attr.y]="cell.cy" class="vpage__cell-label"
+              [class.vpage__cell-label--failing]="cell.failing">{{ cell.label }}</text>
+          </g>
+        </svg>
+
+        <ul class="vpage__check-failures" *ngIf="panel.failures.length">
+          <li *ngFor="let f of panel.failures" class="vpage__check-failure-item">
+            <strong>{{ f.label }}</strong>
+            <span>{{ f.detail }}</span>
+          </li>
+        </ul>
+        <p class="vpage__check-ok" *ngIf="panel.passed">All cells passed.</p>
+      </div>
+    </div>
+
+    <!-- Cell details table -->
+    <div class="vpage__table-wrap">
+      <p class="vpage__section-label">Cell details</p>
+      <table class="vpage__table">
+        <thead>
+          <tr>
+            <th>Room</th>
+            <th>Area</th>
+            <th>Target</th>
+            <th>Delta</th>
+            <th>Aspect</th>
+            <th>Checks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let cell of inspectorCells()"
+            [class.vpage__table-row--fail]="!!cell.failureStroke"
+          >
+            <td>
+              <span class="vpage__cell-swatch" [style.background]="cell.color"></span>
+              {{ cell.label }}
+            </td>
+            <td>{{ fmt(cell.areaSquareMeters) }}</td>
+            <td>{{ cell.targetSquareMeters > 0 ? fmt(cell.targetSquareMeters) : '—' }}</td>
+            <td [class.vpage__delta--bad]="cell.deficiencyFail">
+              {{ cell.targetSquareMeters > 0 ? (cell.areaDelta * 100 | number:'1.1-1') + '%' : '—' }}
+            </td>
+            <td [class.vpage__delta--bad]="cell.aspectFail">{{ cell.aspectRatio | number:'1.1-1' }}:1</td>
+            <td>
+              <span *ngIf="!cell.failureTags" class="vpage__chip vpage__chip--ok">✓</span>
+              <span *ngIf="cell.deficiencyFail" class="vpage__chip vpage__chip--def">DEF</span>
+              <span *ngIf="cell.aspectFail" class="vpage__chip vpage__chip--asp">ASP</span>
+              <span *ngIf="cell.accessFail" class="vpage__chip vpage__chip--acc">ACC</span>
+              <span *ngIf="cell.garageFrontageFail" class="vpage__chip vpage__chip--gar">GAR</span>
+              <span *ngIf="cell.sliverFail" class="vpage__chip vpage__chip--slv">SLV</span>
+              <span *ngIf="cell.overlapFail" class="vpage__chip vpage__chip--ovl">OVL</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </ng-container>
+
+  <ng-template #noInput>
+    <div class="vpage__empty">
+      <p>No captured layout available.</p>
+      <p>Run Layout Exploration until at least one layout is captured, then navigate back here.</p>
+    </div>
+  </ng-template>
+
+</section>

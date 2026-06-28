@@ -1,0 +1,157 @@
+.geometry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.geometry-card {
+  display: grid;
+  gap: 10px;
+  padding: 18px 20px;
+  border: 1px solid #d6d0c6;
+  background: #fffdf9;
+}
+
+.geometry-card--wide {
+  grid-column: 1 / -1;
+}
+
+.geometry-card__eyebrow {
+  margin: 0;
+  color: #8a7f74;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.geometry-card h2,
+.geometry-card p,
+.geometry-list {
+  margin: 0;
+}
+
+.geometry-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.geometry-metric {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid #ebe4d8;
+  background: #fcfaf5;
+}
+
+.geometry-list {
+  padding-left: 18px;
+  color: #4d453d;
+  line-height: 1.5;
+}
+
+.geometry-preview {
+  display: block;
+  width: 100%;
+  height: 320px;
+  border: 1px solid #ebe4d8;
+  background: #fcfaf5;
+}
+
+.geometry-preview__bg {
+  fill: #fcfaf5;
+}
+
+.geometry-preview__lot {
+  fill: rgba(142, 202, 230, 0.14);
+  stroke: #618ea6;
+  stroke-width: 2;
+}
+
+.geometry-preview__lot--ghost {
+  fill: rgba(142, 202, 230, 0.08);
+  stroke-dasharray: 5 4;
+}
+
+.geometry-preview__guide {
+  stroke: #7a5f2b;
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.geometry-preview__buildable {
+  fill: rgba(244, 213, 141, 0.24);
+  stroke: #b68e3f;
+  stroke-width: 2;
+}
+
+.geometry-preview__label,
+.geometry-preview__scale-text {
+  fill: #4d453d;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.geometry-preview__scale-bar {
+  stroke: #3b332c;
+  stroke-width: 2;
+}
+
+.geometry-preview__caption {
+  color: #5b534a;
+  line-height: 1.45;
+}
+
+.geometry-setback-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.geometry-setback-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) auto;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #ebe4d8;
+  background: #fcfaf5;
+  color: #4d453d;
+}
+
+.geometry-point-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.geometry-point-panel {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #ebe4d8;
+  background: #fcfaf5;
+}
+
+.geometry-point-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #4d453d;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 800px) {
+  .geometry-grid,
+  .geometry-metric-grid,
+  .geometry-point-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .geometry-card--wide {
+    grid-column: auto;
+  }
+
+  .geometry-setback-row {
+    grid-template-columns: 1fr;
+  }
+}

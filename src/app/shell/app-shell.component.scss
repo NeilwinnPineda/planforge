@@ -1,0 +1,73 @@
+.app-shell {
+  width: min(1100px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 28px 0 40px;
+}
+
+.app-shell__header {
+  display: grid;
+  gap: 10px;
+  padding: 20px 22px;
+  border: 1px solid #d6d0c6;
+  background: #faf8f4;
+}
+
+.app-shell__eyebrow {
+  margin: 0;
+  color: #6f665d;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-shell__header h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 2vw + 1rem, 2.8rem);
+  line-height: 1.05;
+}
+
+.app-shell__summary {
+  margin: 0;
+  max-width: 60ch;
+  color: #4f483f;
+  line-height: 1.5;
+}
+
+.app-shell__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.app-shell__status {
+  display: grid;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}
+
+.app-shell__status-label {
+  margin: 0;
+  color: #6f665d;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-shell__nav-link {
+  padding: 7px 10px;
+  border: 1px solid #d8d0c5;
+  color: #564c43;
+  text-decoration: none;
+  background: #fffdf9;
+}
+
+.app-shell__nav-link--active {
+  border-color: #b9b0a3;
+  background: #f0ebe2;
+}
+
+.app-shell__body {
+  padding-top: 18px;
+}

@@ -1,0 +1,30 @@
+[1m[33m
+Warning: This is a simple server for use in testing or debugging Angular applications
+locally. It hasn't been reviewed for security issues.
+
+Binding this server to an open connection can result in compromising your application or
+computer. Using a different host than the one passed to the "--host" flag might result in
+websocket connection issues.
+    [39m[22m
+[31m×[39m Building... [31m[FAILED: spawn EPERM][39m
+C:\Users\Neilwinn Pineda\Documents\ProjectRevit\testing\app-next\node_modules\rxjs\dist\cjs\internal\util\reportUnhandledError.js:13
+            throw err;
+            ^
+
+Error: spawn EPERM
+    at ChildProcess.spawn (node:internal/child_process:421:11)
+    at Object.spawn (node:child_process:796:9)
+    at ensureServiceIsRunning (C:\Users\Neilwinn Pineda\Documents\ProjectRevit\testing\app-next\node_modules\esbuild\lib\main.js:1978:29)
+    at context (C:\Users\Neilwinn Pineda\Documents\ProjectRevit\testing\app-next\node_modules\esbuild\lib\main.js:1877:33)
+    at #performBundle (C:\Users\Neilwinn Pineda\Documents\ProjectRevit\testing\app-next\node_modules\@angular\build\src\tools\esbuild\bundler-context.js:164:68)
+    at BundlerContext.bundle (C:\Users\Neilwinn Pineda\Documents\ProjectRevit\testing\app-next\node_modules\@angular\build\src\tools\esbuild\bundler-context.js:137:49)
+    at C:\Users\Neilwinn Pineda\Documents\ProjectRevit\testing\app-next\node_modules\@angular\build\src\tools\esbuild\bundler-context.js:66:28
+    at Array.map (<anonymous>)
+    at BundlerContext.bundleAll (C:\Users\Neilwinn Pineda\Documents\ProjectRevit\testing\app-next\node_modules\@angular\build\src\tools\esbuild\bundler-context.js:62:67)
+    at executeBuild (C:\Users\Neilwinn Pineda\Documents\ProjectRevit\testing\app-next\node_modules\@angular\build\src\builders\application\execute-build.js:110:65) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'spawn'
+}
+
+Node.js v24.14.1

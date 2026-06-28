@@ -1,0 +1,36 @@
+<main class="app-shell">
+  <header class="app-shell__header">
+    <p class="app-shell__eyebrow">App Next / Rebuild Workspace</p>
+    <h1>Layout Polygon Generator</h1>
+    <p class="app-shell__summary">
+      Structured design source in, canonical polygon layouts out.
+    </p>
+    <nav class="app-shell__nav" aria-label="App Next slices">
+      <a routerLink="/" routerLinkActive="app-shell__nav-link--active" [routerLinkActiveOptions]="{ exact: true }" class="app-shell__nav-link">Foundation</a>
+      <a routerLink="/source" routerLinkActive="app-shell__nav-link--active" class="app-shell__nav-link">Source Intake</a>
+      <a routerLink="/geometry" routerLinkActive="app-shell__nav-link--active" class="app-shell__nav-link">Lot Geometry</a>
+      <a routerLink="/generation" routerLinkActive="app-shell__nav-link--active" class="app-shell__nav-link">Generation Seeds</a>
+      <a routerLink="/simulation" routerLinkActive="app-shell__nav-link--active" class="app-shell__nav-link">Simulation</a>
+      <a routerLink="/processing" routerLinkActive="app-shell__nav-link--active" class="app-shell__nav-link">Processing</a>
+      <a routerLink="/verification" routerLinkActive="app-shell__nav-link--active" class="app-shell__nav-link">Verification</a>
+      <a routerLink="/construction" routerLinkActive="app-shell__nav-link--active" class="app-shell__nav-link">Construction</a>
+      <a routerLink="/gallery" routerLinkActive="app-shell__nav-link--active" class="app-shell__nav-link">Gallery</a>
+      <a routerLink="/reporting" routerLinkActive="app-shell__nav-link--active" class="app-shell__nav-link">Reporting Baseline</a>
+    </nav>
+
+    <section class="app-shell__status">
+      <p class="app-shell__status-label">Global Status Bar</p>
+      <app-simulation-control-bar
+        [metrics]="shellMetrics()"
+        [isRunning]="systemRunning()"
+        (startRequested)="startSimulation()"
+        (stopRequested)="stopSimulation()"
+        (clearRequested)="clearSimulation()"
+      />
+    </section>
+  </header>
+
+  <section class="app-shell__body">
+    <ng-content />
+  </section>
+</main>

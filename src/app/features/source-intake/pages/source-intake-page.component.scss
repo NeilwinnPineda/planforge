@@ -1,0 +1,137 @@
+.source-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.source-card {
+  display: grid;
+  gap: 10px;
+  padding: 18px 20px;
+  border: 1px solid #d6d0c6;
+  background: #fffdf9;
+}
+
+.source-card--wide {
+  grid-column: 1 / -1;
+}
+
+.source-card__eyebrow {
+  margin: 0;
+  color: #8a7f74;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.source-card h2,
+.source-card p,
+.source-list {
+  margin: 0;
+}
+
+.source-card__detail {
+  color: #5b534a;
+  line-height: 1.5;
+}
+
+.source-meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.source-meta-strip span {
+  padding: 6px 9px;
+  border: 1px solid #ddd6ca;
+  color: #5a5148;
+  font-size: 0.84rem;
+  background: #faf7f1;
+}
+
+.source-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.source-metric {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid #ebe4d8;
+  background: #fcfaf5;
+}
+
+.source-metric span,
+.source-program-row strong,
+.source-validation-row span,
+.source-comment-row strong {
+  color: #5f564d;
+}
+
+.source-list {
+  padding-left: 18px;
+}
+
+.source-list li,
+.source-validation-row p,
+.source-comment-row p {
+  color: #4d453d;
+  line-height: 1.5;
+}
+
+.source-program-list,
+.source-validation-list,
+.source-comment-list {
+  display: grid;
+  gap: 10px;
+}
+
+.source-program-row,
+.source-validation-row,
+.source-comment-row {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid #ebe4d8;
+  background: #fcfaf5;
+}
+
+.source-program-row {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.source-validation-row strong {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+}
+
+.source-validation--pass {
+  border-color: #c9ddc1;
+  background: #f4faf1;
+}
+
+.source-validation--warn {
+  border-color: #ead49b;
+  background: #fff9e7;
+}
+
+.source-validation--fail {
+  border-color: #e2b0aa;
+  background: #fff1ef;
+}
+
+@media (max-width: 800px) {
+  .source-grid,
+  .source-metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .source-card--wide {
+    grid-column: auto;
+  }
+}

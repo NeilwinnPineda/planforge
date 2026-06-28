@@ -1,0 +1,221 @@
+<section class="simulation-grid">
+  <article class="simulation-card simulation-card--wide">
+    <p class="simulation-card__eyebrow">Slice 7 / Simulation cluster checkpoint</p>
+    <h2>Instance cluster, evaluation, and capture</h2>
+    <p class="simulation-card__copy">
+      The cluster now auto-expands toward {{ autoSpawnTargetCount }} cores at
+      {{ autoSpawnIntervalSeconds }}-second intervals. The top bar controls the whole cluster;
+      this page inspects whichever core is active.
+    </p>
+    <div class="simulation-cluster-layout">
+      <div class="simulation-cluster-stack">
+        <div class="simulation-metric-grid">
+          <div *ngFor="let row of metricRows()" class="simulation-metric">
+            <span>{{ row.label }}</span>
+            <strong>{{ row.value }}</strong>
+          </div>
+        </div>
+
+        <div class="simulation-instance-list">
+          <button
+            *ngFor="let core of coreRows()"
+            type="button"
+            class="simulation-instance"
+            [class.simulation-instance--active]="core.isActive"
+            (click)="activateInstance(core.coreId)"
+          >
+            <strong>{{ core.coreId }}</strong>
+            <span>{{ core.status }} / loop {{ core.loop }}</span>
+            <span>{{ core.ticks }} ticks</span>
+            <span>{{ core.resets }} resets</span>
+            <span>{{ core.captures }} captures</span>
+            <span>{{ core.fails }} fails</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="simulation-cluster-stack">
+        <p class="simulation-card__eyebrow">Latest evaluation</p>
+        <ng-container *ngIf="activeCaptureOutcome() as outcome; else noEvaluation">
+          <div class="simulation-metric-grid">
+            <div class="simulation-metric">
+              <span>Status</span>
+              <strong>{{ outcome.status }}</strong>
+            </div>
+            <div class="simulation-metric">
+              <span>Score</span>
+              <strong>{{ formatScore(outcome.score) }}</strong>
+            </div>
+            <div class="simulation-metric">
+              <span>Threshold</span>
+              <strong>{{ formatScore(outcome.thresholdBefore) }} -> {{ formatScore(outcome.thresholdAfter) }}</strong>
+            </div>
+            <div class="simulation-metric">
+              <span>Front edge</span>
+              <strong>{{ outcome.frontEdgePassed ? 'pass' : 'fail' }}</strong>
+            </div>
+            <div class="simulation-metric">
+              <span>Report</span>
+              <strong>{{ outcome.reportStatus }}</strong>
+            </div>
+          </div>
+          <p class="simulation-card__copy">{{ outcome.reason }}</p>
+          <p *ngIf="outcome.reportMessage" class="simulation-card__copy">{{ outcome.reportMessage }}</p>
+        </ng-container>
+        <ng-template #noEvaluation>
+          <p class="simulation-card__copy">
+            No capture evaluation has completed yet. Let the cluster cycle long enough for a reset-and-capture pass.
+          </p>
+        </ng-template>
+
+        <p class="simulation-card__eyebrow">Recent captures</p>
+        <div *ngIf="recentCaptures().length; else noCaptures" class="simulation-bubble-list">
+          <div *ngFor="let capture of recentCaptures()" class="simulation-bubble-row">
+            <strong>{{ capture.layoutId }}</strong>
+            <span>ID {{ capture.id }}</span>
+            <span>{{ capture.instanceId }}</span>
+            <span>runner {{ capture.jobIndex + 1 }}</span>
+            <span>score {{ formatScore(capture.score) }}</span>
+            <span>{{ capture.bubbleCount }} bubbles</span>
+            <span>{{ formatDate(capture.capturedAtIso) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="simulation-card simulation-card--wide">
+    <div class="simulation-inspection-layout">
+      <div class="simulation-inspection-preview">
+        <p class="simulation-card__eyebrow">Active core preview</p>
+        <svg class="simulation-preview" viewBox="0 0 520 360" preserveAspectRatio="xMidYMid meet">
+          <rect x="0" y="0" width="520" height="360" class="simulation-preview__bg" />
+          <polygon [attr.points]="preview().lotPolygon" class="simulation-preview__lot" />
+          <polygon [attr.points]="preview().buildablePolygon" class="simulation-preview__buildable" />
+          <g *ngFor="let bubble of preview().bubbles">
+            <circle
+              [attr.cx]="bubble.cx"
+              [attr.cy]="bubble.cy"
+              [attr.r]="bubble.radiusPixels"
+              [attr.fill]="bubble.color"
+              class="simulation-preview__bubble"
+              [class.simulation-preview__bubble--generated]="bubble.isGenerated"
+            />
+            <text [attr.x]="bubble.cx" [attr.y]="bubble.cy" class="simulation-preview__label">
+              {{ bubble.label }}
+            </text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="simulation-inspection-panel">
+        <div class="simulation-section-block">
+          <p class="simulation-card__eyebrow">Cluster gallery</p>
+          <p class="simulation-card__copy">
+            The orchestrator compiles accepted layouts from all live cores into one score-sorted gallery surface.
+            Spawn is hard-cascaded to {{ simulationStageService.cascadeSiblingCount }} sibling cores for this checkpoint.
+          </p>
+          <div *ngIf="galleryRows().length; else noGallery" class="simulation-bubble-list simulation-bubble-list--compact">
+            <div *ngFor="let capture of galleryRows()" class="simulation-bubble-row">
+              <strong>#{{ capture.rank }} {{ capture.layoutId }}</strong>
+              <span>ID {{ capture.id }}</span>
+              <span>{{ capture.coreId }}</span>
+              <span>runner {{ capture.jobIndex + 1 }}</span>
+              <span>score {{ formatScore(capture.score) }}</span>
+              <span>attract {{ formatScore(capture.attractionAverage) }}</span>
+              <span>repel {{ formatScore(capture.repelAverage) }}</span>
+              <span>{{ capture.bubbleCount }} bubbles</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="simulation-section-block">
+          <p class="simulation-card__eyebrow">Active core bubbles</p>
+          <div class="simulation-bubble-list simulation-bubble-list--compact">
+            <div *ngFor="let bubble of activeJobBubbles().slice(0, 16)" class="simulation-bubble-row">
+              <strong>{{ bubble.label }}</strong>
+              <span>{{ bubble.band }}</span>
+              <span>{{ formatDistance(bubble.x) }}, {{ formatDistance(bubble.y) }}</span>
+              <span>{{ formatDistance(bubble.radiusMeters) }} radius</span>
+              <span>{{ formatVector(bubble.vx) }}, {{ formatVector(bubble.vy) }} velocity</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="simulation-card simulation-card--wide">
+    <p class="simulation-card__eyebrow">Supporting diagnostics</p>
+    <div class="simulation-diagnostics-grid">
+      <div class="simulation-section-block">
+        <p class="simulation-section-title">Site and room program</p>
+        <div class="simulation-metric-grid">
+          <div *ngFor="let row of lotMetrics()" class="simulation-metric">
+            <span>{{ row.label }}</span>
+            <strong>{{ row.value }}</strong>
+          </div>
+        </div>
+        <div class="simulation-bubble-list simulation-bubble-list--compact">
+          <div *ngFor="let row of roomRows()" class="simulation-bubble-row">
+            <strong>{{ row.label }}</strong>
+            <span>{{ row.value }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="simulation-section-block">
+        <p class="simulation-section-title">Force configuration</p>
+        <div class="simulation-metric-grid">
+          <div *ngFor="let row of forceMetrics()" class="simulation-metric">
+            <span>{{ row.label }}</span>
+            <strong>{{ row.value }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="simulation-section-block">
+        <p class="simulation-section-title">Repel SAT</p>
+        <p class="simulation-card__copy">
+          Average {{ formatScore(repelSatSummary().average) }} across {{ repelSatSummary().sampleCount }} pairs.
+        </p>
+        <div class="simulation-bubble-list simulation-bubble-list--compact">
+          <div *ngFor="let row of satRows().repelRows.slice(0, 10)" class="simulation-bubble-row">
+            <strong>{{ row.roomA }} <-> {{ row.roomB }}</strong>
+            <span>value {{ row.value }}</span>
+            <span>score {{ formatScore(row.score) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="simulation-section-block">
+        <p class="simulation-section-title">Attraction SAT</p>
+        <p class="simulation-card__copy">
+          Average {{ formatScore(attractionSatSummary().average) }} across {{ attractionSatSummary().sampleCount }} pairs.
+        </p>
+        <div class="simulation-bubble-list simulation-bubble-list--compact">
+          <div *ngFor="let row of satRows().attractionRows.slice(0, 10)" class="simulation-bubble-row">
+            <strong>{{ row.roomA }} <-> {{ row.roomB }}</strong>
+            <span>value {{ row.value }}</span>
+            <span>score {{ formatScore(row.score) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+  <ng-template #noEvaluation>
+    <p class="simulation-card__copy">
+      No capture evaluation has completed yet. Start the loop and let at least one cycle finish.
+    </p>
+  </ng-template>
+  <ng-template #noCaptures>
+    <p class="simulation-card__copy">
+      No captures have passed yet. Failed evaluations should still appear above with their reason.
+    </p>
+  </ng-template>
+  <ng-template #noGallery>
+    <p class="simulation-card__copy">
+      The cluster gallery is empty until at least one core captures a passing layout.
+    </p>
+  </ng-template>
+</section>

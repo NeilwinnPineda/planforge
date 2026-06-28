@@ -1,0 +1,240 @@
+<section class="construction">
+  <header class="construction__hero">
+    <p class="construction__eyebrow">Construction handoff</p>
+    <h2>Verified layout to build contract</h2>
+    <p>
+      This page is the downstream staging area after Successes. It keeps one layout ID as the spine from
+      verification into construction output, while Revit mutation stays explicitly gated.
+    </p>
+  </header>
+
+  <ng-container *ngIf="topLayout() as layout; else empty">
+    <section class="construction__selected">
+      <div>
+        <span class="construction__eyebrow">Active construction candidate</span>
+        <strong>{{ layout.artifact.layoutId }}</strong>
+      </div>
+      <div class="construction__score">
+        <span>Quality</span>
+        <strong>{{ layout.score | number:'1.3-3' }}</strong>
+      </div>
+    </section>
+
+    <section class="construction__metrics">
+      <article>
+        <span>Real rooms</span>
+        <strong>{{ realRoomCount(layout) }}</strong>
+      </article>
+      <article>
+        <span>Generated cells</span>
+        <strong>{{ generatedCellCount(layout) }}</strong>
+      </article>
+      <article>
+        <span>Total area</span>
+        <strong>{{ totalArea(layout) | number:'1.1-1' }} m<sup>2</sup></strong>
+      </article>
+      <article>
+        <span>Verification clean</span>
+        <strong>{{ layout.scoreBreakdown.verificationCleanliness | percent:'1.0-0' }}</strong>
+      </article>
+    </section>
+
+    <section class="construction__display">
+      <header>
+        <div>
+          <span class="construction__eyebrow">Final processing pass preview</span>
+          <h3>Construction geometry display</h3>
+        </div>
+        <span class="construction__display-id">{{ layout.artifact.layoutId }}</span>
+      </header>
+
+      <svg class="construction__svg" viewBox="0 0 760 460" preserveAspectRatio="xMidYMid meet">
+        <rect x="0" y="0" width="760" height="460" class="construction__svg-bg" />
+        <ng-container *ngFor="let cell of previewCells()">
+          <polygon
+            [attr.points]="cell.points"
+            [attr.fill]="cell.color"
+            class="construction__cell"
+            [class.construction__cell--generated]="cell.generated"
+            [class.construction__cell--hallway]="cell.hallway"
+          />
+          <text
+            *ngIf="cell.showLabel"
+            class="construction__cell-label"
+            [attr.x]="cell.cx"
+            [attr.y]="cell.cy"
+          >
+            {{ cell.label }}
+          </text>
+        </ng-container>
+        <ng-container *ngFor="let wall of interiorWalls()">
+          <line
+            class="construction__interior-wall"
+            [attr.x1]="wall.fromX"
+            [attr.y1]="wall.fromY"
+            [attr.x2]="wall.toX"
+            [attr.y2]="wall.toY"
+          />
+        </ng-container>
+        <ng-container *ngFor="let loop of externalWallLoops()">
+          <polyline
+            class="construction__external-wall-loop"
+            [class.construction__external-wall-loop--open]="!loop.closed"
+            [attr.points]="loop.points"
+          />
+        </ng-container>
+        <ng-container *ngFor="let window of windowMarkers()">
+          <circle
+            class="construction__window-marker"
+            [attr.cx]="window.cx"
+            [attr.cy]="window.cy"
+            [attr.r]="window.radiusPixels"
+          >
+            <title>{{ window.placement.ownerLabel }} — {{ window.placement.sizeCode }} {{ window.placement.widthMeters }}m</title>
+          </circle>
+        </ng-container>
+        <ng-container *ngFor="let door of doorMarkers()">
+          <rect
+            [class]="'construction__door-marker construction__door-marker--' + door.placement.kind"
+            [attr.x]="door.cx - door.widthPixels / 2"
+            [attr.y]="door.cy - 3"
+            [attr.width]="door.widthPixels"
+            height="6"
+            [attr.transform]="'rotate(' + door.angleDegrees + ',' + door.cx + ',' + door.cy + ')'"
+          >
+            <title>{{ door.placement.ownerLabel }} — {{ door.placement.kind }} {{ door.placement.widthMeters }}m</title>
+          </rect>
+        </ng-container>
+      </svg>
+    </section>
+
+    <section class="construction__process-panel">
+      <header>
+        <div>
+          <span class="construction__eyebrow">Processing pass 1</span>
+          <h3>External walls</h3>
+        </div>
+        <strong>{{ externalWallLoops().length }} loop(s), {{ externalWalls().length }} segments</strong>
+      </header>
+      <p>
+        External walls and interior walls are rendered as their own construction line entities. Cell borders are not used
+        as display linework; fillers remain exterior-side space shaping the external wall path.
+      </p>
+      <div class="construction__wall-list">
+        <div class="construction__wall-row construction__wall-row--head">
+          <span>ID</span>
+          <span>Interior</span>
+          <span>Interior kind</span>
+          <span>Exterior side</span>
+          <span>Length</span>
+        </div>
+        <div *ngFor="let wall of externalWalls()" class="construction__wall-row">
+          <span>{{ wall.id }}</span>
+          <span>{{ wall.ownerLabel }}</span>
+          <span>{{ wall.ownerKind }}</span>
+          <span>{{ wall.exteriorKind }}: {{ wall.exteriorLabel }}</span>
+          <span>{{ wall.lengthMeters | number:'1.2-2' }} m</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="construction__process-panel">
+      <header>
+        <div>
+          <span class="construction__eyebrow">Processing pass 2</span>
+          <h3>Window placements</h3>
+        </div>
+        <strong>{{ windowPlacements().length }} window(s)</strong>
+      </header>
+      <p>
+        Windows are typed by room — size and count are drawn from the window schedule, not a flat rule.
+        Each placement carries a real-world position, typed width, and wall offset for downstream use.
+      </p>
+      <div class="construction__window-list">
+        <div class="construction__window-row construction__window-row--head">
+          <span>ID</span>
+          <span>Room</span>
+          <span>Size</span>
+          <span>Width</span>
+          <span>Wall</span>
+          <span>Offset</span>
+        </div>
+        <div *ngFor="let win of windowPlacements()" class="construction__window-row">
+          <span>{{ win.id }}</span>
+          <span>{{ win.ownerLabel }}</span>
+          <span>{{ win.sizeCode }}</span>
+          <span>{{ win.widthMeters | number:'1.2-2' }} m</span>
+          <span>{{ win.wallId }}</span>
+          <span>{{ win.tMeters | number:'1.2-2' }} m</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="construction__process-panel">
+      <header>
+        <div>
+          <span class="construction__eyebrow">Processing pass 3</span>
+          <h3>Doors</h3>
+        </div>
+        <strong>{{ doorPlacements().length }} door(s)</strong>
+      </header>
+      <p>
+        Entry, garage, and service doors are placed on exterior walls. Interior doors are placed on shared edges,
+        preferring hallway boundaries and falling back to the longest available edge. Each placement carries
+        a real-world position and wall offset.
+      </p>
+      <div class="construction__door-list">
+        <div class="construction__door-row construction__door-row--head">
+          <span>ID</span>
+          <span>Kind</span>
+          <span>Room</span>
+          <span>Width</span>
+          <span>Adjacent</span>
+        </div>
+        <div *ngFor="let door of doorPlacements()" class="construction__door-row">
+          <span>{{ door.id }}</span>
+          <span>{{ door.kind }}</span>
+          <span>{{ door.ownerLabel }}</span>
+          <span>{{ door.widthMeters | number:'1.2-2' }} m</span>
+          <span>{{ door.adjacentLabel ?? '—' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="construction__schedule">
+      <header>
+        <span class="construction__eyebrow">Cell schedule</span>
+        <strong>{{ layout.artifact.cells.length }} verified cells</strong>
+      </header>
+      <div class="construction__schedule-table">
+        <div class="construction__schedule-row construction__schedule-row--head">
+          <span>Cell</span>
+          <span>Type</span>
+          <span>Area</span>
+        </div>
+        <div *ngFor="let cell of layout.artifact.cells" class="construction__schedule-row">
+          <span>{{ cell.label || cell.typeId }}</span>
+          <span>{{ cell.hallway ? 'hallway' : cell.pkg ? 'generated' : 'room' }}</span>
+          <span>{{ cell.areaSquareMeters | number:'1.1-1' }} m<sup>2</sup></span>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+
+  <section class="construction__checklist">
+    <article *ngFor="let row of checklist()" class="construction__check" [class.construction__check--blocked]="row.status === 'blocked'" [class.construction__check--gated]="row.status === 'gated'">
+      <span>{{ row.status }}</span>
+      <div>
+        <strong>{{ row.label }}</strong>
+        <p>{{ row.detail }}</p>
+      </div>
+    </article>
+  </section>
+
+  <ng-template #empty>
+    <section class="construction__empty">
+      <p>No accepted layout is ready for construction yet.</p>
+      <p>Verification must promote a layout into Successes before this page can bind a construction candidate.</p>
+    </section>
+  </ng-template>
+</section>

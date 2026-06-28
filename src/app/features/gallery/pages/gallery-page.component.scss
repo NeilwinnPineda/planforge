@@ -1,0 +1,260 @@
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  min-height: 100%;
+}
+
+.gallery__header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.gallery__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.gallery__count {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.gallery__empty {
+  color: #888;
+  font-size: 0.9rem;
+  p { margin: 0.25rem 0; }
+}
+
+/* Two-panel split */
+.gallery__split {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card list */
+.gallery__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+
+.gallery__card {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+
+  &:hover { border-color: #444; }
+
+  &--selected {
+    border-color: #5a8fd0;
+    background: #1c2330;
+  }
+}
+
+.gallery__card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.gallery__rank {
+  font-size: 0.7rem;
+  color: #666;
+  min-width: 2rem;
+}
+
+.gallery__score {
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.gallery__mini-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.gallery__svg-bg { fill: #111; }
+
+.gallery__cell {
+  stroke: #333;
+  stroke-width: 0.5;
+
+  &--generated { opacity: 0.6; }
+  &--hallway { opacity: 0.45; }
+}
+
+.gallery__card-stats {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  color: #888;
+  margin-top: 0.4rem;
+}
+
+.gallery__card-id {
+  font-size: 0.65rem;
+  color: #555;
+  margin-top: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Push status badge */
+.gallery__push {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+
+  &--pending  { background: #2a2a2a; color: #888; }
+  &--pushing  { background: #1a2d4a; color: #5a9de0; }
+  &--pushed   { background: #1a3a1a; color: #4caf50; }
+  &--failed   { background: #3a1a1a; color: #e05a5a; }
+}
+
+/* Detail panel */
+.gallery__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.gallery__detail-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.gallery__eyebrow {
+  font-size: 0.7rem;
+  color: #666;
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.gallery__detail-id {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.gallery__detail-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.78rem;
+  color: #888;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.gallery__detail-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+}
+
+.gallery__cell-label {
+  font-size: 8px;
+  fill: rgba(255,255,255,0.7);
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+/* Verification checks */
+.gallery__checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.gallery__check {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  &--pass { background: #1a3a1a; color: #4caf50; }
+  &--fail { background: #3a1a1a; color: #e05a5a; }
+}
+
+/* Score rows */
+.gallery__scores {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.gallery__score-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 40px;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gallery__score-label {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.gallery__score-track {
+  height: 5px;
+  background: #222;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.gallery__score-fill {
+  height: 100%;
+  background: #5a8fd0;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.gallery__score-val {
+  font-size: 0.72rem;
+  color: #aaa;
+  text-align: right;
+}
+
+/* Construction stats */
+.gallery__construction {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.gallery__cstat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+
+  span { font-size: 0.7rem; color: #777; }
+  strong { font-size: 0.9rem; }
+}

@@ -1,0 +1,74 @@
+<section class="source-grid">
+  <article class="source-card source-card--wide">
+    <p class="source-card__eyebrow">Source intake</p>
+    <h2>{{ sourceSnapshot.source.meta.title }}</h2>
+    <p>{{ sourceSnapshot.source.meta.summary }}</p>
+    <div class="source-meta-strip">
+      <span>ID {{ sourceSnapshot.source.meta.id }}</span>
+      <span>Version {{ sourceSnapshot.source.meta.version }}</span>
+      <span>Mode {{ sourceSnapshot.source.meta.authoringMode }}</span>
+      <span [ngClass]="validationClass(sourceSnapshot.validation.status)">
+        Validation {{ sourceSnapshot.validation.status }}
+      </span>
+    </div>
+  </article>
+
+  <article class="source-card">
+    <p class="source-card__eyebrow">Intent</p>
+    <h2>{{ sourceSnapshot.source.intent.projectKind }}</h2>
+    <p>{{ sourceSnapshot.source.intent.primaryGoal }}</p>
+    <p class="source-card__detail">{{ sourceSnapshot.source.intent.narrative }}</p>
+  </article>
+
+  <article class="source-card">
+    <p class="source-card__eyebrow">Counts</p>
+    <div class="source-metric-grid">
+      <div *ngFor="let row of sourceMetrics" class="source-metric">
+        <span>{{ row.label }}</span>
+        <strong>{{ row.value }}</strong>
+      </div>
+    </div>
+  </article>
+
+  <article class="source-card">
+    <p class="source-card__eyebrow">Priorities</p>
+    <ul class="source-list">
+      <li *ngFor="let priority of priorityRows">{{ priority }}</li>
+    </ul>
+  </article>
+
+  <article class="source-card">
+    <p class="source-card__eyebrow">Active program</p>
+    <div class="source-program-list">
+      <div *ngFor="let row of activeProgramRows" class="source-program-row">
+        <strong>{{ row.roomId }}</strong>
+        <span>{{ row.count }}</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="source-card source-card--wide">
+    <p class="source-card__eyebrow">Validation messages</p>
+    <div class="source-validation-list">
+      <div
+        *ngFor="let message of validationMessages"
+        class="source-validation-row"
+        [ngClass]="validationClass(message.level)"
+      >
+        <strong>{{ message.level }}</strong>
+        <span>{{ message.scope }}</span>
+        <p>{{ message.message }}</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="source-card source-card--wide">
+    <p class="source-card__eyebrow">AI comments</p>
+    <div class="source-comment-list">
+      <div *ngFor="let comment of sourceComments" class="source-comment-row">
+        <strong>{{ comment.scope }}</strong>
+        <p>{{ comment.comment }}</p>
+      </div>
+    </div>
+  </article>
+</section>

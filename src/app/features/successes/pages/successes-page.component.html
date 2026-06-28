@@ -1,0 +1,112 @@
+<section class="spage">
+
+  <header class="spage__header">
+    <h2 class="spage__title">Accepted Layouts</h2>
+    <span class="spage__count">{{ entries().length }} accepted</span>
+  </header>
+
+  <ng-container *ngIf="entries().length > 0; else empty">
+    <section class="spage__leader" *ngIf="topEntry() as top">
+      <div>
+        <span class="spage__eyebrow">Top accepted layout</span>
+        <strong class="spage__leader-id">{{ top.artifact.layoutId }}</strong>
+      </div>
+      <div class="spage__leader-score">
+        <span>Quality</span>
+        <strong>{{ top.score | number:'1.3-3' }}</strong>
+      </div>
+      <div class="spage__score-grid">
+        <div *ngFor="let row of scoreRows(top)">
+          <span>{{ row.label }}</span>
+          <strong>{{ row.value | percent:'1.0-0' }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="spage__viewer" *ngIf="selectedEntry() as selected">
+      <header class="spage__viewer-head">
+        <div>
+          <span class="spage__eyebrow">Selected layout</span>
+          <strong class="spage__leader-id">{{ selected.artifact.layoutId }}</strong>
+        </div>
+        <div class="spage__viewer-meta">
+          <span>{{ selected.score | number:'1.3-3' }} quality</span>
+          <span>{{ selected.artifact.cells.length }} cells</span>
+          <span>{{ totalArea(selected.artifact) | number:'1.1-1' }} m<sup>2</sup></span>
+        </div>
+      </header>
+      <svg class="spage__svg" viewBox="0 0 760 480" preserveAspectRatio="xMidYMid meet">
+        <rect x="0" y="0" width="760" height="480" class="spage__svg-bg" />
+        <ng-container *ngFor="let cell of selectedPreviewCells()">
+          <polygon
+            [attr.points]="cell.points"
+            [attr.fill]="cell.color"
+            class="spage__cell"
+            [class.spage__cell--generated]="cell.generated"
+          />
+          <text *ngIf="!cell.generated" class="spage__cell-label" [attr.x]="cell.cx" [attr.y]="cell.cy">{{ cell.label }}</text>
+        </ng-container>
+      </svg>
+    </section>
+
+    <div class="spage__table-wrap">
+      <table class="spage__table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Layout ID</th>
+            <th>Quality</th>
+            <th>Area Fit</th>
+            <th>Ext Wall</th>
+            <th>Prop</th>
+            <th>Adj</th>
+            <th>Hall %</th>
+            <th>Cells</th>
+            <th>Area</th>
+            <th>DEF</th>
+            <th>ASP</th>
+            <th>ACC</th>
+            <th>CRIT</th>
+            <th>GAR</th>
+            <th>SLV</th>
+            <th>OVL</th>
+            <th>Promoted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let entry of entries(); let i = index"
+            class="spage__row"
+            [class.spage__row--active]="isSelectedEntry(entry)"
+            (click)="selectEntry(entry)"
+          >
+            <td class="spage__rank">{{ i + 1 }}</td>
+            <td class="spage__id">{{ entry.artifact.layoutId }}</td>
+            <td>{{ entry.score | number:'1.3-3' }}</td>
+            <td>{{ areaFit(entry.artifact) | percent:'1.0-0' }}</td>
+            <td>{{ entry.scoreBreakdown.externalWallPerimeterMeters | number:'1.1-1' }} m</td>
+            <td>{{ entry.scoreBreakdown.roomProportionScore | percent:'1.0-0' }}</td>
+            <td>{{ entry.scoreBreakdown.finalAdjacencyScore | percent:'1.0-0' }}</td>
+            <td>{{ hallwayShare(entry.artifact) | percent:'1.0-0' }}</td>
+            <td>{{ entry.artifact.cells.length }}</td>
+            <td>{{ totalArea(entry.artifact) | number:'1.1-1' }} m<sup>2</sup></td>
+            <td *ngFor="let c of checkLabels">
+              <span class="spage__chip" [class.spage__chip--pass]="checkPassed(entry.artifact, c.key)" [class.spage__chip--fail]="!checkPassed(entry.artifact, c.key)">
+                {{ checkPassed(entry.artifact, c.key) ? '✓' : '✗' }}
+              </span>
+            </td>
+            <td class="spage__time">{{ entry.promotedAtIso | slice:11:19 }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <ng-template #empty>
+    <div class="spage__empty">
+      <p>No layouts accepted yet.</p>
+      <p>The orchestrator is processing captures automatically — accepted layouts will appear here.</p>
+    </div>
+  </ng-template>
+
+</section>

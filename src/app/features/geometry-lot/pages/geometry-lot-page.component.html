@@ -1,0 +1,107 @@
+<section class="geometry-grid">
+  <article class="geometry-card geometry-card--wide">
+    <p class="geometry-card__eyebrow">Slice 3 / Canonical geometry</p>
+    <h2>Lot and buildable polygons</h2>
+    <p>
+      This stage converts source lot segments into canonical world-space polygon geometry before any
+      simulation or schematic generation happens.
+    </p>
+  </article>
+
+  <article class="geometry-card">
+    <p class="geometry-card__eyebrow">Geometry metrics</p>
+    <div class="geometry-metric-grid">
+      <div *ngFor="let row of metricRows" class="geometry-metric">
+        <span>{{ row.label }}</span>
+        <strong>{{ row.value }}</strong>
+      </div>
+    </div>
+  </article>
+
+  <article class="geometry-card">
+    <p class="geometry-card__eyebrow">Canonical output</p>
+    <ul class="geometry-list">
+      <li>{{ lotGeometry.lotPoints.length }} lot polygon vertices</li>
+      <li>{{ lotGeometry.buildablePoints.length }} buildable polygon vertices</li>
+      <li>World-space coordinates derived directly from source lot segments</li>
+      <li>Buildable polygon inset from lot edges using per-segment setbacks</li>
+    </ul>
+  </article>
+
+  <article class="geometry-card geometry-card--wide">
+    <p class="geometry-card__eyebrow">Scaled setback overlay</p>
+    <svg class="geometry-preview" viewBox="0 0 440 320" preserveAspectRatio="xMidYMid meet">
+      <rect x="0" y="0" width="440" height="320" class="geometry-preview__bg" />
+      <polygon [attr.points]="projection.lotPreview.polygon" class="geometry-preview__lot geometry-preview__lot--ghost" />
+      <polygon [attr.points]="projection.buildablePreview.polygon" class="geometry-preview__buildable" />
+      <g *ngFor="let guide of projection.guideLines; trackBy: trackByEdge">
+        <line
+          [attr.x1]="guide.x1"
+          [attr.y1]="guide.y1"
+          [attr.x2]="guide.x2"
+          [attr.y2]="guide.y2"
+          class="geometry-preview__guide"
+        />
+        <text
+          [attr.x]="guide.labelX"
+          [attr.y]="guide.labelY"
+          class="geometry-preview__label"
+        >
+          {{ guide.label }}
+        </text>
+      </g>
+      <line
+        x1="24"
+        y1="296"
+        [attr.x2]="24 + projection.scaleBarWidthPixels"
+        y2="296"
+        class="geometry-preview__scale-bar"
+      />
+      <line x1="24" y1="291" x2="24" y2="301" class="geometry-preview__scale-bar" />
+      <line
+        [attr.x1]="24 + projection.scaleBarWidthPixels"
+        y1="291"
+        [attr.x2]="24 + projection.scaleBarWidthPixels"
+        y2="301"
+        class="geometry-preview__scale-bar"
+      />
+      <text x="24" y="286" class="geometry-preview__scale-text">
+        {{ projection.scaleBarMeters }}m scale
+      </text>
+    </svg>
+    <p class="geometry-preview__caption">
+      Lot outline and buildable outline share the same scale. Guide lines show the actual setback distance per edge.
+    </p>
+  </article>
+
+  <article class="geometry-card geometry-card--wide">
+    <p class="geometry-card__eyebrow">Setback schedule</p>
+    <div class="geometry-setback-grid">
+      <div *ngFor="let row of setbackRows" class="geometry-setback-row">
+        <strong>{{ row.edge }}</strong>
+        <span>{{ row.frontage }}</span>
+        <span>{{ row.setback }}</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="geometry-card geometry-card--wide">
+    <p class="geometry-card__eyebrow">World-space points</p>
+    <div class="geometry-point-grid">
+      <div class="geometry-point-panel">
+        <strong>Lot points</strong>
+        <div *ngFor="let point of lotGeometry.lotPoints" class="geometry-point-row">
+          <span>{{ point.label }}</span>
+          <span>{{ point.x.toFixed(3) }}, {{ point.y.toFixed(3) }}</span>
+        </div>
+      </div>
+      <div class="geometry-point-panel">
+        <strong>Buildable points</strong>
+        <div *ngFor="let point of lotGeometry.buildablePoints" class="geometry-point-row">
+          <span>{{ point.label }}</span>
+          <span>{{ point.x.toFixed(3) }}, {{ point.y.toFixed(3) }}</span>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>

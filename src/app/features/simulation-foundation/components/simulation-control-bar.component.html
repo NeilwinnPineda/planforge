@@ -1,0 +1,16 @@
+<section class="simulation-bar">
+  <div class="simulation-bar__controls">
+    <button type="button" class="simulation-bar__btn simulation-bar__btn--primary" (click)="onPrimaryAction()">
+      {{ isRunning() ? 'Pause All' : 'Run All' }}
+    </button>
+    <button type="button" class="simulation-bar__btn" [disabled]="!isRunning()" (click)="onStop()">Pause now</button>
+    <button type="button" class="simulation-bar__btn" (click)="onClear()">Clear cluster</button>
+  </div>
+
+  <div class="simulation-bar__metrics">
+    <div *ngFor="let metric of metrics()" class="simulation-bar__metric">
+      <span>{{ metric.label }}</span>
+      <strong>{{ metric.value }}</strong>
+    </div>
+  </div>
+</section>
