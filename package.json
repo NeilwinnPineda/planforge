@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "debug:reporting-endpoint": "node scripts/reporting-endpoint-server.mjs",
-    "debug:runtime-inspection": "node scripts/runtime-inspection.mjs"
+    "debug:runtime-inspection": "node scripts/runtime-inspection.mjs",
+    "export:live": "tsx scripts/export-live-contract.ts"
   },
   "private": true,
   "packageManager": "npm@11.12.1",
@@ -27,6 +28,7 @@
     "@angular/compiler-cli": "^21.2.0",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
+    "tsx": "^4.22.4",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }
