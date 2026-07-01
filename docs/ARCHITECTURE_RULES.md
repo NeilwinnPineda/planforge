@@ -2,11 +2,13 @@
 
 ## Purpose
 
-This document defines the architecture rules for the new production rebuild in `testing/app-next`.
+This document defines the architecture rules for the standalone `planforge` app repo.
+
+`planforge` may be linked into `ProjectRevit` for integrated development, but it is not just a temporary folder inside that repo. It is intended to stand on its own as the generator-side product workspace.
 
 The goal is not to clone the old prototype. The goal is to rebuild the workflow in operational order, with clean boundaries and clean handoff at every step.
 
-At the application level, the purpose of `app-next` is to take a structured design data source and output polygonal building-layout geometry that can be inspected, validated, compared, and eventually handed downstream.
+At the application level, the purpose of `planforge` is to take a structured design data source and output polygonal building-layout geometry that can be inspected, validated, compared, and eventually handed downstream.
 
 That means the app should be designed around canonical geometric output, not around temporary UI effects or loosely connected intermediate screens.
 
@@ -108,7 +110,7 @@ These notes should be short and practical. They are migration markers, not essay
 
 ## Legacy Boundary Rule
 
-`testing/app` is the legacy reference implementation.
+`testing/legacy-reference/app` is the legacy reference implementation.
 
 - It may be studied for behavior and lessons.
 - It should not be treated as a source for bulk migration.
@@ -130,7 +132,7 @@ The failure pattern was:
 More specifically:
 
 - the migration boundary was ignored
-- `legacy` was allowed to drift away from the explicitly intended `testing/app` source
+- `legacy` was allowed to drift away from the explicitly intended `testing/legacy-reference/app` source
 - replacement logic was invented for downstream processing steps instead of being ported from source
 - some process panels implied completion before the behavior was actually source-backed and inspectable
 
@@ -138,7 +140,7 @@ That behavior should be treated as incorrect rebuild conduct.
 
 The correction rule is:
 
-- migrate from `testing/app` first
+- migrate from `testing/legacy-reference/app` first
 - declare gaps honestly
 - never mark a step implemented unless it is source-traced and inspectable
 - never use scaffolding language to hide missing migration work
@@ -163,8 +165,8 @@ When the migration source is already designated, the AI must follow that source 
 
 For this rebuild, if the task is migration, then:
 
-- `testing/app` is the source boundary
-- `testing/app/src/app/app.ts` is the primary source for processing migration
+- `testing/legacy-reference/app` is the source boundary
+- `testing/legacy-reference/app/src/app/app.ts` is the primary source for processing migration
 - an easier historical file is not a valid substitute
 
 Choosing an easier source because it is easier to read is lazy behavior and must be treated as incorrect conduct.
@@ -557,7 +559,7 @@ When choosing between speed and structure for `app-next`, choose structure if th
 
 The current planned root is:
 
-- `testing/app-next`
+- `apps/planforge`
 
 Expected structure will evolve, but should likely separate:
 
@@ -568,3 +570,4 @@ Expected structure will evolve, but should likely separate:
 - `docs`
 
 This structure is a starting point, not a prison. The non-monolith rule matters more than strict folder orthodoxy.
+

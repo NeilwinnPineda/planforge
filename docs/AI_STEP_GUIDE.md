@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This guide exists so a future AI agent can continue the rebuild of `testing/app-next` without getting lost, without guessing where logic belongs, and without recreating monolithic structure.
+This guide exists so a future AI agent can continue the rebuild of `apps/planforge` without getting lost, without guessing where logic belongs, and without recreating monolithic structure.
 
 Use this guide together with:
 
@@ -38,8 +38,8 @@ If the project already defines the migration source, obey it.
 
 For this rebuild:
 
-- `testing/app` is the migration source boundary
-- `testing/app/src/app/app.ts` is the primary processing migration source
+- `testing/legacy-reference/app` is the migration source boundary
+- `testing/legacy-reference/app/src/app/app.ts` is the primary processing migration source
 
 That means a future AI must not switch to older historical files as a substitute just because they are easier to scan.
 
@@ -334,3 +334,4 @@ If you are a future AI and you are unsure where code belongs:
 4. Prefer a new small file over enlarging an ambiguous one.
 
 When in doubt, choose the option that keeps the next agent from having to read unrelated code.
+

@@ -41,7 +41,7 @@ export class UvVoronoiBoxingService {
   // Forbidden responsibilities: deficit edge negotiation, residual gap detection, hallway/filler
   //   residual generation, final staging, and verification.
   // Legacy source: buildWarpedQuadCells (ALL sites boxing)
-  //   testing/app/src/app/app.ts lines 5970–6113.
+  //   testing/legacy-reference/app/src/app/app.ts lines 5970–6113.
   run(
     request: LayoutProcessingStepRequest<WarpedRebalancedSiteArtifact, UvVoronoiBoxingArguments>,
   ): LayoutProcessingStepResult<UvBoxedLayoutArtifact, UvVoronoiBoxingMetrics> {
@@ -130,7 +130,7 @@ export class UvVoronoiBoxingService {
     // Major axis snap: attract room edges toward the 2 most-shared U and V positions.
     // Only applied when safe-snap boxes are already clean (no overlaps).
     // Rolled back if the snap introduces overlaps.
-    // Source: snapToMajorAxis — testing/app/src/app/app.ts lines 5408–5428 (re-enabled after hallway filter).
+    // Source: snapToMajorAxis — testing/legacy-reference/app/src/app/app.ts lines 5408–5428 (re-enabled after hallway filter).
     let majorAxisSnappedEdgeCount = 0;
     if (!this.hasOverlappingUvBoxes(snappedBoxes)) {
       const preSnapState = snappedBoxes.map((b) => ({ uMin: b.uMin, uMax: b.uMax, vMin: b.vMin, vMax: b.vMax }));
@@ -219,7 +219,7 @@ export class UvVoronoiBoxingService {
     };
   }
 
-  // Source: snapToMajorAxis — testing/app/src/app/app.ts lines 5395–5428.
+  // Source: snapToMajorAxis — testing/legacy-reference/app/src/app/app.ts lines 5395–5428.
   // Finds the 2 most-shared U and V edge positions across all room boxes and attracts
   // any room edge within `threshold` of a major axis toward it, gated by minExtent.
   private snapToMajorAxes(
@@ -277,7 +277,7 @@ export class UvVoronoiBoxingService {
     return snappedCount;
   }
 
-  // Source: buildSafeSnap inside buildClusteredGridCells — testing/app/src/app/app.ts line 5317.
+  // Source: buildSafeSnap inside buildClusteredGridCells — testing/legacy-reference/app/src/app/app.ts line 5317.
   private buildSafeSnap(
     edgeValues: number[],
     extents: Array<{ min: number; max: number }>,
@@ -311,7 +311,7 @@ export class UvVoronoiBoxingService {
     return (v: number) => snapMap.get(r(v)) ?? v;
   }
 
-  // Source: absorbFreeUvSpace — testing/app/src/app/app.ts line 6114.
+  // Source: absorbFreeUvSpace — testing/legacy-reference/app/src/app/app.ts line 6114.
   // Expands deficit boxes into free adjacent UV gaps, prioritizing largest shortage first.
   private absorbFreeUvSpace(
     boxes: Array<{ site: WarpedUvSite; uMin: number; uMax: number; vMin: number; vMax: number }>,
@@ -387,7 +387,7 @@ export class UvVoronoiBoxingService {
     }
   }
 
-  // Source: hasOverlappingUvBoxes — testing/app/src/app/app.ts line 6217.
+  // Source: hasOverlappingUvBoxes — testing/legacy-reference/app/src/app/app.ts line 6217.
   private hasOverlappingUvBoxes(boxes: Array<{ uMin: number; uMax: number; vMin: number; vMax: number }>): boolean {
     const OVERLAP_EPS = 1e-5;
     for (let i = 0; i < boxes.length; i += 1) {
@@ -400,7 +400,7 @@ export class UvVoronoiBoxingService {
     return false;
   }
 
-  // Source: scaleSitesToUvPowerWeights — testing/app/src/app/app.ts line 6361.
+  // Source: scaleSitesToUvPowerWeights — testing/legacy-reference/app/src/app/app.ts line 6361.
   private scaleSitesToUvPowerWeights(sites: readonly { u: number; v: number; weight: number }[]): number[] {
     if (!sites.length) return [];
     const positiveWeights = sites.map((s) => Math.max(s.weight, 1e-6));
@@ -420,7 +420,7 @@ export class UvVoronoiBoxingService {
     return positiveWeights.map((w) => (w / meanWeight) * weightScale);
   }
 
-  // Source: clipCellByBisector — testing/app/src/app/app.ts line 2692.
+  // Source: clipCellByBisector — testing/legacy-reference/app/src/app/app.ts line 2692.
   private clipCellByBisector(
     poly: { x: number; y: number }[],
     ax: number, ay: number, wA: number,
@@ -478,3 +478,4 @@ export class UvVoronoiBoxingService {
     return Math.abs(total) / 2;
   }
 }
+

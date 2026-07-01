@@ -42,7 +42,7 @@ export class ResidualUvAbsorptionService {
   // Allowed dependencies: UvNegotiatedLayoutArtifact quad and world cells; local UV math only.
   // Forbidden responsibilities: edge negotiation, aspect ratio rescue, verification.
   // Legacy source: buildResidualUvQuads + tryAbsorbResidualUvRect inside buildClusteredGridCells
-  //   in testing/app/src/app/app.ts (line 5584).
+  //   in testing/legacy-reference/app/src/app/app.ts (line 5584).
   run(
     request: LayoutProcessingStepRequest<UvNegotiatedLayoutArtifact, ResidualUvAbsorptionArguments>,
   ): LayoutProcessingStepResult<ResidualAbsorbedLayoutArtifact, ResidualUvAbsorptionMetrics> {
@@ -188,7 +188,7 @@ export class ResidualUvAbsorptionService {
   }
 
   // Greedy maximal-rect scan of uncovered UV space — source: buildResidualUvQuads
-  // (testing/app/src/app/app.ts line 5587).
+  // (testing/legacy-reference/app/src/app/app.ts line 5587).
   private buildResidualUvQuads(
     quad: readonly { x: number; y: number }[],
     safeBoxes: UvBox[],
@@ -327,7 +327,7 @@ export class ResidualUvAbsorptionService {
   }
 
   // Tries to expand an adjacent deficit room box to absorb a small residual gap.
-  // Source: tryAbsorbResidualUvRect in testing/app/src/app/app.ts (line 5839).
+  // Source: tryAbsorbResidualUvRect in testing/legacy-reference/app/src/app/app.ts (line 5839).
   private tryAbsorbResidualUvRect(
     rect: { uMin: number; uMax: number; vMin: number; vMax: number },
     safeBoxes: UvBox[],
@@ -473,7 +473,7 @@ export class ResidualUvAbsorptionService {
   }
 
   // Newton-Raphson inverse bilinear quad map: world → (u, v).
-  // Source: inverseWarpedGrid in testing/app/src/app/app.ts (line 5160).
+  // Source: inverseWarpedGrid in testing/legacy-reference/app/src/app/app.ts (line 5160).
   private inverseWarpedGrid(
     world: GeometryPoint,
     quad: readonly { x: number; y: number }[],
@@ -503,3 +503,4 @@ export class ResidualUvAbsorptionService {
     return { u, v };
   }
 }
+

@@ -152,6 +152,17 @@ For the first reporting milestone, the same standard should already apply to sim
 
 `app-next` now includes a lightweight headless-browser runtime inspection path for rebuild validation.
 
+Local runtime inspection assumes the app can be served through the repo-owned npm command path:
+
+- `npm.cmd start`
+
+Do not treat a global `ng serve` as the default validation entry point for this repo.
+
+If runtime inspection or ordinary local serve fails before the browser even loads, check local machine state first:
+
+- confirm `node_modules` is installed
+- confirm the shell is not injecting `ELECTRON_RUN_AS_NODE=1` into the serve process
+
 Current script:
 
 - `npm run debug:runtime-inspection`

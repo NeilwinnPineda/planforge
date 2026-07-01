@@ -30,7 +30,7 @@ export class WarpedSiteProjectionService {
   // Allowed dependencies: mass-balanced cells and explicit quad argument only.
   // Forbidden responsibilities: UV Voronoi generation, weight rebalancing, world back-projection,
   //   residual absorption, edge negotiation, and final staging.
-  // Legacy source: buildPanel2WarpedSites in testing/app/src/app/app.ts (line 2948).
+  // Legacy source: buildPanel2WarpedSites in testing/legacy-reference/app/src/app/app.ts (line 2948).
   run(
     request: LayoutProcessingStepRequest<MassBalancedLayoutArtifact, WarpedSiteProjectionArguments>,
   ): LayoutProcessingStepResult<WarpedSiteArtifact, WarpedSiteProjectionMetrics> {
@@ -126,7 +126,7 @@ export class WarpedSiteProjectionService {
   }
 
   // Newton-Raphson inverse bilinear quad map: world → (u, v).
-  // Source: inverseWarpedGrid in testing/app/src/app/app.ts (line 5160).
+  // Source: inverseWarpedGrid in testing/legacy-reference/app/src/app/app.ts (line 5160).
   private inverseWarpedGrid(
     world: GeometryPoint,
     quad: readonly { x: number; y: number }[],
@@ -170,3 +170,4 @@ export class WarpedSiteProjectionService {
     };
   }
 }
+

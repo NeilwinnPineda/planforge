@@ -641,7 +641,7 @@ export class ProcessingPageComponent {
           { label: 'Shift gain', value: this.uvEdgeNegotiationArguments.shiftGain.toFixed(2) },
           { label: 'Max passes', value: String(this.uvEdgeNegotiationArguments.maxPasses) },
           { label: 'Target aspect ratio', value: this.uvEdgeNegotiationArguments.targetAspectRatio.toFixed(1) },
-          { label: 'Migration source', value: 'buildClusteredGridCells (buildSafeSnap + snapToMajorAxis + negotiateEdges) — testing/app/src/app/app.ts line 5280' },
+          { label: 'Migration source', value: 'buildClusteredGridCells (buildSafeSnap + snapToMajorAxis + negotiateEdges) — testing/legacy-reference/app/src/app/app.ts line 5280' },
         ],
       },
       {
@@ -675,7 +675,7 @@ export class ProcessingPageComponent {
         detailRows: [
           { label: 'Filler color', value: this.residualUvAbsorptionArguments.fillerColor },
           { label: 'Hallway color', value: this.residualUvAbsorptionArguments.hallwayColor },
-          { label: 'Migration source', value: 'buildResidualUvQuads + tryAbsorbResidualUvRect — testing/app/src/app/app.ts line 5584' },
+          { label: 'Migration source', value: 'buildResidualUvQuads + tryAbsorbResidualUvRect — testing/legacy-reference/app/src/app/app.ts line 5584' },
           { label: 'Stage note', value: 'Fifth and final step of the real verification-feeding warped pipeline (Slice 9E)' },
         ],
       },
@@ -920,3 +920,4 @@ export class ProcessingPageComponent {
     return { u, v };
   }
 }
+

@@ -3,7 +3,7 @@ import type { ActiveRoomInstance } from './models/room-instance.model';
 
 // Migration note:
 // This block replaces the legacy active-room expansion responsibility currently embedded in
-// testing/app/src/app/services/config.service.ts. The new version isolates source-program expansion
+// testing/legacy-reference/app/src/app/services/config.service.ts. The new version isolates source-program expansion
 // from layout constants, visualization, and simulation orchestration.
 
 // Room-instance derivation stage.
@@ -39,3 +39,4 @@ export function deriveActiveRoomInstances(source: PromptDesignSource): ActiveRoo
     });
   });
 }
+

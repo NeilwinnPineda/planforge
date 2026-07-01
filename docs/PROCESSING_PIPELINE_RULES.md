@@ -14,7 +14,7 @@ The goal is:
 
 ## Legacy Processing Scan
 
-The legacy `testing/app/src/app/app.ts` processing path currently behaves like a chained schematic refinement pipeline.
+The legacy `testing/legacy-reference/app/src/app/app.ts` processing path currently behaves like a chained schematic refinement pipeline.
 
 ### Migration Failure Note
 
@@ -23,15 +23,15 @@ This note is here because the migration drifted and needs to be called out plain
 A bad migration mistake happened:
 
 - the rebuild temporarily treated non-primary historical files as if they were the legacy migration source
-- invented processing behavior was added instead of strictly porting from `testing/app/src/app/app.ts`
+- invented processing behavior was added instead of strictly porting from `testing/legacy-reference/app/src/app/app.ts`
 - some steps were labeled or presented as implemented before they were source-faithful
 
 That was wrong.
 
 For this rebuild, `legacy` means:
 
-- `testing/app`
-- especially `testing/app/src/app/app.ts`
+- `testing/legacy-reference/app`
+- especially `testing/legacy-reference/app/src/app/app.ts`
 
 It does **not** mean:
 
@@ -39,7 +39,7 @@ It does **not** mean:
 - inventing substitute algorithms to keep the page moving
 - treating compiled scaffolding as completed migration
 
-If a step cannot be traced back to `testing/app/src/app/app.ts`, it must be treated as:
+If a step cannot be traced back to `testing/legacy-reference/app/src/app/app.ts`, it must be treated as:
 
 - not yet migrated
 - provisional only
@@ -47,7 +47,7 @@ If a step cannot be traced back to `testing/app/src/app/app.ts`, it must be trea
 
 This rule exists because fake completeness is more damaging than an explicit gap.
 
-Observed major stages (real verification-feeding order from `testing/app/src/app/app.ts`):
+Observed major stages (real verification-feeding order from `testing/legacy-reference/app/src/app/app.ts`):
 
 1. provisional constrained cell generation (`buildSchematicCells` — Panel 1 Voronoi)
 2. hallway injection (path site seeding + Panel 2 Voronoi + mass balance inside `buildPanel2Cells`)
@@ -69,7 +69,7 @@ Note: **Gap absorption, fringe exchange, and simplification** are display-only d
 
 These steps exist as typed placeholder services in app-next but have no real migrated implementation yet.
 
-Real implementations must be source-traced to `testing/app/src/app/app.ts` before any can be marked implemented.
+Real implementations must be source-traced to `testing/legacy-reference/app/src/app/app.ts` before any can be marked implemented.
 
 ### Gap Absorption
 
@@ -380,3 +380,4 @@ Current rebuild note:
 - final staging is now a real checkpoint in `app-next`
 - this is the current stop point for the migrated processing chain
 - verification queueing, culling, and promotion still remain downstream of this checkpoint
+

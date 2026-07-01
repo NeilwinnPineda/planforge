@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This roadmap tracks the incremental rebuild of `testing/app-next`.
+This roadmap tracks the incremental rebuild of `apps/planforge`.
 
 The rebuild target is a production-oriented procedural generation app that takes a structured design source and outputs polygonal building-layout geometry with strong reporting, inspection, and stage boundaries.
 
@@ -99,7 +99,7 @@ Delivered:
 
 The old app scan shows that the next proper migration seam after Slice 4 is the simulation block, not early footprint interpretation.
 
-Primary missing migration areas still living in `testing/app/src/app/app.ts` include:
+Primary missing migration areas still living in `testing/legacy-reference/app/src/app/app.ts` include:
 
 - simulation engine lifecycle: `startBuildableSimulation`, `stopBuildableSimulation`, `shakeBuildableSimulation`, and loop timer ownership
 - job loop orchestration: multi-job state, active job switching, and hard-reset capture loop control
@@ -458,11 +458,11 @@ Still out of scope after Slice 8D:
 
 ### Pipeline Correction — Post-Slice-8D Source Audit
 
-A full source trace of `testing/app/src/app/app.ts` revealed that the step sequence documented in "Next Structural Move Before Processing Migration" was wrong.
+A full source trace of `testing/legacy-reference/app/src/app/app.ts` revealed that the step sequence documented in "Next Structural Move Before Processing Migration" was wrong.
 
 **Boundary edge stepping** is a Panel 1 display branch in the legacy. It operates on `edgeCutVoronoiCells` which is not `p2Cells` and does not reach `finalSchematicCells` or verification. Its panel is kept as a diagnostic inspection surface and the service is preserved, but it is not a prerequisite step in the real verification-feeding chain.
 
-**Gap absorption, fringe exchange, and simplification** are display-only diagnostic panels in the legacy with no downstream consumers. The three services currently in app-next were implemented by Codex from an earlier, easier prototype — not from `testing/app/src/app/app.ts`. Per the migration source rule, those implementations are incorrect. They are now held as typed deferred stubs only and explicitly removed from the active verification-feeding chain.
+**Gap absorption, fringe exchange, and simplification** are display-only diagnostic panels in the legacy with no downstream consumers. The three services currently in app-next were implemented by Codex from an earlier, easier prototype — not from `testing/legacy-reference/app/src/app/app.ts`. Per the migration source rule, those implementations are incorrect. They are now held as typed deferred stubs only and explicitly removed from the active verification-feeding chain.
 
 **The real verification-feeding pipeline after mass balance** is the warped grid chain: UV site projection → warped Voronoi rebalance → UV boxing → UV edge negotiation → residual absorption → final staging → verification. This was the most effective pipeline in the legacy but was not migrated. Slices 9A–9E target this chain.
 
@@ -480,7 +480,7 @@ A full source trace of `testing/app/src/app/app.ts` revealed that the step seque
 
 ### Deferred Future Features
 
-These steps are declared but not actively migrated. Real implementations must be source-traced to `testing/app/src/app/app.ts` before they can be marked implemented.
+These steps are declared but not actively migrated. Real implementations must be source-traced to `testing/legacy-reference/app/src/app/app.ts` before they can be marked implemented.
 
 **Gap absorption**
 - Legacy location: `buildGapAbsorptionResult` (line 3732)
@@ -514,10 +514,10 @@ Delivered:
 - `warpedSiteProjectionResult` signal on the Processing page consuming mass-balanced output
 - Panel 5 on the Processing page showing UV site count, skipped degenerate cells, and source migration note
 - Deferred panels (gap absorption, fringe exchange, simplification) relabeled as deferred future features with correct legacy source references
-- Migration marker added in `testing/app/src/app/app.ts` at `buildPanel2WarpedSites`
+- Migration marker added in `testing/legacy-reference/app/src/app/app.ts` at `buildPanel2WarpedSites`
 - Step order corrected across REBUILD_ROADMAP, PROCESSING_PIPELINE_RULES, and AI_STEP_GUIDE
 
-Source: `buildPanel2WarpedSites` in `testing/app/src/app/app.ts` (line 2948)
+Source: `buildPanel2WarpedSites` in `testing/legacy-reference/app/src/app/app.ts` (line 2948)
 
 Step template:
 - Slice number: 9A
@@ -546,9 +546,9 @@ Delivered:
 - All sub-functions ported from legacy: `scaleSitesToUvPowerWeights`, `clipCellByBisector`, `bilinearQuadPoint`, `inverseWarpedGrid`, `polygonsTouch`
 - `warpedVoronoiRebalanceResult` signal consuming warped site projection output
 - Panel 6 on the Processing page with iteration count, stable runs, and final max delta
-- Migration marker added in `testing/app/src/app/app.ts` at `rebalanceWarpedSites` / `scaleSitesToUvPowerWeights`
+- Migration marker added in `testing/legacy-reference/app/src/app/app.ts` at `rebalanceWarpedSites` / `scaleSitesToUvPowerWeights`
 
-Source: `rebalanceWarpedSites` in `testing/app/src/app/app.ts` (line 6244)
+Source: `rebalanceWarpedSites` in `testing/legacy-reference/app/src/app/app.ts` (line 6244)
 
 Step template:
 - Slice number: 9B
@@ -571,7 +571,7 @@ Goal:
 
 Status: Done
 
-Source: `buildWarpedQuadCells` in `testing/app/src/app/app.ts` (line 5966)
+Source: `buildWarpedQuadCells` in `testing/legacy-reference/app/src/app/app.ts` (line 5966)
 
 Delivered:
 - `uv-voronoi-boxing.service.ts` — full port of `buildWarpedQuadCells`
@@ -601,7 +601,7 @@ Goal:
 
 Status: Done
 
-Source: `negotiateEdges` + `rescueClusteredAspectRatios` inside `buildClusteredGridCells` in `testing/app/src/app/app.ts` (line 5277)
+Source: `negotiateEdges` + `rescueClusteredAspectRatios` inside `buildClusteredGridCells` in `testing/legacy-reference/app/src/app/app.ts` (line 5277)
 
 Delivered:
 - `uv-edge-negotiation.service.ts` — ports `negotiateEdges` and `rescueClusteredAspectRatios`
@@ -630,7 +630,7 @@ Goal:
 
 Status: Done
 
-Source: `buildResidualUvQuads` + `tryAbsorbResidualUvRect` inside `buildClusteredGridCells` in `testing/app/src/app/app.ts` (line 5584)
+Source: `buildResidualUvQuads` + `tryAbsorbResidualUvRect` inside `buildClusteredGridCells` in `testing/legacy-reference/app/src/app/app.ts` (line 5584)
 
 Delivered:
 - `residual-uv-absorption.service.ts` — ports `buildResidualUvQuads` and `tryAbsorbResidualUvRect`
@@ -786,3 +786,4 @@ What is now live end-to-end:
 - Spawn heatmap from construction room centroids weakly biases future simulation respawns
 
 The next milestone is the Revit-side consumer: read contracts from `GET /layout-contracts`, preview in Revit as temporary geometry, then apply behind an approval gate.
+

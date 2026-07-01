@@ -15,7 +15,7 @@ interface OffsetLine {
 
 // Migration note:
 // This block replaces the legacy lot-polygon derivation responsibility currently embedded inside
-// testing/app/src/app/app.ts. The new version isolates canonical lot/buildable geometry so later
+// testing/legacy-reference/app/src/app/app.ts. The new version isolates canonical lot/buildable geometry so later
 // stages can consume it without inheriting legacy orchestration structure.
 
 // Lot geometry stage.
@@ -205,3 +205,4 @@ function getClosureErrorMeters(points: NamedGeometryPoint[]): number {
   const lastPoint = points[points.length - 1];
   return Math.hypot(lastPoint.x, lastPoint.y);
 }
+

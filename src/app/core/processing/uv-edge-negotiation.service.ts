@@ -51,7 +51,7 @@ export class UvEdgeNegotiationService {
   // Allowed dependencies: MassBalancedLayoutArtifact and local UV math helpers only.
   // Forbidden responsibilities: Voronoi, residual gap detection, hallway generation, final staging.
   // Legacy source: buildClusteredGridCells (buildSafeSnap + snapToMajorAxis + negotiateEdges +
-  //   rescueClusteredAspectRatios) — testing/app/src/app/app.ts lines 5280–5530.
+  //   rescueClusteredAspectRatios) — testing/legacy-reference/app/src/app/app.ts lines 5280–5530.
   run(
     request: LayoutProcessingStepRequest<MassBalancedLayoutArtifact, UvEdgeNegotiationArguments>,
   ): LayoutProcessingStepResult<UvNegotiatedLayoutArtifact, UvEdgeNegotiationMetrics> {
@@ -117,7 +117,7 @@ export class UvEdgeNegotiationService {
     this.resolveUvOverlaps(boxes);
 
     // Edge clustering: merge close UV edge positions without collapsing rooms.
-    // Source: buildSafeSnap — testing/app/src/app/app.ts line 5317.
+    // Source: buildSafeSnap — testing/legacy-reference/app/src/app/app.ts line 5317.
     const uEdges = [...new Set(boxes.flatMap((b) => [b.uMin, b.uMax, 0, 1]))];
     const vEdges = [...new Set(boxes.flatMap((b) => [b.vMin, b.vMax, 0, 1]))];
     const uExtents = boxes.map((b) => ({ min: b.uMin, max: b.uMax }));
@@ -137,7 +137,7 @@ export class UvEdgeNegotiationService {
 
     // Major axis snap: attract room edges toward the 2 most-shared U and V positions.
     // minExtent guards inside snapToMajorAxes prevent box collapse — no post-snap check needed.
-    // Source: findMajorAxes + snapToMajorAxis — testing/app/src/app/app.ts lines 5396–5425.
+    // Source: findMajorAxes + snapToMajorAxis — testing/legacy-reference/app/src/app/app.ts lines 5396–5425.
     const { count: majorAxisSnappedEdgeCount, majorU, majorV } = this.snapToMajorAxes(boxes, snapThreshold * majorAxisSnapMultiplier, minExtent);
 
     // Deficit-driven edge negotiation: edge ordering constraint prevents overlaps by construction.
@@ -256,7 +256,7 @@ export class UvEdgeNegotiationService {
     }
   }
 
-  // Source: buildSafeSnap inside buildClusteredGridCells — testing/app/src/app/app.ts line 5317.
+  // Source: buildSafeSnap inside buildClusteredGridCells — testing/legacy-reference/app/src/app/app.ts line 5317.
   private buildSafeSnap(
     edgeValues: number[],
     extents: Array<{ min: number; max: number }>,
@@ -290,7 +290,7 @@ export class UvEdgeNegotiationService {
     return (v: number) => snapMap.get(r(v)) ?? v;
   }
 
-  // Source: findMajorAxes + snapToMajorAxis — testing/app/src/app/app.ts lines 5396–5425.
+  // Source: findMajorAxes + snapToMajorAxis — testing/legacy-reference/app/src/app/app.ts lines 5396–5425.
   private snapToMajorAxes(
     boxes: Array<{ uMin: number; uMax: number; vMin: number; vMax: number }>,
     threshold: number,
@@ -339,7 +339,7 @@ export class UvEdgeNegotiationService {
     return { count, majorU, majorV };
   }
 
-  // Source: negotiateEdges in buildClusteredGridCells — testing/app/src/app/app.ts line 5430.
+  // Source: negotiateEdges in buildClusteredGridCells — testing/legacy-reference/app/src/app/app.ts line 5430.
   private negotiateEdges(
     workBoxes: UvBox[],
     quad: readonly { x: number; y: number }[],
@@ -411,7 +411,7 @@ export class UvEdgeNegotiationService {
     return pass;
   }
 
-  // Source: rescueClusteredAspectRatios — testing/app/src/app/app.ts line 5736.
+  // Source: rescueClusteredAspectRatios — testing/legacy-reference/app/src/app/app.ts line 5736.
   private rescueAspectRatios(
     boxes: UvBox[],
     quad: readonly { x: number; y: number }[],
@@ -528,7 +528,7 @@ export class UvEdgeNegotiationService {
     };
   }
 
-  // Source: inverseWarpedGrid — testing/app/src/app/app.ts line 5160.
+  // Source: inverseWarpedGrid — testing/legacy-reference/app/src/app/app.ts line 5160.
   private inverseWarpedGrid(world: GeometryPoint, quad: readonly { x: number; y: number }[]): { u: number; v: number } {
     let u = 0.5;
     let v = 0.5;
@@ -546,3 +546,4 @@ export class UvEdgeNegotiationService {
     return { u, v };
   }
 }
+

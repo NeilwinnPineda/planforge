@@ -37,7 +37,7 @@ export class WarpedVoronoiRebalanceService {
   // Allowed dependencies: WarpedSiteArtifact and local deterministic UV geometry helpers only.
   // Forbidden responsibilities: UV boxing, world projection, edge negotiation, residual
   //   absorption, and final staging.
-  // Legacy source: rebalanceWarpedSites in testing/app/src/app/app.ts (line 6244).
+  // Legacy source: rebalanceWarpedSites in testing/legacy-reference/app/src/app/app.ts (line 6244).
   run(
     request: LayoutProcessingStepRequest<WarpedSiteArtifact, WarpedVoronoiRebalanceArguments>,
   ): LayoutProcessingStepResult<WarpedRebalancedSiteArtifact, WarpedVoronoiRebalanceMetrics> {
@@ -219,7 +219,7 @@ export class WarpedVoronoiRebalanceService {
   }
 
   // Runs power Voronoi clipping in UV space and back-projects to world for area measurement.
-  // Source: buildUVVoronoiCells in testing/app/src/app/app.ts (line 5208).
+  // Source: buildUVVoronoiCells in testing/legacy-reference/app/src/app/app.ts (line 5208).
   private buildUVVoronoiCells(
     quad: readonly { x: number; y: number }[],
     sites: readonly WarpedUvSite[],
@@ -248,7 +248,7 @@ export class WarpedVoronoiRebalanceService {
     });
   }
 
-  // Source: scaleSitesToUvPowerWeights in testing/app/src/app/app.ts (line 6356).
+  // Source: scaleSitesToUvPowerWeights in testing/legacy-reference/app/src/app/app.ts (line 6356).
   private scaleSitesToUvPowerWeights(sites: readonly { u: number; v: number; weight: number }[]): number[] {
     if (!sites.length) return [];
 
@@ -272,7 +272,7 @@ export class WarpedVoronoiRebalanceService {
     return positiveWeights.map((w) => (w / meanWeight) * weightScale);
   }
 
-  // Source: clipCellByBisector in testing/app/src/app/app.ts (line 2692).
+  // Source: clipCellByBisector in testing/legacy-reference/app/src/app/app.ts (line 2692).
   private clipCellByBisector(
     poly: { x: number; y: number }[],
     ax: number, ay: number, wA: number,
@@ -387,3 +387,4 @@ export class WarpedVoronoiRebalanceService {
     return dot >= -epsilon && dot <= len * len + epsilon;
   }
 }
+

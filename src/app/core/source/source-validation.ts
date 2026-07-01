@@ -7,7 +7,7 @@ import type {
 
 // Migration note:
 // This block replaces the legacy source-intake validation responsibility that currently lives in
-// testing/app/src/app/data/design-source.ts. The new version is isolated so source intake can evolve
+// testing/legacy-reference/app/src/app/data/design-source.ts. The new version is isolated so source intake can evolve
 // independently from generation and presentation stages.
 
 // Source validation stage.
@@ -210,3 +210,4 @@ export function validateDesignSource(source: PromptDesignSource): DesignSourceVa
     },
   };
 }
+
