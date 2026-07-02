@@ -21,6 +21,11 @@ export interface GeometryBounds {
   maxY: number;
 }
 
+export interface GeometrySegment {
+  from: GeometryPoint;
+  to: GeometryPoint;
+}
+
 export interface LotGeometryResult {
   lotSegments: ProjectLotSegment[];
   lotPoints: NamedGeometryPoint[];
@@ -31,4 +36,7 @@ export interface LotGeometryResult {
   buildableBounds: GeometryBounds;
   frontageSegments: number;
   closureErrorMeters: number;
+  closureSegment: GeometrySegment | null;
+  isBuildable: boolean;
+  issues: string[];
 }

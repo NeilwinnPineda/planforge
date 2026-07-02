@@ -38,15 +38,15 @@ describe('App', () => {
     fixture = null;
   });
 
-  it('creates the app-next shell', () => {
+  it('creates the planforge shell', () => {
     fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
 
     expect(fixture.componentInstance).toBeTruthy();
-    expect(compiled.querySelector('h1')?.textContent).toContain('Layout Polygon Generator');
-    expect(compiled.textContent).toContain('Structured design source in, canonical polygon layouts out.');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Residential Layout Studio');
+    expect(compiled.textContent).toContain('Set up the project, generate layout options, review what works, and prepare the strongest result for export.');
   });
 
   it('keeps the local app-next source artifact valid', () => {
@@ -63,6 +63,7 @@ describe('App', () => {
     const reports = buildReportingSelfTestReports({
       source: DESIGN_SOURCE,
       validation: DESIGN_SOURCE_VALIDATION,
+      origin: 'default',
     });
 
     expect(reports).toHaveLength(2);
@@ -192,7 +193,7 @@ describe('App', () => {
     const report = buildSimulationCaptureReport(
       'test-core',
       'LTESTCAPTURE001',
-      { source: DESIGN_SOURCE, validation: DESIGN_SOURCE_VALIDATION },
+      { source: DESIGN_SOURCE, validation: DESIGN_SOURCE_VALIDATION, origin: 'default' },
       candidateLayout,
       job,
       {

@@ -1,41 +1,66 @@
-<section class="foundation-grid">
-  <article class="foundation-card">
-    <p class="foundation-card__eyebrow">Purpose</p>
-    <h2>Production rebuild foundation</h2>
-    <p>
-      This workspace starts from a clean boundary: the app exists to consume structured design data
-      and emit inspectable building-layout polygons.
-    </p>
-  </article>
-
-  <article class="foundation-card">
-    <p class="foundation-card__eyebrow">Current slice</p>
-    <h2>Slice 1 / Source intake live</h2>
-    <p>
-      The new app now reads a local typed design source, validates it, and presents the read-only
-      intake state before any generation logic is introduced.
-    </p>
-  </article>
-
-  <article class="foundation-card foundation-card--wide">
-    <p class="foundation-card__eyebrow">Pipeline framing</p>
-    <h2>Initial staged view</h2>
-    <div class="foundation-stage-list">
-      <div *ngFor="let row of stageRows" class="foundation-stage-row">
-        <strong>{{ row.stage }}</strong>
-        <span>{{ row.purpose }}</span>
-      </div>
+<section class="foundation-page">
+  <article class="foundation-hero">
+    <div class="foundation-hero__copy">
+      <p class="foundation-card__eyebrow">Workspace overview</p>
+      <h2>Move from project brief to construction-ready layout decisions</h2>
+      <p class="foundation-card__detail">
+        Use this workspace to define the brief, test the site envelope, generate options, and
+        promote only the strongest layouts toward verification and export.
+      </p>
+    </div>
+    <div class="foundation-hero__status">
+      <span>Start with program setup</span>
+      <span>Review one stage at a time</span>
+      <span>Promote only verified outputs</span>
     </div>
   </article>
-  <article class="foundation-card foundation-card--wide">
-    <p class="foundation-card__eyebrow">Migration posture</p>
-    <h2>What this slice is protecting</h2>
-    <ul>
-      <li>No monolithic copy-over from the legacy prototype.</li>
-      <li>No heavy visuals that compete with generation cost.</li>
-      <li>No hidden shared-state coupling between process steps.</li>
-      <li>Reporting and testing will be added early, starting at meaningful layout outputs.</li>
-      <li>Source intake is now separated from future generation and reporting stages.</li>
-    </ul>
-  </article>
+
+  <section class="foundation-workspace">
+    <aside class="foundation-sidebar">
+      <article class="foundation-card">
+        <p class="foundation-card__eyebrow">Recommended next step</p>
+        <h2>Review the project brief first</h2>
+        <p class="foundation-card__detail">
+          Start with <strong>Program Setup</strong> to confirm the lot, room program, and design
+          assumptions before you spend time comparing layouts.
+        </p>
+      </article>
+
+      <article class="foundation-card">
+        <p class="foundation-card__eyebrow">What to focus on</p>
+        <h2>Use the app to answer practical questions</h2>
+        <ul class="foundation-list">
+          <li>Do the project inputs look right before generation starts?</li>
+          <li>Which candidates are strongest and why?</li>
+          <li>What still blocks verification or export?</li>
+          <li>Which layout is worth carrying forward?</li>
+          <li>Is the current output ready for construction handoff?</li>
+        </ul>
+      </article>
+    </aside>
+
+    <div class="foundation-main">
+      <article class="foundation-card">
+        <div class="foundation-section-heading">
+          <div>
+            <p class="foundation-card__eyebrow">Workflow map</p>
+            <h2>Move through the workflow in order</h2>
+            <p class="foundation-card__detail">
+              Each stage should answer one decision question before you move to the next one.
+            </p>
+          </div>
+        </div>
+
+        <div class="foundation-stage-list">
+          <div *ngFor="let row of stageRows; let index = index" class="foundation-stage-row">
+            <span class="foundation-stage-row__index">{{ index + 1 }}</span>
+            <div class="foundation-stage-row__copy">
+              <strong>{{ row.stage }}</strong>
+              <span>{{ row.purpose }}</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
 </section>

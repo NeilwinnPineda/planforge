@@ -1,107 +1,419 @@
-<section class="geometry-grid">
-  <article class="geometry-card geometry-card--wide">
-    <p class="geometry-card__eyebrow">Slice 3 / Canonical geometry</p>
-    <h2>Lot and buildable polygons</h2>
-    <p>
-      This stage converts source lot segments into canonical world-space polygon geometry before any
-      simulation or schematic generation happens.
-    </p>
-  </article>
+<section class="site-page">
+  <article class="site-hero">
+    <div class="site-hero__main">
+      <div class="site-hero__copy">
+        <p class="site-card__eyebrow">Site and lot</p>
+        <h2>Confirm the buildable footprint before layout generation</h2>
+        <p class="site-card__detail site-card__detail--lead">
+          {{ stageSummary() }}
+        </p>
+      </div>
 
-  <article class="geometry-card">
-    <p class="geometry-card__eyebrow">Geometry metrics</p>
-    <div class="geometry-metric-grid">
-      <div *ngFor="let row of metricRows" class="geometry-metric">
+      <div class="site-hero__status-card">
+        <span
+          class="site-status-chip"
+          [class.site-status-chip--ready]="stageStatus() === 'ready'"
+          [class.site-status-chip--review]="stageStatus() === 'review'"
+          [class.site-status-chip--fail]="stageStatus() === 'fail'"
+        >
+          {{ stageStatusLabel() }}
+        </span>
+        <p class="site-hero__next-label">Next action</p>
+        <p class="site-hero__next-copy">{{ stageNextAction() }}</p>
+      </div>
+    </div>
+
+    <div class="site-highlights">
+      <div *ngFor="let row of highlightRows()" class="site-highlight">
         <span>{{ row.label }}</span>
         <strong>{{ row.value }}</strong>
       </div>
     </div>
+
+    <div class="site-hero__status">
+      <span>{{ lotGeometry().lotPoints.length }} lot points</span>
+      <span>{{ lotGeometry().buildablePoints.length }} buildable points</span>
+      <span
+        class="site-status-chip"
+        [class.site-status-chip--ready]="closureStatusLabel() === 'Closed'"
+        [class.site-status-chip--fail]="closureStatusLabel() === 'Open'"
+      >
+        {{ closureStatusLabel() }} chain
+      </span>
+    </div>
   </article>
 
-  <article class="geometry-card">
-    <p class="geometry-card__eyebrow">Canonical output</p>
-    <ul class="geometry-list">
-      <li>{{ lotGeometry.lotPoints.length }} lot polygon vertices</li>
-      <li>{{ lotGeometry.buildablePoints.length }} buildable polygon vertices</li>
-      <li>World-space coordinates derived directly from source lot segments</li>
-      <li>Buildable polygon inset from lot edges using per-segment setbacks</li>
-    </ul>
-  </article>
+  <section class="site-workspace">
+    <div class="site-main">
+      <article class="site-card">
+        <div class="site-section-heading">
+          <div>
+            <p class="site-card__eyebrow">Primary visualization</p>
+            <h2>Lot polygon preview</h2>
+            <p class="site-card__detail">
+              This is the lot chain you are building. The outer outline is the polygon itself. The inner outline
+              is only a downstream preview of what setbacks would do later.
+            </p>
+          </div>
+        </div>
 
-  <article class="geometry-card geometry-card--wide">
-    <p class="geometry-card__eyebrow">Scaled setback overlay</p>
-    <svg class="geometry-preview" viewBox="0 0 440 320" preserveAspectRatio="xMidYMid meet">
-      <rect x="0" y="0" width="440" height="320" class="geometry-preview__bg" />
-      <polygon [attr.points]="projection.lotPreview.polygon" class="geometry-preview__lot geometry-preview__lot--ghost" />
-      <polygon [attr.points]="projection.buildablePreview.polygon" class="geometry-preview__buildable" />
-      <g *ngFor="let guide of projection.guideLines; trackBy: trackByEdge">
-        <line
-          [attr.x1]="guide.x1"
-          [attr.y1]="guide.y1"
-          [attr.x2]="guide.x2"
-          [attr.y2]="guide.y2"
-          class="geometry-preview__guide"
-        />
-        <text
-          [attr.x]="guide.labelX"
-          [attr.y]="guide.labelY"
-          class="geometry-preview__label"
+        <svg
+          class="site-preview"
+          [attr.viewBox]="projection().viewBox"
+          [attr.width]="projection().width"
+          [attr.height]="projection().height"
+          preserveAspectRatio="xMidYMid meet"
         >
-          {{ guide.label }}
-        </text>
-      </g>
-      <line
-        x1="24"
-        y1="296"
-        [attr.x2]="24 + projection.scaleBarWidthPixels"
-        y2="296"
-        class="geometry-preview__scale-bar"
-      />
-      <line x1="24" y1="291" x2="24" y2="301" class="geometry-preview__scale-bar" />
-      <line
-        [attr.x1]="24 + projection.scaleBarWidthPixels"
-        y1="291"
-        [attr.x2]="24 + projection.scaleBarWidthPixels"
-        y2="301"
-        class="geometry-preview__scale-bar"
-      />
-      <text x="24" y="286" class="geometry-preview__scale-text">
-        {{ projection.scaleBarMeters }}m scale
-      </text>
-    </svg>
-    <p class="geometry-preview__caption">
-      Lot outline and buildable outline share the same scale. Guide lines show the actual setback distance per edge.
-    </p>
-  </article>
-
-  <article class="geometry-card geometry-card--wide">
-    <p class="geometry-card__eyebrow">Setback schedule</p>
-    <div class="geometry-setback-grid">
-      <div *ngFor="let row of setbackRows" class="geometry-setback-row">
-        <strong>{{ row.edge }}</strong>
-        <span>{{ row.frontage }}</span>
-        <span>{{ row.setback }}</span>
-      </div>
-    </div>
-  </article>
-
-  <article class="geometry-card geometry-card--wide">
-    <p class="geometry-card__eyebrow">World-space points</p>
-    <div class="geometry-point-grid">
-      <div class="geometry-point-panel">
-        <strong>Lot points</strong>
-        <div *ngFor="let point of lotGeometry.lotPoints" class="geometry-point-row">
-          <span>{{ point.label }}</span>
-          <span>{{ point.x.toFixed(3) }}, {{ point.y.toFixed(3) }}</span>
+          <rect x="0" y="0" [attr.width]="projection().width" [attr.height]="projection().height" class="site-preview__bg" />
+          <polygon [attr.points]="projection().lotPreview.polygon" class="site-preview__lot site-preview__lot--ghost" />
+          <g *ngFor="let point of projection().lotPreview.points; let pointIndex = index">
+            <circle
+              [attr.cx]="point.x"
+              [attr.cy]="point.y"
+              r="4.5"
+              class="site-preview__point site-preview__point--lot"
+            />
+            <text
+              [attr.x]="point.x + 7"
+              [attr.y]="point.y - 8"
+              class="site-preview__point-label"
+            >
+              {{ lotGeometry().lotPoints[pointIndex].label }}
+            </text>
+            <text
+              [attr.x]="point.x + 7"
+              [attr.y]="point.y + 6"
+              class="site-preview__point-bearing"
+            >
+              {{ lotGeometry().lotSegments[pointIndex].bearing }}
+            </text>
+          </g>
+          <g *ngFor="let edge of projection().edgeAnnotations">
+            <line
+              [attr.x1]="edge.lineX1"
+              [attr.y1]="edge.lineY1"
+              [attr.x2]="edge.lineX2"
+              [attr.y2]="edge.lineY2"
+              class="site-preview__edge-callout"
+            />
+            <text
+              [attr.x]="edge.labelX"
+              [attr.y]="edge.labelY + 4"
+              class="site-preview__edge-label"
+            >
+              {{ edge.distance }}
+            </text>
+          </g>
+          <polygon
+            *ngIf="projection().hasBuildablePreview"
+            [attr.points]="projection().buildablePreview.polygon"
+            class="site-preview__buildable"
+          />
+          <g *ngIf="projection().hasBuildablePreview">
+            <circle
+              *ngFor="let point of projection().buildablePreview.points"
+              [attr.cx]="point.x"
+              [attr.cy]="point.y"
+              r="3"
+              class="site-preview__point site-preview__point--buildable"
+            />
+          </g>
+          <line
+            *ngIf="projection().closureLine"
+            [attr.x1]="projection().closureLine!.x1"
+            [attr.y1]="projection().closureLine!.y1"
+            [attr.x2]="projection().closureLine!.x2"
+            [attr.y2]="projection().closureLine!.y2"
+            class="site-preview__closure"
+          />
+          <g *ngFor="let guide of projection().guideLines; trackBy: trackByEdge">
+            <line
+              [attr.x1]="guide.x1"
+              [attr.y1]="guide.y1"
+              [attr.x2]="guide.x2"
+              [attr.y2]="guide.y2"
+              class="site-preview__guide"
+            />
+            <text
+              [attr.x]="guide.labelX"
+              [attr.y]="guide.labelY"
+              class="site-preview__label"
+            >
+              {{ guide.label }}
+            </text>
+          </g>
+          <line
+            [attr.x1]="projection().scaleBarX"
+            [attr.y1]="projection().scaleBarY"
+            [attr.x2]="projection().scaleBarX + projection().scaleBarWidthPixels"
+            [attr.y2]="projection().scaleBarY"
+            class="site-preview__scale-bar"
+          />
+          <line
+            [attr.x1]="projection().scaleBarX"
+            [attr.y1]="projection().scaleBarY - 5"
+            [attr.x2]="projection().scaleBarX"
+            [attr.y2]="projection().scaleBarY + 5"
+            class="site-preview__scale-bar"
+          />
+          <line
+            [attr.x1]="projection().scaleBarX + projection().scaleBarWidthPixels"
+            [attr.y1]="projection().scaleBarY - 5"
+            [attr.x2]="projection().scaleBarX + projection().scaleBarWidthPixels"
+            [attr.y2]="projection().scaleBarY + 5"
+            class="site-preview__scale-bar"
+          />
+          <text [attr.x]="projection().scaleBarX" [attr.y]="projection().scaleTextY" class="site-preview__scale-text">
+            {{ projection().scaleBarMeters }}m scale
+          </text>
+        </svg>
+        <p class="site-preview__caption">
+          Build the outer lot first. The buildable inset is secondary and only helps you spot obvious downstream issues.
+          <span *ngIf="projection().closureLine"> The dashed warning line shows the missing last leg when the survey chain does not close.</span>
+        </p>
+        <div class="site-preview__legend">
+          <span><i class="site-preview__legend-dot site-preview__legend-dot--lot"></i>Lot points</span>
+          <span><i class="site-preview__legend-dot site-preview__legend-dot--buildable"></i>Buildable points</span>
+          <span><i class="site-preview__legend-text"></i>Point bearings</span>
+          <span><i class="site-preview__legend-line"></i>Edge distances</span>
         </div>
-      </div>
-      <div class="geometry-point-panel">
-        <strong>Buildable points</strong>
-        <div *ngFor="let point of lotGeometry.buildablePoints" class="geometry-point-row">
-          <span>{{ point.label }}</span>
-          <span>{{ point.x.toFixed(3) }}, {{ point.y.toFixed(3) }}</span>
+      </article>
+
+      <article class="site-card">
+        <div class="site-section-heading">
+          <div>
+            <p class="site-card__eyebrow">Geometry verdict</p>
+            <h2>Should this lot move forward?</h2>
+          </div>
         </div>
-      </div>
+        <div class="site-summary-list">
+          <div *ngFor="let row of statusRows()" class="site-summary-row">
+            <strong>{{ row.label }}</strong>
+            <span>{{ row.value }}</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="site-card">
+        <div class="site-section-heading">
+          <div>
+            <p class="site-card__eyebrow">Lot polygon builder</p>
+            <h2>Survey segment editor</h2>
+            <p class="site-card__detail">
+              Build the lot one segment at a time. Start at `P1`, then each row creates the next corner from the
+              previous one using bearing and distance.
+            </p>
+          </div>
+        </div>
+
+        <div class="site-builder-intro">
+          <div class="site-builder-step">
+            <strong>1. Start</strong>
+            <span>`P1` is the anchor at the local origin.</span>
+          </div>
+          <div class="site-builder-step">
+            <strong>2. Create next corner</strong>
+            <span>Each segment row says: from this point, travel this bearing and distance.</span>
+          </div>
+          <div class="site-builder-step">
+            <strong>3. Close the lot</strong>
+            <span>The final segment should land back on `P1`. If it misses, the red dashed closure line appears.</span>
+          </div>
+        </div>
+
+        <div class="site-builder-closure">
+          <strong>Polygon status: {{ closureStatusLabel() }}</strong>
+          <span>
+            {{ closureStatusLabel() === 'Closed'
+              ? 'The final segment is landing back on P1 within tolerance.'
+              : 'The chain is not landing back on P1 yet. Adjust the last segments until the closure warning disappears.' }}
+          </span>
+        </div>
+
+        <div class="site-scroll-frame">
+          <div class="site-segment-editor">
+            <div class="site-segment-editor__row site-segment-editor__row--heading">
+              <span>Build step</span>
+              <span>Bearing</span>
+              <span>Distance (m)</span>
+              <span>Corner</span>
+              <span>Action</span>
+            </div>
+            <div *ngFor="let row of lotSegmentRows()" class="site-segment-editor__row">
+              <div class="site-segment-editor__step">
+                <strong>{{ row.startLabel }} to {{ row.endLabel }}</strong>
+                <span>Create {{ row.endLabel }} from {{ row.startLabel }}</span>
+              </div>
+              <label class="site-segment-editor__field">
+                <span class="site-segment-editor__sr-only">{{ row.startLabel }} to {{ row.endLabel }} bearing</span>
+                <input
+                  type="text"
+                  [value]="row.bearing"
+                  (change)="onLotSegmentBearingChanged(row.segmentIndex, $event)"
+                />
+              </label>
+              <label class="site-measure-field">
+                <span class="site-segment-editor__sr-only">{{ row.startLabel }} to {{ row.endLabel }} distance</span>
+                <input
+                  type="number"
+                  step="0.001"
+                  min="0.001"
+                  [value]="row.distance.toFixed(3)"
+                  (change)="onLotSegmentDistanceChanged(row.segmentIndex, $event)"
+                />
+                <small>m</small>
+              </label>
+              <span>End corner {{ row.endLabel }}</span>
+              <div class="site-segment-editor__actions">
+                <button
+                  type="button"
+                  class="site-segment-editor__action-btn site-segment-editor__action-btn--danger"
+                  [disabled]="!canRemoveLotCorner(row.segmentIndex + 1)"
+                  [attr.aria-label]="'Remove corner ' + row.endLabel"
+                  (click)="removeLotCorner(row.segmentIndex + 1)"
+                >
+                  Remove corner
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="site-builder-footer">
+          <button
+            type="button"
+            class="site-segment-editor__action-btn site-segment-editor__action-btn--primary"
+            aria-label="Add next corner"
+            (click)="addNextLotCorner()"
+          >
+            Add next corner
+          </button>
+          <span>
+            Adds one more corner before the closing return to `P1`.
+          </span>
+        </div>
+      </article>
+
+      <article class="site-card">
+        <div class="site-section-heading">
+          <div>
+            <p class="site-card__eyebrow">Boundary setup</p>
+            <h2>Setbacks and RROW setup</h2>
+            <p class="site-card__detail">
+              Use this schedule to define what each lot edge means downstream. `RROW` is an edge modifier here,
+              not part of the point-building flow above.
+            </p>
+          </div>
+        </div>
+
+        <div class="site-scroll-frame">
+          <div class="site-boundary-schedule">
+            <div class="site-boundary-schedule__row site-boundary-schedule__row--heading">
+              <span>Edge</span>
+              <span>Role</span>
+              <span>Setback (m)</span>
+              <span>RROW</span>
+            </div>
+            <div *ngFor="let row of setbackRows()" class="site-boundary-schedule__row">
+              <strong>{{ row.edge }}</strong>
+              <span>{{ row.frontage }}</span>
+              <label class="site-measure-field">
+                <span class="site-segment-editor__sr-only">{{ row.edge }} setback distance</span>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  [value]="row.setback.toFixed(2)"
+                  (change)="onLotSegmentSetbackChanged(row.segmentIndex, $event)"
+                />
+                <small>m</small>
+              </label>
+              <label class="site-boundary-schedule__toggle">
+                <input
+                  type="checkbox"
+                  [checked]="row.isRrow"
+                  (change)="onLotSegmentRrowChanged(row.segmentIndex, $event)"
+                />
+                <span class="site-boundary-schedule__toggle-ui" aria-hidden="true">
+                  <span class="site-boundary-schedule__toggle-knob"></span>
+                </span>
+                <span class="site-boundary-schedule__toggle-copy">
+                  <strong>{{ row.isRrow ? 'RROW edge' : 'No RROW' }}</strong>
+                  <small>{{ row.isRrow ? 'Acts as a frontage boundary.' : 'Standard side or rear boundary.' }}</small>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <ul class="site-list">
+          <li>{{ lotGeometry().lotPoints.length }} lot polygon vertices</li>
+          <li>{{ lotGeometry().buildablePoints.length }} buildable polygon vertices</li>
+          <li>World-space coordinates are derived directly from source lot segments.</li>
+          <li>Buildable geometry is inset from the lot boundary using the per-edge setback schedule.</li>
+        </ul>
+      </article>
+
+      <details class="site-disclosure" open>
+        <summary>Show world-space point viewer</summary>
+        <div class="site-disclosure__content">
+          <article class="site-card site-card--nested">
+            <div class="site-section-heading">
+              <div>
+                <p class="site-card__eyebrow">Computed output</p>
+                <h2>World-space point viewer</h2>
+                <p class="site-card__detail">
+                  These coordinates are derived from the segment chain above. Inspect them here, but author the lot in the segment editor.
+                </p>
+              </div>
+            </div>
+            <div class="site-point-grid">
+              <div class="site-point-panel">
+                <strong>Lot points (m)</strong>
+                <div *ngFor="let point of lotGeometry().lotPoints" class="site-point-row">
+                  <span>{{ point.label }}</span>
+                  <span>{{ point.x.toFixed(3) }}, {{ point.y.toFixed(3) }}</span>
+                </div>
+              </div>
+              <div class="site-point-panel">
+                <strong>Buildable points (m)</strong>
+                <div *ngFor="let point of lotGeometry().buildablePoints" class="site-point-row">
+                  <span>{{ point.label }}</span>
+                  <span>{{ point.x.toFixed(3) }}, {{ point.y.toFixed(3) }}</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </details>
     </div>
-  </article>
+
+    <aside class="site-sidebar">
+      <article class="site-card">
+        <p class="site-card__eyebrow">Key signals</p>
+        <div class="site-metric-grid">
+          <div *ngFor="let row of metricRows()" class="site-metric">
+            <span>{{ row.label }}</span>
+            <strong>{{ row.value }}</strong>
+          </div>
+        </div>
+      </article>
+
+      <article *ngIf="lotGeometry().issues.length" class="site-card site-card--alert">
+        <p class="site-card__eyebrow">Fail catch</p>
+        <h2>Geometry issues</h2>
+        <ul class="site-list site-list--tight">
+          <li *ngFor="let issue of lotGeometry().issues">{{ issue }}</li>
+        </ul>
+      </article>
+
+      <article class="site-card">
+        <p class="site-card__eyebrow">Stage reminder</p>
+        <h2>What this stage controls</h2>
+        <p class="site-card__detail">
+          Everything downstream trusts this lot, its frontage, and its setbacks. If this page is wrong, generation and simulation will be solving the wrong site.
+        </p>
+      </article>
+    </aside>
+  </section>
 </section>

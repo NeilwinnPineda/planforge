@@ -177,7 +177,7 @@ export function validateDesignSource(source: PromptDesignSource): DesignSourceVa
   addMessage(
     'pass',
     'source.meta',
-    `${source.meta.title} ${source.meta.version} is loaded as the active design source.`,
+    `Version ${source.meta.version} is loaded as the active design source.`,
   );
   addMessage(
     'pass',

@@ -3,28 +3,18 @@ import { NgFor, NgIf } from '@angular/common';
 import type { GeometryPoint } from '../../../core/geometry/geometry.exports';
 import { LotGeometryService } from '../../../core/geometry/geometry.exports';
 import {
-  FinalStagingService,
-  HallwayInjectionService,
-  LayoutProcessingOrchestratorService,
-  MassBalanceRenegotiationService,
-  ProvisionalCellGenerationService,
-  WarpedDiagnosticStagingService,
-  UvEdgeNegotiationService,
-  ResidualUvAbsorptionService,
-  HallwayMergeService,
-  CanonicalGeometryService,
   type FinalStagingArguments,
   type HallwayMergeArguments,
   type CanonicalGeometryArguments,
   type HallwayInjectionArguments,
-  type MassBalanceRenegotiationArguments,
   type ProvisionalCellGenerationArguments,
   type WarpedDiagnosticStagingArguments,
   type UvEdgeNegotiationArguments,
   type ResidualUvAbsorptionArguments,
+  ProcessingPipelineService,
   type UvNegotiatedLayoutArtifact,
 } from '../../../core/processing/processing.exports';
-import { SourceReadService } from '../../../core/source/source.exports';
+import { WorkflowVisualStateService } from '../../../core/processing/workflow-visual-state.service';
 import { SimulationStageService } from '../../../core/simulation/simulation.exports';
 
 interface ProcessingMetricRow {
@@ -91,6 +81,11 @@ interface ProcessingFutureFeature {
   readonly reason: string;
 }
 
+interface ProcessingHighlightRow {
+  readonly label: string;
+  readonly value: string;
+}
+
 @Component({
   selector: 'app-processing-page',
   standalone: true,
@@ -101,242 +96,112 @@ interface ProcessingFutureFeature {
 export class ProcessingPageComponent {
   private readonly simulationStageService = inject(SimulationStageService);
   private readonly lotGeometryService = inject(LotGeometryService);
-  private readonly sourceReadService = inject(SourceReadService);
-  private readonly provisionalCellGenerationService = inject(ProvisionalCellGenerationService);
-  private readonly hallwayInjectionService = inject(HallwayInjectionService);
-  private readonly massBalanceRenegotiationService = inject(MassBalanceRenegotiationService);
-  private readonly warpedDiagnosticStagingService = inject(WarpedDiagnosticStagingService);
-  private readonly uvEdgeNegotiationService = inject(UvEdgeNegotiationService);
-  private readonly residualUvAbsorptionService = inject(ResidualUvAbsorptionService);
-  private readonly hallwayMergeService = inject(HallwayMergeService);
-  private readonly finalStagingService = inject(FinalStagingService);
-  private readonly canonicalGeometryService = inject(CanonicalGeometryService);
-  private readonly processingOrchestratorService = inject(LayoutProcessingOrchestratorService);
+  private readonly processingPipelineService = inject(ProcessingPipelineService);
+  private readonly workflowVisualStateService = inject(WorkflowVisualStateService);
   private readonly previewWidth = 560;
   private readonly previewHeight = 380;
   private readonly numberFormatter = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   protected readonly captureArtifacts = this.simulationStageService.captureArtifacts;
-  protected readonly activeCaptureArtifact = computed(() => this.captureArtifacts()[0] ?? null);
+  protected readonly liveCaptureArtifact = computed(() => this.captureArtifacts()[0] ?? null);
   protected readonly lotGeometry = this.lotGeometryService.getActiveLotGeometry();
-  protected readonly provisionalArguments: ProvisionalCellGenerationArguments = {
-    buildablePoints: this.lotGeometry.buildablePoints,
-    snapToAxis: false,
-    looseBisector: true,
-    fillerWeightScale: 0.35,
-    hallwayWeightScale: 0.25,
-  };
-  protected readonly hallwayArguments: HallwayInjectionArguments = {
-    buildablePoints: this.lotGeometry.buildablePoints,
-    hallwayTargetSquareMeters: 2,
-    spacingMultiplier: 3,
-    minHallwayAreaSquareMeters: 0.5,
-    rebalanceIterations: 24,
-    rebalanceGain: 0.12,
-    roomDriftGain: 0.08,
-    hallwayDriftGain: 0.14,
-    stableDeviation: 0.02,
-    stableRunsRequired: 3,
-  };
-  protected readonly massBalanceArguments: MassBalanceRenegotiationArguments = {
-    buildablePoints: this.lotGeometry.buildablePoints,
-    rebalanceIterations: 18,
-    rebalanceGain: 0.05,
-    stableDeviation: 0.02,
-    stableRunsRequired: 3,
-    roomDriftGain: 0.05,
-    hallwayDriftGain: 0.08,
-  };
-  protected readonly warpedDiagnosticArguments: WarpedDiagnosticStagingArguments = {
-    buildablePoints: this.lotGeometry.buildablePoints,
-    rebalanceIterations: 18,
-    rebalanceGain: 0.18,
-    stableDeviation: 0.02,
-    stableRunsRequired: 3,
-    roomDriftGain: 0.05,
-    hallwayDriftGain: 0.08,
-  };
-  protected readonly finalStagingArguments: FinalStagingArguments = {
-    stageLabel: 'app-next processing checkpoint',
-  };
-  protected readonly uvEdgeNegotiationArguments: UvEdgeNegotiationArguments = {
-    quadPoints: this.lotGeometry.buildablePoints,
-    snapThreshold: 0.05,
-    majorAxisSnapMultiplier: 1.5,
-    minExtent: 0.04,
-    shiftGain: 0.05,
-    maxPasses: 8,
-    stableShift: 1e-4,
-    targetAspectRatio: 4.5,
-    maxAspectPasses: 10,
-  };
-  protected readonly residualUvAbsorptionArguments: ResidualUvAbsorptionArguments = {
-    fillerColor: '#e8dfc8',
-    hallwayColor: '#d4d0c0',
-  };
-  protected readonly hallwayMergeArguments: HallwayMergeArguments = {
-    edgeMatchEpsilon: 1e-3,
-  };
-  protected readonly canonicalGeometryArguments: CanonicalGeometryArguments = {
-    vertexSnapGridMeters: 0.001,
-    edgeSplitToleranceMeters: 0.001,
-    minSegmentLengthMeters: 0.01,
-  };
-  protected readonly provisionalResult = computed(() => {
+  protected readonly livePipelineSnapshot = computed(() => {
+    const artifact = this.liveCaptureArtifact();
+    return artifact
+      ? this.processingPipelineService.runFromCapture(artifact, 'app-next processing checkpoint')
+      : null;
+  });
+  protected readonly pipelineSnapshot = computed(() =>
+    this.livePipelineSnapshot() ?? this.workflowVisualStateService.latestRenderableSnapshot(),
+  );
+  protected readonly activeCaptureArtifact = computed(() =>
+    this.liveCaptureArtifact() ?? this.pipelineSnapshot()?.capture ?? null,
+  );
+  protected readonly provisionalResult = computed(() => this.pipelineSnapshot()?.provisionalResult ?? null);
+  protected readonly hallwayResult = computed(() => this.pipelineSnapshot()?.hallwayResult ?? null);
+  protected readonly warpedDiagnosticResult = computed(() => this.pipelineSnapshot()?.warpedDiagnosticResult ?? null);
+  protected readonly uvEdgeNegotiationResult = computed(() => this.pipelineSnapshot()?.uvEdgeNegotiationResult ?? null);
+  protected readonly residualUvAbsorptionResult = computed(() => this.pipelineSnapshot()?.residualUvAbsorptionResult ?? null);
+  protected readonly hallwayMergeResult = computed(() => this.pipelineSnapshot()?.hallwayMergeResult ?? null);
+  protected readonly finalStagingResult = computed(() => this.pipelineSnapshot()?.finalStagingResult ?? null);
+  protected readonly canonicalGeometryResult = computed(() => this.pipelineSnapshot()?.canonicalGeometryResult ?? null);
+  protected readonly stageStatusLabel = computed(() => {
+    if (this.finalStagingResult()) return 'Ready for verification review';
+    if (this.activeCaptureArtifact()) return 'Processing captured layout';
+    return 'Waiting for captured layout';
+  });
+  protected readonly stageStatusTone = computed<'ready' | 'progress' | 'attention'>(() => {
+    if (this.finalStagingResult()) return 'ready';
+    if (this.activeCaptureArtifact()) return 'progress';
+    return 'attention';
+  });
+  protected readonly stageSummary = computed(() => {
+    if (this.finalStagingResult()) {
+      return 'This stage turns a captured simulation result into cleaner room geometry that can be judged more honestly in verification.';
+    }
+    if (this.activeCaptureArtifact()) {
+      return 'A captured layout is available and the downstream cleanup pipeline is assembling its next geometry state.';
+    }
+    return 'Processing begins only after Simulation captures a layout worth carrying forward.';
+  });
+  protected readonly stageNextAction = computed(() => {
+    if (this.finalStagingResult()) {
+      return 'Review the final processed layout first, then open Verification to check whether the cleaned layout actually passes.';
+    }
+    if (this.activeCaptureArtifact()) {
+      return 'Wait for the cleanup chain to finish, then compare the final processed layout against the rough captured version.';
+    }
+    return 'Go to Simulation and let the engine capture at least one layout so Processing has something real to clean up.';
+  });
+  protected readonly highlightRows = computed<readonly ProcessingHighlightRow[]>(() => {
     const artifact = this.activeCaptureArtifact();
-    if (!artifact) {
-      return null;
-    }
-
-    return this.provisionalCellGenerationService.run({
-      artifact,
-      artifactRef: {
-        layoutId: artifact.layoutId,
-        sourceStageId: 'layout-exploration.capture',
-        sourceScore: artifact.sourceScore,
-      },
-      arguments: this.provisionalArguments,
-    });
-  });
-  protected readonly hallwayResult = computed(() => {
-    const provisionalResult = this.provisionalResult();
-    if (!provisionalResult) {
-      return null;
-    }
-
-    this.processingOrchestratorService.runOrderedSteps(
-      {
-        artifact: this.activeCaptureArtifact()!,
-        artifactRef: {
-          layoutId: this.activeCaptureArtifact()!.layoutId,
-          sourceStageId: 'layout-exploration.capture',
-          sourceScore: this.activeCaptureArtifact()!.sourceScore,
-        },
-        arguments: this.provisionalArguments,
-      },
-      [this.provisionalCellGenerationService],
-    );
-
-    return this.hallwayInjectionService.run({
-      artifact: provisionalResult.artifact,
-      artifactRef: {
-        layoutId: provisionalResult.artifact.layoutId,
-        sourceStageId: 'processing.provisional_cells',
-        sourceScore: this.activeCaptureArtifact()?.sourceScore,
-      },
-      arguments: this.hallwayArguments,
-    });
-  });
-  protected readonly warpedDiagnosticResult = computed(() => {
-    const hallwayResult = this.hallwayResult();
-    if (!hallwayResult) {
-      return null;
-    }
-
-    return this.warpedDiagnosticStagingService.run({
-      artifact: hallwayResult.artifact,
-      artifactRef: {
-        layoutId: hallwayResult.artifact.layoutId,
-        sourceStageId: 'processing.hallway_injection',
-        sourceScore: this.activeCaptureArtifact()?.sourceScore,
-      },
-      arguments: this.warpedDiagnosticArguments,
-    });
-  });
-  protected readonly hallwayMergeResult = computed(() => {
-    const residualUvAbsorptionResult = this.residualUvAbsorptionResult();
-    if (!residualUvAbsorptionResult) return null;
-
-    return this.hallwayMergeService.run({
-      artifact: residualUvAbsorptionResult.artifact,
-      artifactRef: {
-        layoutId: residualUvAbsorptionResult.artifact.layoutId,
-        sourceStageId: 'processing.residual_uv_absorption',
-        sourceScore: this.activeCaptureArtifact()?.sourceScore,
-      },
-      arguments: this.hallwayMergeArguments,
-    });
-  });
-
-  protected readonly finalStagingResult = computed(() => {
-    const hallwayMergeResult = this.hallwayMergeResult();
-    if (!hallwayMergeResult) {
-      return null;
-    }
-
-    return this.finalStagingService.run({
-      artifact: hallwayMergeResult.artifact,
-      artifactRef: {
-        layoutId: hallwayMergeResult.artifact.layoutId,
-        sourceStageId: 'processing.hallway_merge',
-        sourceScore: this.activeCaptureArtifact()?.sourceScore,
-      },
-      arguments: this.finalStagingArguments,
-    });
-  });
-  protected readonly canonicalGeometryResult = computed(() => {
     const finalStagingResult = this.finalStagingResult();
-    if (!finalStagingResult) {
-      return null;
-    }
-
-    return this.canonicalGeometryService.run({
-      artifact: finalStagingResult.artifact,
-      artifactRef: {
-        layoutId: finalStagingResult.artifact.layoutId,
-        sourceStageId: 'processing.final_staging',
-        sourceScore: this.activeCaptureArtifact()?.sourceScore,
-      },
-      arguments: this.canonicalGeometryArguments,
-    });
+    return [
+      { label: 'Current status', value: this.stageStatusLabel() },
+      { label: 'Captured bubbles', value: artifact ? String(artifact.bubbles.filter((bubble) => bubble.placed).length) : '0' },
+      { label: 'Processed cells', value: finalStagingResult ? String(finalStagingResult.metrics.outputCellCount) : '0' },
+      { label: 'Ready for verification', value: finalStagingResult ? 'yes' : 'not yet' },
+    ];
   });
-  protected readonly massBalanceResult = computed(() => {
-    const warpedDiagnosticResult = this.warpedDiagnosticResult();
-    if (!warpedDiagnosticResult) {
-      return null;
-    }
 
-    return this.massBalanceRenegotiationService.run({
-      artifact: warpedDiagnosticResult.artifact,
-      artifactRef: {
-        layoutId: warpedDiagnosticResult.artifact.layoutId,
-        sourceStageId: 'processing.diagnostic_staging',
-        sourceScore: this.activeCaptureArtifact()?.sourceScore,
-      },
-      arguments: this.massBalanceArguments,
-    });
-  });
-  protected readonly uvEdgeNegotiationResult = computed(() => {
-    const warpedDiagnosticResult = this.warpedDiagnosticResult();
-    if (!warpedDiagnosticResult) {
-      return null;
-    }
+  protected get provisionalArguments(): ProvisionalCellGenerationArguments {
+    return this.pipelineSnapshot()?.argumentsBundle.provisional
+      ?? this.processingPipelineService.buildArguments('app-next processing checkpoint').provisional;
+  }
 
-    return this.uvEdgeNegotiationService.run({
-      artifact: warpedDiagnosticResult.artifact,
-      artifactRef: {
-        layoutId: warpedDiagnosticResult.artifact.layoutId,
-        sourceStageId: 'processing.warped_diagnostic',
-        sourceScore: this.activeCaptureArtifact()?.sourceScore,
-      },
-      arguments: this.uvEdgeNegotiationArguments,
-    });
-  });
-  protected readonly residualUvAbsorptionResult = computed(() => {
-    const uvEdgeNegotiationResult = this.uvEdgeNegotiationResult();
-    if (!uvEdgeNegotiationResult) {
-      return null;
-    }
+  protected get hallwayArguments(): HallwayInjectionArguments {
+    return this.pipelineSnapshot()?.argumentsBundle.hallway
+      ?? this.processingPipelineService.buildArguments('app-next processing checkpoint').hallway;
+  }
 
-    return this.residualUvAbsorptionService.run({
-      artifact: uvEdgeNegotiationResult.artifact,
-      artifactRef: {
-        layoutId: uvEdgeNegotiationResult.artifact.layoutId,
-        sourceStageId: 'processing.uv_edge_negotiation',
-        sourceScore: this.activeCaptureArtifact()?.sourceScore,
-      },
-      arguments: this.residualUvAbsorptionArguments,
-    });
-  });
+  protected get warpedDiagnosticArguments(): WarpedDiagnosticStagingArguments {
+    return this.pipelineSnapshot()?.argumentsBundle.warpedDiagnostic
+      ?? this.processingPipelineService.buildArguments('app-next processing checkpoint').warpedDiagnostic;
+  }
+
+  protected get finalStagingArguments(): FinalStagingArguments {
+    return this.pipelineSnapshot()?.argumentsBundle.finalStaging
+      ?? this.processingPipelineService.buildArguments('app-next processing checkpoint').finalStaging;
+  }
+
+  protected get uvEdgeNegotiationArguments(): UvEdgeNegotiationArguments {
+    return this.pipelineSnapshot()?.argumentsBundle.uvEdgeNegotiation
+      ?? this.processingPipelineService.buildArguments('app-next processing checkpoint').uvEdgeNegotiation;
+  }
+
+  protected get residualUvAbsorptionArguments(): ResidualUvAbsorptionArguments {
+    return this.pipelineSnapshot()?.argumentsBundle.residualUvAbsorption
+      ?? this.processingPipelineService.buildArguments('app-next processing checkpoint').residualUvAbsorption;
+  }
+
+  protected get hallwayMergeArguments(): HallwayMergeArguments {
+    return this.pipelineSnapshot()?.argumentsBundle.hallwayMerge
+      ?? this.processingPipelineService.buildArguments('app-next processing checkpoint').hallwayMerge;
+  }
+
+  protected get canonicalGeometryArguments(): CanonicalGeometryArguments {
+    return this.pipelineSnapshot()?.argumentsBundle.canonicalGeometry
+      ?? this.processingPipelineService.buildArguments('app-next processing checkpoint').canonicalGeometry;
+  }
   protected readonly coverageDiagnostic = computed(() => {
     const finalStagingResult = this.finalStagingResult();
     const canonicalGeometryResult = this.canonicalGeometryResult();
@@ -467,7 +332,7 @@ export class ProcessingPageComponent {
     const residualUvAbsorptionResult = this.residualUvAbsorptionResult();
     const hallwayMergeResult = this.hallwayMergeResult();
 
-    if (!captureArtifact || !provisionalResult || !hallwayResult || !finalStagingResult || !canonicalGeometryResult || !warpedDiagnosticResult) {
+    if (!captureArtifact) {
       return [];
     }
 
@@ -477,51 +342,61 @@ export class ProcessingPageComponent {
       color: bubble.color,
       worldPoints: this.buildBubblePolygonPoints(bubble.x, bubble.y, bubble.radiusMeters),
     })));
-    const provisionalPreview = this.buildPreviewModel(provisionalResult.artifact.cells);
-    const hallwayPreview = this.buildPreviewModel(hallwayResult.artifact.cells);
+    const provisionalPreview = provisionalResult ? this.buildPreviewModel(provisionalResult.artifact.cells) : null;
+    const hallwayPreview = hallwayResult ? this.buildPreviewModel(hallwayResult.artifact.cells) : null;
     const captureMetrics: readonly ProcessingMetricRow[] = [
       { label: 'Placed bubbles', value: String(captureArtifact.bubbles.filter((bubble) => bubble.placed).length) },
       { label: 'Attraction average', value: this.numberFormatter.format(captureArtifact.attractionAverage) },
       { label: 'Repel average', value: this.numberFormatter.format(captureArtifact.repelAverage) },
       { label: 'Source score', value: this.numberFormatter.format(captureArtifact.sourceScore) },
     ];
-    const provisionalMetrics: readonly ProcessingMetricRow[] = [
-      { label: 'Placed bubbles', value: String(provisionalResult.metrics.placedBubbleCount) },
-      { label: 'Generated cells', value: String(provisionalResult.metrics.generatedCellCount) },
-      { label: 'Dropped degenerate cells', value: String(provisionalResult.metrics.droppedDegenerateCellCount) },
-    ];
-    const hallwayMetrics: readonly ProcessingMetricRow[] = [
-      { label: 'Input cells', value: String(hallwayResult.metrics.inputCellCount) },
-      { label: 'Hallway sites', value: String(hallwayResult.metrics.hallwaySiteCount) },
-      { label: 'Output cells', value: String(hallwayResult.metrics.outputCellCount) },
-      { label: 'Dropped hallway cells', value: String(hallwayResult.metrics.droppedHallwayCellCount) },
-    ];
-    const warpedDiagnosticMetrics: readonly ProcessingMetricRow[] = [
-      { label: 'Input cells', value: String(warpedDiagnosticResult.metrics.inputCellCount) },
-      { label: 'Output cells', value: String(warpedDiagnosticResult.metrics.outputCellCount) },
-      { label: 'Warped sites', value: String(warpedDiagnosticResult.metrics.warpedSiteCount) },
-      { label: 'Iteration count', value: String(warpedDiagnosticResult.metrics.iterationCount) },
-      { label: 'Stable runs', value: String(warpedDiagnosticResult.metrics.stableRunCount) },
-    ];
-    const finalStagingMetrics: readonly ProcessingMetricRow[] = [
-      { label: 'Output cells', value: String(finalStagingResult.metrics.outputCellCount) },
-      { label: 'Total area', value: `${this.numberFormatter.format(finalStagingResult.metrics.totalAreaSquareMeters)} sq m` },
-      { label: 'Room cells', value: String(finalStagingResult.metrics.roomCellCount) },
-      { label: 'Hallway cells', value: String(finalStagingResult.metrics.hallwayCellCount) },
-    ];
-    const canonicalGeometryMetrics: readonly ProcessingMetricRow[] = [
-      { label: 'Output cells', value: String(canonicalGeometryResult.metrics.outputCellCount) },
-      { label: 'Shared vertices', value: String(canonicalGeometryResult.metrics.canonicalVertexCount) },
-      { label: 'Inserted splits', value: String(canonicalGeometryResult.metrics.insertedVertexCount) },
-      { label: 'Dropped degenerates', value: String(canonicalGeometryResult.metrics.droppedDegenerateCellCount) },
-    ];
+    const provisionalMetrics: readonly ProcessingMetricRow[] = provisionalResult
+      ? [
+          { label: 'Placed bubbles', value: String(provisionalResult.metrics.placedBubbleCount) },
+          { label: 'Generated cells', value: String(provisionalResult.metrics.generatedCellCount) },
+          { label: 'Dropped degenerate cells', value: String(provisionalResult.metrics.droppedDegenerateCellCount) },
+        ]
+      : [];
+    const hallwayMetrics: readonly ProcessingMetricRow[] = hallwayResult
+      ? [
+          { label: 'Input cells', value: String(hallwayResult.metrics.inputCellCount) },
+          { label: 'Hallway sites', value: String(hallwayResult.metrics.hallwaySiteCount) },
+          { label: 'Output cells', value: String(hallwayResult.metrics.outputCellCount) },
+          { label: 'Dropped hallway cells', value: String(hallwayResult.metrics.droppedHallwayCellCount) },
+        ]
+      : [];
+    const warpedDiagnosticMetrics: readonly ProcessingMetricRow[] = warpedDiagnosticResult
+      ? [
+          { label: 'Input cells', value: String(warpedDiagnosticResult.metrics.inputCellCount) },
+          { label: 'Output cells', value: String(warpedDiagnosticResult.metrics.outputCellCount) },
+          { label: 'Warped sites', value: String(warpedDiagnosticResult.metrics.warpedSiteCount) },
+          { label: 'Iteration count', value: String(warpedDiagnosticResult.metrics.iterationCount) },
+          { label: 'Stable runs', value: String(warpedDiagnosticResult.metrics.stableRunCount) },
+        ]
+      : [];
+    const finalStagingMetrics: readonly ProcessingMetricRow[] = finalStagingResult
+      ? [
+          { label: 'Output cells', value: String(finalStagingResult.metrics.outputCellCount) },
+          { label: 'Total area', value: `${this.numberFormatter.format(finalStagingResult.metrics.totalAreaSquareMeters)} sq m` },
+          { label: 'Room cells', value: String(finalStagingResult.metrics.roomCellCount) },
+          { label: 'Hallway cells', value: String(finalStagingResult.metrics.hallwayCellCount) },
+        ]
+      : [];
+    const canonicalGeometryMetrics: readonly ProcessingMetricRow[] = canonicalGeometryResult
+      ? [
+          { label: 'Output cells', value: String(canonicalGeometryResult.metrics.outputCellCount) },
+          { label: 'Shared vertices', value: String(canonicalGeometryResult.metrics.canonicalVertexCount) },
+          { label: 'Inserted splits', value: String(canonicalGeometryResult.metrics.insertedVertexCount) },
+          { label: 'Dropped degenerates', value: String(canonicalGeometryResult.metrics.droppedDegenerateCellCount) },
+        ]
+      : [];
 
     return [
       {
         stepNumber: 0,
         stepId: 'layout-exploration.capture',
         title: 'Layout exploration capture',
-        status: 'implemented',
+        status: provisionalResult ? 'implemented' : 'pending',
         category: 'Simulation handoff',
         purpose: 'Freeze one accepted simulation result into a stable artifact that downstream processing can consume without talking back to the live simulation loop.',
         inputSummary: 'Accepted bubble layout from the Layout Exploration core plus capture score and diagnostic averages.',
@@ -541,19 +416,21 @@ export class ProcessingPageComponent {
         stepNumber: 1,
         stepId: 'processing.provisional_cells',
         title: 'Provisional constrained cells',
-        status: 'implemented',
+        status: finalStagingResult ? 'implemented' : 'pending',
         category: 'Partition generation',
         purpose: 'Convert accepted bubbles into the first provisional room, hallway, and filler cells clipped to the buildable envelope.',
         inputSummary: 'Captured bubble layout artifact and buildable polygon arguments.',
         outputSummary: 'Canonical provisional cell artifact with typed cells, target areas, area deltas, and traces.',
-        summary: `${provisionalResult.metrics.generatedCellCount} cells generated`,
+        summary: provisionalResult ? `${provisionalResult.metrics.generatedCellCount} cells generated` : 'Pending - waiting for provisional cell generation.',
         preview: provisionalPreview,
         metrics: provisionalMetrics,
-        traces: provisionalResult.traces.map((trace) => ({
-          stepId: trace.stepId,
-          severity: trace.severity,
-          message: trace.message,
-        })),
+        traces: provisionalResult
+          ? provisionalResult.traces.map((trace) => ({
+              stepId: trace.stepId,
+              severity: trace.severity,
+              message: trace.message,
+            }))
+          : [],
         detailRows: [
           { label: 'Snap to axis', value: this.provisionalArguments.snapToAxis ? 'Yes' : 'No' },
           { label: 'Loose bisector', value: this.provisionalArguments.looseBisector ? 'Yes' : 'No' },
@@ -565,15 +442,15 @@ export class ProcessingPageComponent {
         stepNumber: 2,
         stepId: 'processing.hallway_injection',
         title: 'Hallway injection',
-        status: 'implemented',
+        status: hallwayResult ? 'implemented' : 'pending',
         category: 'Circulation refinement',
         purpose: 'Introduce explicit hallway territory as its own bounded circulation pass without collapsing back into the provisional partition step.',
         inputSummary: 'Provisional constrained cells plus hallway injection arguments and the same buildable boundary.',
         outputSummary: 'Updated canonical cell artifact with hallway cells and rebalanced neighboring room/filler cells.',
-        summary: `${hallwayResult.metrics.hallwaySiteCount} hallway sites / ${hallwayResult.metrics.outputCellCount} output cells`,
+        summary: hallwayResult ? `${hallwayResult.metrics.hallwaySiteCount} hallway sites / ${hallwayResult.metrics.outputCellCount} output cells` : 'Pending - waiting for hallway injection.',
         preview: hallwayPreview,
         metrics: hallwayMetrics,
-        traces: this.hallwayTraceRows(),
+        traces: hallwayResult ? this.hallwayTraceRows() : [],
         detailRows: [
           { label: 'Hallway target', value: `${this.hallwayArguments.hallwayTargetSquareMeters.toFixed(2)} sq m` },
           { label: 'Spacing multiplier', value: this.hallwayArguments.spacingMultiplier.toFixed(2) },
@@ -585,19 +462,21 @@ export class ProcessingPageComponent {
         stepNumber: 3,
         stepId: 'processing.diagnostic_staging',
         title: 'Warped orthogonalization',
-        status: 'implemented',
+        status: warpedDiagnosticResult ? 'implemented' : 'pending',
         category: 'Warped orthogonalization',
         purpose: 'Repartition the current canonical cells through constrained warped grid space so the orthogonalized alternative is inspectable before mass negotiation and boundary edge cleanup.',
         inputSummary: 'Hallway-injected canonical cells plus a four-corner buildable quad and warped-grid rebalance arguments.',
         outputSummary: 'Warped orthogonalized artifact with remapped world-space cells for later mass negotiation and boundary cleanup.',
-        summary: `${warpedDiagnosticResult.metrics.outputCellCount} warped-grid cells staged from ${warpedDiagnosticResult.metrics.warpedSiteCount} warped sites`,
-        preview: this.buildPreviewModel(warpedDiagnosticResult.artifact.cells),
+        summary: warpedDiagnosticResult ? `${warpedDiagnosticResult.metrics.outputCellCount} warped-grid cells staged from ${warpedDiagnosticResult.metrics.warpedSiteCount} warped sites` : 'Pending - waiting for warped orthogonalization.',
+        preview: warpedDiagnosticResult ? this.buildPreviewModel(warpedDiagnosticResult.artifact.cells) : null,
         metrics: warpedDiagnosticMetrics,
-        traces: warpedDiagnosticResult.traces.map((trace) => ({
-          stepId: trace.stepId,
-          severity: trace.severity,
-          message: trace.message,
-        })),
+        traces: warpedDiagnosticResult
+          ? warpedDiagnosticResult.traces.map((trace) => ({
+              stepId: trace.stepId,
+              severity: trace.severity,
+              message: trace.message,
+            }))
+          : [],
         detailRows: [
           { label: 'Rebalance gain', value: this.warpedDiagnosticArguments.rebalanceGain.toFixed(2) },
           { label: 'Stable deviation', value: this.warpedDiagnosticArguments.stableDeviation.toFixed(2) },
@@ -712,23 +591,25 @@ export class ProcessingPageComponent {
         stepNumber: 8,
         stepId: 'processing.final_staging',
         title: 'Final staged output',
-        status: 'implemented',
+        status: canonicalGeometryResult ? 'implemented' : 'pending',
         category: 'Output staging',
         purpose: 'Stage the current downstream cells as the checkpoint before canonical geometry rebuild.',
         inputSummary: 'Residual-absorbed cells from 9E (ResidualUvAbsorptionService) and staging metadata.',
         outputSummary: 'Final staged layout artifact ready for pre-verification canonical geometry.',
-        summary: `${finalStagingResult.metrics.outputCellCount} cells staged across ${this.numberFormatter.format(finalStagingResult.metrics.totalAreaSquareMeters)} sq m`,
-        preview: this.buildPreviewModel(finalStagingResult.artifact.cells),
+        summary: finalStagingResult ? `${finalStagingResult.metrics.outputCellCount} cells staged across ${this.numberFormatter.format(finalStagingResult.metrics.totalAreaSquareMeters)} sq m` : 'Pending - waiting for final staging.',
+        preview: finalStagingResult ? this.buildPreviewModel(finalStagingResult.artifact.cells) : null,
         metrics: finalStagingMetrics,
-        traces: finalStagingResult.traces.map((trace) => ({
-          stepId: trace.stepId,
-          severity: trace.severity,
-          message: trace.message,
-        })),
+        traces: finalStagingResult
+          ? finalStagingResult.traces.map((trace) => ({
+              stepId: trace.stepId,
+              severity: trace.severity,
+              message: trace.message,
+            }))
+          : [],
         detailRows: [
           { label: 'Stage label', value: this.finalStagingArguments.stageLabel },
-          { label: 'Output layout id', value: finalStagingResult.artifact.layoutId },
-          { label: 'Generated pieces staged', value: String(this.countGeneratedCells(finalStagingResult.artifact.cells)) },
+          { label: 'Output layout id', value: finalStagingResult?.artifact.layoutId ?? 'pending' },
+          { label: 'Generated pieces staged', value: finalStagingResult ? String(this.countGeneratedCells(finalStagingResult.artifact.cells)) : 'pending' },
           { label: 'Source chain', value: 'Warped orthogonalization → UV cluster + negotiate → Residual absorption → Hallway merge → Final staging' },
         ],
       },
@@ -741,14 +622,16 @@ export class ProcessingPageComponent {
         purpose: 'Rebuild staged per-cell polygons onto shared snapped vertices, split edges at T-junctions, and recompute cell areas before verification consumes the artifact.',
         inputSummary: 'Final staged layout cells with independently owned world-space polygon loops.',
         outputSummary: 'FinalStagedLayoutArtifact-compatible cells whose shared boundaries use identical vertex coordinates.',
-        summary: `${canonicalGeometryResult.metrics.outputCellCount} cells canonicalized with ${canonicalGeometryResult.metrics.insertedVertexCount} inserted edge split(s)`,
-        preview: this.buildPreviewModel(canonicalGeometryResult.artifact.cells),
+        summary: canonicalGeometryResult ? `${canonicalGeometryResult.metrics.outputCellCount} cells canonicalized with ${canonicalGeometryResult.metrics.insertedVertexCount} inserted edge split(s)` : 'Pending - waiting for canonical geometry.',
+        preview: canonicalGeometryResult ? this.buildPreviewModel(canonicalGeometryResult.artifact.cells) : null,
         metrics: canonicalGeometryMetrics,
-        traces: canonicalGeometryResult.traces.map((trace) => ({
-          stepId: trace.stepId,
-          severity: trace.severity,
-          message: trace.message,
-        })),
+        traces: canonicalGeometryResult
+          ? canonicalGeometryResult.traces.map((trace) => ({
+              stepId: trace.stepId,
+              severity: trace.severity,
+              message: trace.message,
+            }))
+          : [],
         detailRows: [
           { label: 'Vertex grid', value: `${this.canonicalGeometryArguments.vertexSnapGridMeters.toFixed(3)} m` },
           { label: 'Split tolerance', value: `${this.canonicalGeometryArguments.edgeSplitToleranceMeters.toFixed(3)} m` },
@@ -757,6 +640,17 @@ export class ProcessingPageComponent {
         ],
       },
     ];
+  });
+  protected readonly finalProcessPanel = computed(() =>
+    this.processPanels().find((panel) => panel.stepId === 'processing.final_staging') ?? null,
+  );
+  protected readonly transformationPanels = computed(() => {
+    const panels = this.processPanels();
+    return {
+      capture: panels.find((panel) => panel.stepId === 'layout-exploration.capture') ?? null,
+      provisional: panels.find((panel) => panel.stepId === 'processing.provisional_cells') ?? null,
+      final: panels.find((panel) => panel.stepId === 'processing.final_staging') ?? null,
+    };
   });
 
   protected readonly futureFeatures: readonly ProcessingFutureFeature[] = [

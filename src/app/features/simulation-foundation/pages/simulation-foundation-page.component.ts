@@ -18,15 +18,21 @@ interface SimulationMetricRow {
   readonly value: string;
 }
 
+interface SimulationHighlight {
+  readonly label: string;
+  readonly value: string;
+}
+
 interface SimulationCoreRow {
   readonly coreId: string;
-  readonly isActive: boolean;
   readonly status: string;
   readonly loop: string;
   readonly ticks: number;
   readonly resets: number;
   readonly captures: number;
   readonly fails: number;
+  readonly lastScore: string;
+  readonly lastOutcome: string;
 }
 
 interface SimulationGalleryRow {
@@ -76,20 +82,67 @@ export class SimulationFoundationPageComponent {
   protected readonly captureGallery = this.simulationStageService.captureGallery;
   protected readonly activeJob = computed(() => this.snapshot().jobs[this.snapshot().activeJobIndex] ?? null);
   protected readonly activeCaptureOutcome = computed(() => this.activeJob()?.lastCaptureOutcome ?? null);
+  protected readonly runningInstanceCount = computed(() =>
+    this.instanceIds().filter((instanceId) => this.simulationStageService.readInstanceSnapshot(instanceId).isRunning).length,
+  );
+  protected readonly stageStatusLabel = computed(() => {
+    const outcome = this.activeCaptureOutcome();
+    if (this.captureGallery().length > 0) return 'Accepted layout found';
+    if (outcome?.status === 'pass') return 'Accepted layout found';
+    if (this.runningInstanceCount() > 0) return 'Exploring layouts';
+    return 'Waiting to explore';
+  });
+  protected readonly stageStatusTone = computed<'ready' | 'progress' | 'attention'>(() => {
+    const outcome = this.activeCaptureOutcome();
+    if (this.captureGallery().length > 0 || outcome?.status === 'pass') return 'ready';
+    if (this.runningInstanceCount() > 0) return 'progress';
+    return 'attention';
+  });
+  protected readonly stageNextAction = computed(() => {
+    if (this.captureGallery().length > 0) {
+      return 'Open Processing or Candidate Gallery to inspect the strongest captured layout next.';
+    }
+    if (this.runningInstanceCount() > 0) {
+      return 'Keep watching the live layout until the simulation captures a layout or shows a clear failure pattern.';
+    }
+    return 'Start the simulation from the run bar above so the first layout exploration cycle can begin.';
+  });
+  protected readonly stageSummary = computed(() => {
+    const outcome = this.activeCaptureOutcome();
+    if (outcome?.status === 'pass') {
+      return 'A live simulation has already produced a passing capture. Use this page to confirm the layout motion and inspect why it succeeded.';
+    }
+    if (this.runningInstanceCount() > 0) {
+      return 'This stage shows the layout bubbles moving inside the lot while the engine searches for a capture worth keeping.';
+    }
+    return 'This stage is where the layout first becomes animated. Start the engine to see rooms settle into a candidate arrangement.';
+  });
+  protected readonly highlightRows = computed<readonly SimulationHighlight[]>(() => {
+    const latestOutcome = this.activeCaptureOutcome();
+    return [
+      { label: 'Current status', value: this.stageStatusLabel() },
+      { label: 'Running sims', value: this.integerFormatter.format(this.runningInstanceCount()) },
+      { label: 'Total sims', value: this.integerFormatter.format(this.instanceIds().length) },
+      { label: 'Accepted layouts', value: this.integerFormatter.format(this.captureGallery().length) },
+      { label: 'Latest result', value: latestOutcome?.status ?? 'waiting' },
+    ];
+  });
   protected readonly coreRows = computed<readonly SimulationCoreRow[]>(() =>
     this.instanceIds().map((instanceId) => {
       const instanceSnapshot = this.simulationStageService.readInstanceSnapshot(instanceId);
       const activeJob = instanceSnapshot.jobs[instanceSnapshot.activeJobIndex];
+      const lastOutcome = activeJob?.lastCaptureOutcome ?? null;
 
       return {
         coreId: instanceId,
-        isActive: instanceId === this.simulationStageService.activeInstanceId(),
         status: instanceSnapshot.isRunning ? 'running' : 'paused',
         loop: instanceSnapshot.captureLoopRunning ? 'active' : 'idle',
         ticks: activeJob?.tickCount ?? 0,
         resets: activeJob?.resetCount ?? 0,
         captures: activeJob?.capturedCount ?? 0,
         fails: activeJob?.failedCount ?? 0,
+        lastScore: lastOutcome ? this.decimalFormatter.format(lastOutcome.score) : 'n/a',
+        lastOutcome: lastOutcome?.status ?? 'waiting',
       };
     }),
   );
@@ -109,24 +162,27 @@ export class SimulationFoundationPageComponent {
         rank: index + 1,
       })),
   );
-  protected readonly metricRows = computed<readonly SimulationMetricRow[]>(() => {
+  protected readonly viewerMetricRows = computed<readonly SimulationMetricRow[]>(() => {
     const activeJob = this.activeJob();
-    const placedBubbleCount = activeJob?.bubbles.filter((bubble) => bubble.placed).length ?? 0;
-    const totalBubbleCount = activeJob?.bubbles.length ?? 0;
+    const latestOutcome = this.activeCaptureOutcome();
 
     return [
-      { label: 'Core count', value: `${this.integerFormatter.format(this.instanceIds().length)} / ${this.integerFormatter.format(this.simulationStageService.autoSpawnTargetCount)}` },
-      { label: 'Cascade siblings', value: String(this.simulationStageService.cascadeSiblingCount) },
-      { label: 'Spawn cadence', value: `${this.integerFormatter.format(this.simulationStageService.autoSpawnInterval / 1000)} s` },
-      { label: 'Gallery layouts', value: this.integerFormatter.format(this.captureGallery().length) },
-      { label: 'Runner count', value: this.integerFormatter.format(this.snapshot().jobs.length) },
-      { label: 'Engine running', value: this.snapshot().isRunning ? 'running' : 'stopped' },
+      { label: 'Parallel simulations', value: `${this.integerFormatter.format(this.runningInstanceCount())} running / ${this.integerFormatter.format(this.instanceIds().length)} total` },
       { label: 'Capture loop', value: this.snapshot().captureLoopRunning ? 'active' : 'idle' },
-      { label: 'Reset cadence', value: `${this.integerFormatter.format(this.snapshot().hardResetIntervalMs)} ms` },
-      { label: 'Auto shake feature', value: this.snapshot().autoShakeEnabled ? 'enabled in source' : 'disabled in source' },
-      { label: 'Active runner ticks', value: this.integerFormatter.format(activeJob?.tickCount ?? 0) },
-      { label: 'Placed bubbles', value: `${this.integerFormatter.format(placedBubbleCount)} / ${this.integerFormatter.format(totalBubbleCount)}` },
+      { label: 'Accepted layouts', value: this.integerFormatter.format(this.captureGallery().length) },
+      { label: 'Latest outcome', value: latestOutcome?.status ?? 'waiting' },
+      { label: 'Latest score', value: latestOutcome ? this.decimalFormatter.format(latestOutcome.score) : 'n/a' },
+      { label: 'Latest reason', value: latestOutcome?.reason ?? 'Let the simulation run long enough to complete an evaluation cycle.' },
+      { label: 'Bubbles in view', value: this.integerFormatter.format(activeJob?.bubbles.length ?? 0) },
+      { label: 'Ticks in view', value: this.integerFormatter.format(activeJob?.tickCount ?? 0) },
     ];
+  });
+  protected readonly activeOutcomeSummary = computed(() => {
+    const outcome = this.activeCaptureOutcome();
+    if (!outcome) {
+      return 'No evaluation has completed yet. Let the layout keep moving until the engine finishes a capture check.';
+    }
+    return outcome.reason;
   });
   protected readonly preview = computed(() =>
     buildSimulationPreview(this.lotGeometry, this.activeJob()?.bubbles ?? [], {

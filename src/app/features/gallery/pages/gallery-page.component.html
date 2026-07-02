@@ -1,141 +1,276 @@
-<div class="gallery">
+<section class="gallery-page">
+  <article class="gallery-hero">
+    <div class="gallery-hero__main">
+      <div class="gallery-hero__copy">
+        <p class="gallery-card__eyebrow">Candidate gallery</p>
+        <h2>Compare accepted layouts and keep the strongest one in view</h2>
+        <p class="gallery-card__detail gallery-card__detail--lead">
+          {{ stageSummary() }}
+        </p>
+      </div>
 
-  <header class="gallery__header">
-    <h2 class="gallery__title">Layout Gallery</h2>
-    <span class="gallery__count">{{ cards().length }} constructed</span>
-  </header>
-
-  <ng-container *ngIf="cards().length > 0; else empty">
-
-    <div class="gallery__split">
-
-      <!-- LEFT: card list -->
-      <aside class="gallery__list">
-        <article
-          *ngFor="let card of cards()"
-          class="gallery__card"
-          [class.gallery__card--selected]="isSelected(card)"
-          (click)="select(card.output.entry.artifact.layoutId)"
-        >
-          <div class="gallery__card-head">
-            <span class="gallery__rank">#{{ card.rank }}</span>
-            <span class="gallery__score">{{ card.output.entry.score | number:'1.3-3' }}</span>
-            <span [class]="'gallery__push gallery__push--' + pushService.statusFor(card.output.entry.artifact.layoutId)">
-              {{ pushService.statusFor(card.output.entry.artifact.layoutId) }}
-            </span>
-          </div>
-
-          <svg
-            [attr.viewBox]="'0 0 ' + miniW + ' ' + miniH"
-            [attr.width]="miniW"
-            [attr.height]="miniH"
-            class="gallery__mini-svg"
-          >
-            <rect class="gallery__svg-bg" x="0" y="0" [attr.width]="miniW" [attr.height]="miniH" />
-            <polygon
-              *ngFor="let cell of card.miniCells"
-              [attr.points]="cell.points"
-              [attr.fill]="cell.color"
-              [class]="'gallery__cell' + (cell.generated ? ' gallery__cell--generated' : '') + (cell.hallway ? ' gallery__cell--hallway' : '')"
-            />
-          </svg>
-
-          <div class="gallery__card-stats">
-            <span>{{ card.roomCount }} rooms</span>
-            <span>{{ card.totalAreaSqm | number:'1.0-0' }}&thinsp;m²</span>
-            <span>{{ card.windowCount }}W / {{ card.doorCount }}D</span>
-          </div>
-
-          <div class="gallery__card-id">{{ card.output.entry.artifact.layoutId }}</div>
-        </article>
-      </aside>
-
-      <!-- RIGHT: detail panel -->
-      <main class="gallery__detail" *ngIf="selectedCard() as sel">
-
-        <header class="gallery__detail-head">
-          <div>
-            <span class="gallery__eyebrow">Selected layout</span>
-            <strong class="gallery__detail-id">{{ sel.output.entry.artifact.layoutId }}</strong>
-          </div>
-          <div class="gallery__detail-meta">
-            <span>{{ sel.output.entry.score | number:'1.4-4' }} quality</span>
-            <span>{{ sel.totalAreaSqm | number:'1.1-1' }}&thinsp;m²</span>
-            <span>{{ sel.output.entry.artifact.cells.length }} cells</span>
-            <span>hallway {{ hallwayShare(sel.output.entry.artifact) | percent:'1.0-0' }}</span>
-          </div>
-        </header>
-
-        <svg
-          [attr.viewBox]="'0 0 ' + detailW + ' ' + detailH"
-          class="gallery__detail-svg"
-        >
-          <rect class="gallery__svg-bg" x="0" y="0" [attr.width]="detailW" [attr.height]="detailH" />
-          <ng-container *ngFor="let cell of detailCells()">
-            <polygon
-              [attr.points]="cell.points"
-              [attr.fill]="cell.color"
-              [class]="'gallery__cell' + (cell.generated ? ' gallery__cell--generated' : '')"
-            />
-            <text *ngIf="!cell.generated" class="gallery__cell-label" [attr.x]="cell.cx" [attr.y]="cell.cy">
-              {{ cell.label }}
-            </text>
-          </ng-container>
-        </svg>
-
-        <section class="gallery__checks">
-          <div
-            *ngFor="let c of checkLabels"
-            class="gallery__check"
-            [class.gallery__check--pass]="checkPassed(sel.output.entry.artifact, c.key)"
-            [class.gallery__check--fail]="!checkPassed(sel.output.entry.artifact, c.key)"
-          >
-            {{ c.label }}&nbsp;{{ checkPassed(sel.output.entry.artifact, c.key) ? '✓' : '✗' }}
-          </div>
-        </section>
-
-        <section class="gallery__scores">
-          <div class="gallery__score-row" *ngFor="let row of scoreRows(sel.output)">
-            <span class="gallery__score-label">{{ row.label }}</span>
-            <div class="gallery__score-track">
-              <div class="gallery__score-fill" [style.width.%]="row.value * 100"></div>
-            </div>
-            <span class="gallery__score-val">{{ row.value | percent:'1.0-0' }}</span>
-          </div>
-        </section>
-
-        <section class="gallery__construction">
-          <div class="gallery__cstat">
-            <span>Rooms</span><strong>{{ sel.roomCount }}</strong>
-          </div>
-          <div class="gallery__cstat">
-            <span>Windows</span><strong>{{ sel.windowCount }}</strong>
-          </div>
-          <div class="gallery__cstat">
-            <span>Doors</span><strong>{{ sel.doorCount }}</strong>
-          </div>
-          <div class="gallery__cstat">
-            <span>Ext wall</span>
-            <strong>{{ sel.output.analysis.externalWallPerimeterMeters | number:'1.1-1' }}&thinsp;m</strong>
-          </div>
-          <div class="gallery__cstat">
-            <span>Revit push</span>
-            <strong [class]="'gallery__push gallery__push--' + pushService.statusFor(sel.output.entry.artifact.layoutId)">
-              {{ pushService.statusFor(sel.output.entry.artifact.layoutId) }}
-            </strong>
-          </div>
-        </section>
-
-      </main>
+      <div class="gallery-hero__status-card">
+        <span class="gallery-stage-pill" [ngClass]="stageToneClass()">
+          {{ stageStatusLabel() }}
+        </span>
+        <p class="gallery-hero__next-label">Next action</p>
+        <p class="gallery-hero__next-copy">{{ stageNextAction() }}</p>
+      </div>
     </div>
 
+    <div class="gallery-highlights">
+      <div *ngFor="let row of highlightRows()" class="gallery-highlight">
+        <span>{{ row.label }}</span>
+        <strong>{{ row.value }}</strong>
+      </div>
+    </div>
+  </article>
+
+  <ng-container *ngIf="cards().length > 0; else empty">
+    <section class="gallery-workspace">
+      <article class="gallery-card gallery-card--board">
+        <div class="gallery-section-heading">
+          <div>
+            <p class="gallery-card__eyebrow">Comparison board</p>
+            <h2>Candidate lineup</h2>
+            <p class="gallery-card__detail">
+              Start here. Compare the candidates as a set before drilling into one selected layout.
+            </p>
+          </div>
+        </div>
+
+        <div class="gallery-card-grid">
+          <article
+            *ngFor="let card of cards()"
+            class="gallery-candidate"
+            [class.gallery-candidate--selected]="isSelected(card)"
+            (click)="select(card.output.entry.artifact.layoutId)"
+          >
+            <div class="gallery-candidate__top">
+              <span class="gallery-candidate__rank">Rank #{{ card.rank }}</span>
+              <span class="gallery-candidate__score">{{ card.output.entry.score | number:'1.3-3' }}</span>
+            </div>
+
+            <svg
+              [attr.viewBox]="'0 0 ' + miniW + ' ' + miniH"
+              [attr.width]="miniW"
+              [attr.height]="miniH"
+              class="gallery-candidate__preview"
+            >
+              <rect class="gallery-preview__bg" x="0" y="0" [attr.width]="miniW" [attr.height]="miniH" />
+              <polygon
+                *ngFor="let cell of card.miniCells"
+                [attr.points]="cell.points"
+                [attr.fill]="cell.color"
+                [class]="'gallery-preview__cell' + (cell.generated ? ' gallery-preview__cell--generated' : '') + (cell.hallway ? ' gallery-preview__cell--hallway' : '')"
+              />
+            </svg>
+
+            <div class="gallery-candidate__stats">
+              <div class="gallery-candidate__stat">
+                <span>Rooms</span>
+                <strong>{{ card.roomCount }}</strong>
+              </div>
+              <div class="gallery-candidate__stat">
+                <span>Area</span>
+                <strong>{{ card.totalAreaSqm | number:'1.0-0' }}&thinsp;m²</strong>
+              </div>
+              <div class="gallery-candidate__stat">
+                <span>Openings</span>
+                <strong>{{ card.windowCount }}W / {{ card.doorCount }}D</strong>
+              </div>
+            </div>
+
+            <div class="gallery-candidate__footer">
+              <span class="gallery-candidate__id">{{ card.output.entry.artifact.layoutId }}</span>
+              <span [class]="'gallery-push gallery-push--' + pushService.statusFor(card.output.entry.artifact.layoutId)">
+                {{ pushService.statusFor(card.output.entry.artifact.layoutId) }}
+              </span>
+            </div>
+          </article>
+        </div>
+      </article>
+
+      <div class="gallery-detail-stack" *ngIf="selectedCard() as sel">
+        <article class="gallery-card gallery-card--detail">
+          <div class="gallery-detail">
+            <div class="gallery-detail__main">
+              <div class="gallery-section-heading">
+                <div>
+                  <p class="gallery-card__eyebrow">Selected candidate</p>
+                  <h2>Inspect the current leading layout</h2>
+                  <p class="gallery-card__detail">
+                    Keep this view focused on the currently selected layout while you compare the numbers and pass/fail signals around it.
+                  </p>
+                </div>
+              </div>
+
+              <div class="gallery-detail__meta">
+                <span>{{ sel.output.entry.artifact.layoutId }}</span>
+                <span>Score {{ sel.output.entry.score | number:'1.4-4' }}</span>
+                <span>{{ sel.totalAreaSqm | number:'1.1-1' }}&thinsp;m²</span>
+                <span>{{ sel.output.entry.artifact.cells.length }} cells</span>
+                <span>Hallway {{ hallwayShare(sel.output.entry.artifact) | percent:'1.0-0' }}</span>
+              </div>
+
+              <svg
+                [attr.viewBox]="'0 0 ' + detailW + ' ' + detailH"
+                class="gallery-detail__preview"
+              >
+                <rect class="gallery-preview__bg" x="0" y="0" [attr.width]="detailW" [attr.height]="detailH" />
+                <ng-container *ngFor="let cell of detailCells()">
+                  <polygon
+                    [attr.points]="cell.points"
+                    [attr.fill]="cell.color"
+                    [class]="'gallery-preview__cell' + (cell.generated ? ' gallery-preview__cell--generated' : '')"
+                  />
+                  <text *ngIf="!cell.generated" class="gallery-preview__label" [attr.x]="cell.cx" [attr.y]="cell.cy">
+                    {{ cell.label }}
+                  </text>
+                </ng-container>
+              </svg>
+            </div>
+
+            <aside class="gallery-detail__sidebar">
+              <div class="gallery-section">
+                <p class="gallery-card__eyebrow">Decision guide</p>
+                <div class="gallery-metric-list">
+                  <div *ngFor="let row of decisionRows()" class="gallery-metric-row">
+                    <span>{{ row.label }}</span>
+                    <strong>{{ row.value }}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="gallery-section">
+                <p class="gallery-card__eyebrow">Construction facts</p>
+                <div class="gallery-metric-list">
+                  <div class="gallery-metric-row">
+                    <span>Rooms</span>
+                    <strong>{{ sel.roomCount }}</strong>
+                  </div>
+                  <div class="gallery-metric-row">
+                    <span>Windows</span>
+                    <strong>{{ sel.windowCount }}</strong>
+                  </div>
+                  <div class="gallery-metric-row">
+                    <span>Doors</span>
+                    <strong>{{ sel.doorCount }}</strong>
+                  </div>
+                  <div class="gallery-metric-row">
+                    <span>Ext wall</span>
+                    <strong>{{ sel.output.analysis.externalWallPerimeterMeters | number:'1.1-1' }}&thinsp;m</strong>
+                  </div>
+                  <div class="gallery-metric-row">
+                    <span>Revit push</span>
+                    <strong [class]="'gallery-push gallery-push--' + pushService.statusFor(sel.output.entry.artifact.layoutId)">
+                      {{ pushService.statusFor(sel.output.entry.artifact.layoutId) }}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </article>
+
+        <article class="gallery-card">
+          <div class="gallery-section-heading">
+            <div>
+              <p class="gallery-card__eyebrow">Verification checks</p>
+              <h2>Pass and fail signals</h2>
+            </div>
+          </div>
+          <section class="gallery-checks">
+            <div
+              *ngFor="let c of checkLabels"
+              class="gallery-check"
+              [class.gallery-check--pass]="checkPassed(sel.output.entry.artifact, c.key)"
+              [class.gallery-check--fail]="!checkPassed(sel.output.entry.artifact, c.key)"
+            >
+              <strong>{{ c.label }}</strong>
+              <span>{{ checkPassed(sel.output.entry.artifact, c.key) ? 'Pass' : 'Fail' }}</span>
+            </div>
+          </section>
+        </article>
+
+        <article class="gallery-card">
+          <div class="gallery-section-heading">
+            <div>
+              <p class="gallery-card__eyebrow">Score breakdown</p>
+              <h2>Why this candidate scored the way it did</h2>
+            </div>
+          </div>
+          <section class="gallery-scores">
+            <div class="gallery-score-row" *ngFor="let row of scoreRows(sel.output)">
+              <span class="gallery-score-row__label">{{ row.label }}</span>
+              <div class="gallery-score-row__track">
+                <div class="gallery-score-row__fill" [style.width.%]="row.value * 100"></div>
+              </div>
+              <span class="gallery-score-row__value">{{ row.value | percent:'1.0-0' }}</span>
+            </div>
+          </section>
+        </article>
+      </div>
+    </section>
   </ng-container>
 
   <ng-template #empty>
-    <div class="gallery__empty">
-      <p>No layouts in the gallery yet.</p>
-      <p>Run simulation — accepted layouts appear here automatically.</p>
-    </div>
-  </ng-template>
+    <article class="gallery-card gallery-card--empty" *ngIf="fallbackArtifact() as artifact; else trulyEmpty">
+      <p class="gallery-card__eyebrow">Candidate gallery fallback</p>
+      <h2>No accepted candidates yet, but the latest reviewed layout stays visible</h2>
+      <p class="gallery-card__detail">
+        This route now keeps the last verification attempt on screen so the user can still see what the pipeline produced while waiting for an accepted candidate.
+      </p>
 
-</div>
+      <div class="gallery-detail__meta">
+        <span>{{ artifact.layoutId }}</span>
+        <span>{{ artifact.cells.length }} cells</span>
+        <span>Hallway {{ hallwayShare(artifact) | percent:'1.0-0' }}</span>
+        <span>{{ artifact.accepted ? 'Accepted' : 'Not accepted yet' }}</span>
+      </div>
+
+      <svg
+        [attr.viewBox]="'0 0 ' + detailW + ' ' + detailH"
+        class="gallery-detail__preview"
+      >
+        <rect class="gallery-preview__bg" x="0" y="0" [attr.width]="detailW" [attr.height]="detailH" />
+        <ng-container *ngFor="let cell of fallbackDetailCells()">
+          <polygon
+            [attr.points]="cell.points"
+            [attr.fill]="cell.color"
+            [class]="'gallery-preview__cell' + (cell.generated ? ' gallery-preview__cell--generated' : '')"
+          />
+          <text *ngIf="!cell.generated" class="gallery-preview__label" [attr.x]="cell.cx" [attr.y]="cell.cy">
+            {{ cell.label }}
+          </text>
+        </ng-container>
+      </svg>
+
+      <section class="gallery-checks">
+        <div
+          *ngFor="let c of checkLabels"
+          class="gallery-check"
+          [class.gallery-check--pass]="checkPassed(artifact, c.key)"
+          [class.gallery-check--fail]="!checkPassed(artifact, c.key)"
+        >
+          <strong>{{ c.label }}</strong>
+          <span>{{ checkPassed(artifact, c.key) ? 'Pass' : 'Fail' }}</span>
+        </div>
+      </section>
+
+      <p class="gallery-card__detail" *ngIf="artifact.cullReasons.length">
+        Blocking reasons: {{ artifact.cullReasons.join(', ') }}
+      </p>
+    </article>
+
+    <ng-template #trulyEmpty>
+      <article class="gallery-card gallery-card--empty">
+      <p class="gallery-card__eyebrow">Candidate gallery</p>
+      <h2>No accepted layouts yet</h2>
+      <p class="gallery-card__detail">
+        Run the earlier pipeline stages and let accepted layouts flow here automatically. This page becomes the comparison board only after real candidates exist.
+      </p>
+      </article>
+    </ng-template>
+  </ng-template>
+</section>

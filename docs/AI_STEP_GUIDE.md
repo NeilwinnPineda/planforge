@@ -6,20 +6,21 @@ This guide exists so a future AI agent can continue the rebuild of `apps/planfor
 
 Use this guide together with:
 
-- `docs/ARCHITECTURE_RULES.md`
+- `docs/PLANFORGE_SYSTEM_GUIDE.md`
 - `docs/REBUILD_ROADMAP.md`
-- `docs/PROCESSING_PIPELINE_RULES.md` when working on downstream layout processing
+- `docs/PLANFORGE_PRODUCT_GUIDE.md` when the task affects the product workflow or UI layer
 - local block comments near the code being changed
 
 ## First Orientation Pass
 
 Before writing code, a future agent should check these in order:
 
-1. Read `docs/ARCHITECTURE_RULES.md`.
-2. Read `docs/REBUILD_ROADMAP.md`.
-3. Identify the next unfinished slice number.
-4. Identify whether the work belongs to source intake, generation, refinement, validation, reporting, projection, or presentation.
-5. Confirm whether the change should live in `core`, `features`, `shell`, or `shared`.
+1. Read `docs/PLANFORGE_CENTRAL_GUIDE.md`.
+2. Read `docs/PLANFORGE_SYSTEM_GUIDE.md`.
+3. Read `docs/REBUILD_ROADMAP.md`.
+4. Identify the next unfinished slice number.
+5. Identify whether the work belongs to source intake, generation, refinement, validation, reporting, projection, or presentation.
+6. Confirm whether the change should live in `core`, `features`, `shell`, or `shared`.
 
 If the work does not fit cleanly in one of those categories, stop and define the block boundary before coding.
 
@@ -303,7 +304,7 @@ Treat that as a checkpoint constant, not a forever design limit. If future work 
 
 When the rebuild moves beyond Layout Exploration and begins downstream processing:
 
-1. Read `docs/PROCESSING_PIPELINE_RULES.md`.
+1. Read `docs/PLANFORGE_SYSTEM_GUIDE.md`.
 2. Do not port legacy processing math into a page component.
 3. Do not create one generic processing service that hides many internal phases.
 4. Define one service per real processing step.

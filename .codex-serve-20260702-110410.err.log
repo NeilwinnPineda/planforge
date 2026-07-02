@@ -1,0 +1,1019 @@
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8103: NG8103: The `*ngIf` directive was used in the template, but neither the `NgIf` directive nor the `CommonModule` was imported. Use Angular's built-in control flow @if or make sure that either the `NgIf` directive or the `CommonModule` is included in the `@Component.imports` array of this component. Find more at https://v21.angular.dev/extended-diagnostics/NG8103[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shell/app-shell.component.html:61:52:
+[37m      61 │ ...s="app-shell__nav-connector" *[32mngIf[37m="index < workflowNav.length ...
+         ╵                                  [32m~~~~[0m
+
+  Warning occurs in the template of component AppShellComponent.
+
+    src/app/shell/app-shell.component.ts:22:15:
+[37m      22 │   templateUrl: [32m'./app-shell.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8103: NG8103: The `*ngIf` directive was used in the template, but neither the `NgIf` directive nor the `CommonModule` was imported. Use Angular's built-in control flow @if or make sure that either the `NgIf` directive or the `CommonModule` is included in the `@Component.imports` array of this component. Find more at https://v21.angular.dev/extended-diagnostics/NG8103[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shell/app-shell.component.html:61:52:
+[37m      61 │ ...s="app-shell__nav-connector" *[32mngIf[37m="index < workflowNav.length ...
+         ╵                                  [32m~~~~[0m
+
+  Warning occurs in the template of component AppShellComponent.
+
+    src/app/shell/app-shell.component.ts:22:15:
+[37m      22 │   templateUrl: [32m'./app-shell.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:91:8:
+[37m      91 │     if ([32moutcome?.status === 'accepted'[37m) return 'Accepted layout fo...
+         ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:97:44:
+[37m      97 │ ...ry().length > 0 || [32moutcome?.status === 'accepted'[37m) return 'ready';
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:112:8:
+[37m      112 │     if ([32moutcome?.status === 'accepted'[37m) {
+          ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:91:8:
+[37m      91 │     if ([32moutcome?.status === 'accepted'[37m) return 'Accepted layout fo...
+         ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:97:44:
+[37m      97 │ ...ry().length > 0 || [32moutcome?.status === 'accepted'[37m) return 'ready';
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:112:8:
+[37m      112 │     if ([32moutcome?.status === 'accepted'[37m) {
+          ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:91:8:
+[37m      91 │     if ([32moutcome?.status === 'accepted'[37m) return 'Accepted layout fo...
+         ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:97:44:
+[37m      97 │ ...ry().length > 0 || [32moutcome?.status === 'accepted'[37m) return 'ready';
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:112:8:
+[37m      112 │     if ([32moutcome?.status === 'accepted'[37m) {
+          ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:91:8:
+[37m      91 │     if ([32moutcome?.status === 'accepted'[37m) return 'Accepted layout fo...
+         ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:97:44:
+[37m      97 │ ...ry().length > 0 || [32moutcome?.status === 'accepted'[37m) return 'ready';
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:112:8:
+[37m      112 │     if ([32moutcome?.status === 'accepted'[37m) {
+          ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:91:8:
+[37m      91 │     if ([32moutcome?.status === 'accepted'[37m) return 'Accepted layout fo...
+         ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:97:44:
+[37m      97 │ ...ry().length > 0 || [32moutcome?.status === 'accepted'[37m) return 'ready';
+         ╵                       [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types '"skip" | "fail" | "pass" | undefined' and '"accepted"' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/simulation-foundation/pages/simulation-foundation-page.component.ts:112:8:
+[37m      112 │     if ([32moutcome?.status === 'accepted'[37m) {
+          ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: All imports are unused[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.ts:101:2:
+[37m      101 │   [32mimports[37m: [NgFor, NgIf],
+          ╵   [32m~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.html:445:4:
+[37m      445 │     [32m</div>[37m
+          ╵     [32m~~~~~~[0m
+
+  Error occurs in the template of component GeometryLotPageComponent.
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.ts:102:15:
+[37m      102 │   templateUrl: [32m'./geometry-lot-page.component.html'[37m,
+          ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "section". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.html:446:2:
+[37m      446 │   [32m</section>[37m
+          ╵   [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component GeometryLotPageComponent.
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.ts:102:15:
+[37m      102 │   templateUrl: [32m'./geometry-lot-page.component.html'[37m,
+          ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: All imports are unused[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.ts:101:2:
+[37m      101 │   [32mimports[37m: [NgFor, NgIf],
+          ╵   [32m~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.html:417:4:
+[37m      417 │     [32m</div>[37m
+          ╵     [32m~~~~~~[0m
+
+  Error occurs in the template of component GeometryLotPageComponent.
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.ts:102:15:
+[37m      102 │   templateUrl: [32m'./geometry-lot-page.component.html'[37m,
+          ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "section". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.html:418:2:
+[37m      418 │   [32m</section>[37m
+          ╵   [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component GeometryLotPageComponent.
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.ts:102:15:
+[37m      102 │   templateUrl: [32m'./geometry-lot-page.component.html'[37m,
+          ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: All imports are unused[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.ts:101:2:
+[37m      101 │   [32mimports[37m: [NgFor, NgIf],
+          ╵   [32m~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "div". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.html:417:4:
+[37m      417 │     [32m</div>[37m
+          ╵     [32m~~~~~~[0m
+
+  Error occurs in the template of component GeometryLotPageComponent.
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.ts:102:15:
+[37m      102 │   templateUrl: [32m'./geometry-lot-page.component.html'[37m,
+          ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "section". It may happen when the tag has already been closed by another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.html:418:2:
+[37m      418 │   [32m</section>[37m
+          ╵   [32m~~~~~~~~~~[0m
+
+  Error occurs in the template of component GeometryLotPageComponent.
+
+    src/app/features/geometry-lot/pages/geometry-lot-page.component.ts:102:15:
+[37m      102 │   templateUrl: [32m'./geometry-lot-page.component.html'[37m,
+          ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG8002: Can't bind to 'ngClass' since it isn't a known property of 'span'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/gallery/pages/gallery-page.component.html:13:41:
+[37m      13 │ ...    <span class="gallery-stage-pill" [32m[ngClass]="stageToneClass()"[37m>
+         ╵                                         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component GalleryPageComponent.
+
+    src/app/features/gallery/pages/gallery-page.component.ts:61:15:
+[37m      61 │   templateUrl: [32m'./gallery-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: NgClass is not used within the template of AppShellComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shell/app-shell.component.ts:38:12:
+[37m      38 │   imports: [[32mNgClass[37m, NgFor, NgIf, RouterLink, RouterLinkActive, Si...
+         ╵             [32m~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'artifact' does not exist on type 'Signal<LayoutProcessingStepResult<FinalStagedLayoutArtifact, FinalStagingMetrics> | null>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.html:110:58:
+[37m      110 │ ...cell of finalStagingResult.[32martifact[37m.cells" class="processing-t...
+          ╵                               [32m~~~~~~~~[0m
+
+  Error occurs in the template of component ProcessingPageComponent.
+
+    src/app/features/processing/pages/processing-page.component.ts:93:15:
+[37m      93 │   templateUrl: [32m'./processing-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'artifact' does not exist on type 'Signal<LayoutProcessingStepResult<FinalStagedLayoutArtifact, FinalStagingMetrics> | null>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.html:110:58:
+[37m      110 │ ...cell of finalStagingResult.[32martifact[37m.cells" class="processing-t...
+          ╵                               [32m~~~~~~~~[0m
+
+  Error occurs in the template of component ProcessingPageComponent.
+
+    src/app/features/processing/pages/processing-page.component.ts:93:15:
+[37m      93 │   templateUrl: [32m'./processing-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'provisionalResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:354:47:
+[37m      354 │ ...ubbles', value: String([32mprovisionalResult[37m.metrics.placedBubbleC...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'provisionalResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:355:48:
+[37m      355 │ ... cells', value: String([32mprovisionalResult[37m.metrics.generatedCell...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'provisionalResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:356:57:
+[37m      356 │ ... cells', value: String([32mprovisionalResult[37m.metrics.droppedDegene...
+          ╵                           [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'hallwayResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:359:44:
+[37m      359 │ ...ut cells', value: String([32mhallwayResult[37m.metrics.inputCellCount) },
+          ╵                             [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'hallwayResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:360:46:
+[37m      360 │ ...ay sites', value: String([32mhallwayResult[37m.metrics.hallwaySiteCoun...
+          ╵                             [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'hallwayResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:361:45:
+[37m      361 │ ...ut cells', value: String([32mhallwayResult[37m.metrics.outputCellCount...
+          ╵                             [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'hallwayResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:362:54:
+[37m      362 │ ...ay cells', value: String([32mhallwayResult[37m.metrics.droppedHallwayC...
+          ╵                             [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:365:44:
+[37m      365 │ ...lls', value: String([32mwarpedDiagnosticResult[37m.metrics.inputCellCo...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:366:45:
+[37m      366 │ ...lls', value: String([32mwarpedDiagnosticResult[37m.metrics.outputCellC...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:367:45:
+[37m      367 │ ...tes', value: String([32mwarpedDiagnosticResult[37m.metrics.warpedSiteC...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:368:48:
+[37m      368 │ ...unt', value: String([32mwarpedDiagnosticResult[37m.metrics.iterationCo...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:369:44:
+[37m      369 │ ...uns', value: String([32mwarpedDiagnosticResult[37m.metrics.stableRunCo...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:372:45:
+[37m      372 │ ...cells', value: String([32mfinalStagingResult[37m.metrics.outputCellCou...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:373:67:
+[37m      373 │ ...umberFormatter.format([32mfinalStagingResult[37m.metrics.totalAreaSqua...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:374:43:
+[37m      374 │ ...cells', value: String([32mfinalStagingResult[37m.metrics.roomCellCount...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:375:46:
+[37m      375 │ ...cells', value: String([32mfinalStagingResult[37m.metrics.hallwayCellCo...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:378:45:
+[37m      378 │ ...lls', value: String([32mcanonicalGeometryResult[37m.metrics.outputCell...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:379:48:
+[37m      379 │ ...ces', value: String([32mcanonicalGeometryResult[37m.metrics.canonicalV...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:380:48:
+[37m      380 │ ...its', value: String([32mcanonicalGeometryResult[37m.metrics.insertedVe...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:381:52:
+[37m      381 │ ...tes', value: String([32mcanonicalGeometryResult[37m.metrics.droppedDeg...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'provisionalResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:414:20:
+[37m      414 │         summary: `${[32mprovisionalResult[37m.metrics.generatedCellCount}...
+          ╵                     [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'provisionalResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:417:16:
+[37m      417 │         traces: [32mprovisionalResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'hallwayResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:438:20:
+[37m      438 │         summary: `${[32mhallwayResult[37m.metrics.hallwaySiteCount} hallw...
+          ╵                     [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'hallwayResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:438:78:
+[37m      438 │ ...Count} hallway sites / ${[32mhallwayResult[37m.metrics.outputCellCount...
+          ╵                             [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:458:20:
+[37m      458 │         summary: `${[32mwarpedDiagnosticResult[37m.metrics.outputCellCoun...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:458:100:
+[37m      458 │ ...cells staged from ${[32mwarpedDiagnosticResult[37m.metrics.warpedSiteC...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:459:40:
+[37m      459 │ ...w: this.buildPreviewModel([32mwarpedDiagnosticResult[37m.artifact.cells),
+          ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:461:16:
+[37m      461 │         traces: [32mwarpedDiagnosticResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:585:20:
+[37m      585 │         summary: `${[32mfinalStagingResult[37m.metrics.outputCellCount} c...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:585:114:
+[37m      585 │ ...umberFormatter.format([32mfinalStagingResult[37m.metrics.totalAreaSqua...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:586:40:
+[37m      586 │ ...eview: this.buildPreviewModel([32mfinalStagingResult[37m.artifact.cells),
+          ╵                                  [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:588:16:
+[37m      588 │         traces: [32mfinalStagingResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:595:46:
+[37m      595 │ ...Output layout id', value: [32mfinalStagingResult[37m.artifact.layoutId },
+          ╵                              [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:596:85:
+[37m      596 │ ...g(this.countGeneratedCells([32mfinalStagingResult[37m.artifact.cells)) },
+          ╵                               [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:609:20:
+[37m      609 │         summary: `${[32mcanonicalGeometryResult[37m.metrics.outputCellCou...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:609:96:
+[37m      609 │ ...anonicalized with ${[32mcanonicalGeometryResult[37m.metrics.insertedVe...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:610:40:
+[37m      610 │ ...: this.buildPreviewModel([32mcanonicalGeometryResult[37m.artifact.cells),
+          ╵                             [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:612:16:
+[37m      612 │         traces: [32mcanonicalGeometryResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'artifact' does not exist on type 'Signal<LayoutProcessingStepResult<FinalStagedLayoutArtifact, FinalStagingMetrics> | null>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.html:110:58:
+[37m      110 │ ...cell of finalStagingResult.[32martifact[37m.cells" class="processing-t...
+          ╵                               [32m~~~~~~~~[0m
+
+  Error occurs in the template of component ProcessingPageComponent.
+
+    src/app/features/processing/pages/processing-page.component.ts:93:15:
+[37m      93 │   templateUrl: [32m'./processing-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'provisionalResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:424:20:
+[37m      424 │         summary: `${[32mprovisionalResult[37m.metrics.generatedCellCount}...
+          ╵                     [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'provisionalResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:427:16:
+[37m      427 │         traces: [32mprovisionalResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'hallwayResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:448:20:
+[37m      448 │         summary: `${[32mhallwayResult[37m.metrics.hallwaySiteCount} hallw...
+          ╵                     [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'hallwayResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:448:78:
+[37m      448 │ ...Count} hallway sites / ${[32mhallwayResult[37m.metrics.outputCellCount...
+          ╵                             [32m~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:468:20:
+[37m      468 │         summary: `${[32mwarpedDiagnosticResult[37m.metrics.outputCellCoun...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:468:100:
+[37m      468 │ ...cells staged from ${[32mwarpedDiagnosticResult[37m.metrics.warpedSiteC...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:469:40:
+[37m      469 │ ...w: this.buildPreviewModel([32mwarpedDiagnosticResult[37m.artifact.cells),
+          ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'warpedDiagnosticResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:471:16:
+[37m      471 │         traces: [32mwarpedDiagnosticResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:595:20:
+[37m      595 │         summary: `${[32mfinalStagingResult[37m.metrics.outputCellCount} c...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:595:114:
+[37m      595 │ ...umberFormatter.format([32mfinalStagingResult[37m.metrics.totalAreaSqua...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:596:40:
+[37m      596 │ ...eview: this.buildPreviewModel([32mfinalStagingResult[37m.artifact.cells),
+          ╵                                  [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:598:16:
+[37m      598 │         traces: [32mfinalStagingResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:605:46:
+[37m      605 │ ...Output layout id', value: [32mfinalStagingResult[37m.artifact.layoutId },
+          ╵                              [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:606:85:
+[37m      606 │ ...g(this.countGeneratedCells([32mfinalStagingResult[37m.artifact.cells)) },
+          ╵                               [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:619:20:
+[37m      619 │         summary: `${[32mcanonicalGeometryResult[37m.metrics.outputCellCou...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:619:96:
+[37m      619 │ ...anonicalized with ${[32mcanonicalGeometryResult[37m.metrics.insertedVe...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:620:40:
+[37m      620 │ ...: this.buildPreviewModel([32mcanonicalGeometryResult[37m.artifact.cells),
+          ╵                             [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:622:16:
+[37m      622 │         traces: [32mcanonicalGeometryResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'artifact' does not exist on type 'Signal<LayoutProcessingStepResult<FinalStagedLayoutArtifact, FinalStagingMetrics> | null>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.html:110:58:
+[37m      110 │ ...cell of finalStagingResult.[32martifact[37m.cells" class="processing-t...
+          ╵                               [32m~~~~~~~~[0m
+
+  Error occurs in the template of component ProcessingPageComponent.
+
+    src/app/features/processing/pages/processing-page.component.ts:93:15:
+[37m      93 │   templateUrl: [32m'./processing-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:599:20:
+[37m      599 │         summary: `${[32mfinalStagingResult[37m.metrics.outputCellCount} c...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:599:114:
+[37m      599 │ ...umberFormatter.format([32mfinalStagingResult[37m.metrics.totalAreaSqua...
+          ╵                          [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:600:40:
+[37m      600 │ ...eview: this.buildPreviewModel([32mfinalStagingResult[37m.artifact.cells),
+          ╵                                  [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:602:16:
+[37m      602 │         traces: [32mfinalStagingResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:609:46:
+[37m      609 │ ...Output layout id', value: [32mfinalStagingResult[37m.artifact.layoutId },
+          ╵                              [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:610:85:
+[37m      610 │ ...g(this.countGeneratedCells([32mfinalStagingResult[37m.artifact.cells)) },
+          ╵                               [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:623:20:
+[37m      623 │         summary: `${[32mcanonicalGeometryResult[37m.metrics.outputCellCou...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:623:96:
+[37m      623 │ ...anonicalized with ${[32mcanonicalGeometryResult[37m.metrics.insertedVe...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:624:40:
+[37m      624 │ ...: this.buildPreviewModel([32mcanonicalGeometryResult[37m.artifact.cells),
+          ╵                             [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:626:16:
+[37m      626 │         traces: [32mcanonicalGeometryResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'artifact' does not exist on type 'Signal<LayoutProcessingStepResult<FinalStagedLayoutArtifact, FinalStagingMetrics> | null>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.html:110:58:
+[37m      110 │ ...cell of finalStagingResult.[32martifact[37m.cells" class="processing-t...
+          ╵                               [32m~~~~~~~~[0m
+
+  Error occurs in the template of component ProcessingPageComponent.
+
+    src/app/features/processing/pages/processing-page.component.ts:93:15:
+[37m      93 │   templateUrl: [32m'./processing-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:602:16:
+[37m      602 │         traces: [32mfinalStagingResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:609:46:
+[37m      609 │ ...Output layout id', value: [32mfinalStagingResult[37m.artifact.layoutId },
+          ╵                              [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:610:85:
+[37m      610 │ ...g(this.countGeneratedCells([32mfinalStagingResult[37m.artifact.cells)) },
+          ╵                               [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:623:20:
+[37m      623 │         summary: `${[32mcanonicalGeometryResult[37m.metrics.outputCellCou...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:623:96:
+[37m      623 │ ...anonicalized with ${[32mcanonicalGeometryResult[37m.metrics.insertedVe...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:624:40:
+[37m      624 │ ...: this.buildPreviewModel([32mcanonicalGeometryResult[37m.artifact.cells),
+          ╵                             [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:626:16:
+[37m      626 │         traces: [32mcanonicalGeometryResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'artifact' does not exist on type 'Signal<LayoutProcessingStepResult<FinalStagedLayoutArtifact, FinalStagingMetrics> | null>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.html:110:58:
+[37m      110 │ ...cell of finalStagingResult.[32martifact[37m.cells" class="processing-t...
+          ╵                               [32m~~~~~~~~[0m
+
+  Error occurs in the template of component ProcessingPageComponent.
+
+    src/app/features/processing/pages/processing-page.component.ts:93:15:
+[37m      93 │   templateUrl: [32m'./processing-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:611:46:
+[37m      611 │ ...Output layout id', value: [32mfinalStagingResult[37m.artifact.layoutId },
+          ╵                              [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'finalStagingResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:612:85:
+[37m      612 │ ...g(this.countGeneratedCells([32mfinalStagingResult[37m.artifact.cells)) },
+          ╵                               [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:625:20:
+[37m      625 │         summary: `${[32mcanonicalGeometryResult[37m.metrics.outputCellCou...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:625:96:
+[37m      625 │ ...anonicalized with ${[32mcanonicalGeometryResult[37m.metrics.insertedVe...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:626:40:
+[37m      626 │ ...: this.buildPreviewModel([32mcanonicalGeometryResult[37m.artifact.cells),
+          ╵                             [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:628:16:
+[37m      628 │         traces: [32mcanonicalGeometryResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'artifact' does not exist on type 'Signal<LayoutProcessingStepResult<FinalStagedLayoutArtifact, FinalStagingMetrics> | null>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.html:110:58:
+[37m      110 │ ...cell of finalStagingResult.[32martifact[37m.cells" class="processing-t...
+          ╵                               [32m~~~~~~~~[0m
+
+  Error occurs in the template of component ProcessingPageComponent.
+
+    src/app/features/processing/pages/processing-page.component.ts:93:15:
+[37m      93 │   templateUrl: [32m'./processing-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:625:20:
+[37m      625 │         summary: `${[32mcanonicalGeometryResult[37m.metrics.outputCellCou...
+          ╵                     [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:625:96:
+[37m      625 │ ...anonicalized with ${[32mcanonicalGeometryResult[37m.metrics.insertedVe...
+          ╵                        [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:626:40:
+[37m      626 │ ...: this.buildPreviewModel([32mcanonicalGeometryResult[37m.artifact.cells),
+          ╵                             [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS18047: 'canonicalGeometryResult' is possibly 'null'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.ts:628:16:
+[37m      628 │         traces: [32mcanonicalGeometryResult[37m.traces.map((trace) => ({
+          ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'artifact' does not exist on type 'Signal<LayoutProcessingStepResult<FinalStagedLayoutArtifact, FinalStagingMetrics> | null>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/processing/pages/processing-page.component.html:110:58:
+[37m      110 │ ...cell of finalStagingResult.[32martifact[37m.cells" class="processing-t...
+          ╵                               [32m~~~~~~~~[0m
+
+  Error occurs in the template of component ProcessingPageComponent.
+
+    src/app/features/processing/pages/processing-page.component.ts:93:15:
+[37m      93 │   templateUrl: [32m'./processing-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of OutputViewerPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.ts:40:12:
+[37m      40 │   imports: [[32mDatePipe[37m, DecimalPipe, JsonPipe, NgFor, NgIf],
+         ╵             [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: JsonPipe is not used within the template of OutputViewerPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.ts:40:35:
+[37m      40 │   imports: [DatePipe, DecimalPipe, [32mJsonPipe[37m, NgFor, NgIf],
+         ╵                                    [32m~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type '(_: number, wall: ConstructionContractWall) => string' is not assignable to type 'TrackByFunction<ViewerProjectedSegment>'.
+  Types of parameters 'wall' and 'item' are incompatible.
+    Type 'ViewerProjectedSegment' is missing the following properties from type 'ConstructionContractWall': from, to, lengthMeters, ownerTypeId, and 2 more.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.html:71:48:
+[37m      71 │             *ngFor="let wall of wallSegments(); [32mtrackBy[37m: trackByWall"
+         ╵                                                 [32m~~~~~~~[0m
+
+  Error occurs in the template of component OutputViewerPageComponent.
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.ts:41:15:
+[37m      41 │   templateUrl: [32m'./output-viewer-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of OutputViewerPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.ts:40:12:
+[37m      40 │   imports: [[32mDatePipe[37m, DecimalPipe, JsonPipe, NgFor, NgIf],
+         ╵             [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: JsonPipe is not used within the template of OutputViewerPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.ts:40:35:
+[37m      40 │   imports: [DatePipe, DecimalPipe, [32mJsonPipe[37m, NgFor, NgIf],
+         ╵                                    [32m~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type '(_: number, wall: ConstructionContractWall) => string' is not assignable to type 'TrackByFunction<ViewerProjectedSegment>'.
+  Types of parameters 'wall' and 'item' are incompatible.
+    Type 'ViewerProjectedSegment' is missing the following properties from type 'ConstructionContractWall': from, to, lengthMeters, ownerTypeId, and 2 more.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.html:71:48:
+[37m      71 │             *ngFor="let wall of wallSegments(); [32mtrackBy[37m: trackByWall"
+         ╵                                                 [32m~~~~~~~[0m
+
+  Error occurs in the template of component OutputViewerPageComponent.
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.ts:41:15:
+[37m      41 │   templateUrl: [32m'./output-viewer-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'trackByWall' does not exist on type 'OutputViewerPageComponent'. Did you mean 'trackByCell'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.html:71:57:
+[37m      71 │             *ngFor="let wall of wallSegments(); trackBy: [32mtrackByWall[37m"
+         ╵                                                          [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component OutputViewerPageComponent.
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.ts:41:15:
+[37m      41 │   templateUrl: [32m'./output-viewer-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'trackByWall' does not exist on type 'OutputViewerPageComponent'. Did you mean 'trackByCell'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.html:71:57:
+[37m      71 │             *ngFor="let wall of wallSegments(); trackBy: [32mtrackByWall[37m"
+         ╵                                                          [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component OutputViewerPageComponent.
+
+    src/app/features/output-viewer/pages/output-viewer-page.component.ts:40:15:
+[37m      40 │   templateUrl: [32m'./output-viewer-page.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m

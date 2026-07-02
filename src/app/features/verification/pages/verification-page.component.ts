@@ -2,33 +2,9 @@ import { Component, computed, effect, inject } from '@angular/core';
 import { DecimalPipe, NgFor, NgIf } from '@angular/common';
 import type { GeometryPoint } from '../../../core/geometry/geometry.exports';
 import { LotGeometryService } from '../../../core/geometry/geometry.exports';
-import {
-  FinalStagingService,
-  HallwayInjectionService,
-  HallwayMergeService,
-  CanonicalGeometryService,
-  LayoutProcessingOrchestratorService,
-  MassBalanceRenegotiationService,
-  ProvisionalCellGenerationService,
-  ResidualUvAbsorptionService,
-  UvEdgeNegotiationService,
-  VerificationService,
-  WarpedDiagnosticStagingService,
-  type FinalStagingArguments,
-  type HallwayInjectionArguments,
-  type HallwayMergeArguments,
-  type CanonicalGeometryArguments,
-  type MassBalanceRenegotiationArguments,
-  type ProvisionalCellGenerationArguments,
-  type ResidualUvAbsorptionArguments,
-  type UvEdgeNegotiationArguments,
-  type VerificationArguments,
-  type WarpedDiagnosticStagingArguments,
-} from '../../../core/processing/processing.exports';
+import { ProcessingPipelineService } from '../../../core/processing/processing.exports';
+import { WorkflowVisualStateService } from '../../../core/processing/workflow-visual-state.service';
 import { SimulationStageService } from '../../../core/simulation/simulation.exports';
-import { SourceReadService } from '../../../core/source/source.exports';
-import { ReportingEndpointService } from '../../../core/reporting/reporting-endpoint.service';
-import type { PipelineReport } from '../../../core/reporting/models/pipeline-report.model';
 
 interface InspectorCell {
   readonly id: string;
@@ -76,6 +52,11 @@ interface CheckInspectorPanel {
   readonly failures: readonly { readonly label: string; readonly detail: string }[];
 }
 
+interface VerificationHighlightRow {
+  readonly label: string;
+  readonly value: string;
+}
+
 @Component({
   selector: 'app-verification-page',
   standalone: true,
@@ -86,282 +67,76 @@ interface CheckInspectorPanel {
 export class VerificationPageComponent {
   private readonly simulationStageService = inject(SimulationStageService);
   private readonly lotGeometryService = inject(LotGeometryService);
-  private readonly sourceReadService = inject(SourceReadService);
-  private readonly provisionalCellGenerationService = inject(ProvisionalCellGenerationService);
-  private readonly hallwayInjectionService = inject(HallwayInjectionService);
-  private readonly massBalanceRenegotiationService = inject(MassBalanceRenegotiationService);
-  private readonly warpedDiagnosticStagingService = inject(WarpedDiagnosticStagingService);
-  private readonly uvEdgeNegotiationService = inject(UvEdgeNegotiationService);
-  private readonly residualUvAbsorptionService = inject(ResidualUvAbsorptionService);
-  private readonly hallwayMergeService = inject(HallwayMergeService);
-  private readonly finalStagingService = inject(FinalStagingService);
-  private readonly canonicalGeometryService = inject(CanonicalGeometryService);
-  private readonly verificationService = inject(VerificationService);
-  private readonly processingOrchestratorService = inject(LayoutProcessingOrchestratorService);
-  private readonly reportingEndpointService = inject(ReportingEndpointService);
+  private readonly processingPipelineService = inject(ProcessingPipelineService);
+  private readonly workflowVisualStateService = inject(WorkflowVisualStateService);
 
   private readonly numberFormatter = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   constructor() {
     effect(() => {
-      const vr = this.verificationResult();
-      const uvNeg = this.uvEdgeNegotiationResult();
-      const residual = this.residualUvAbsorptionResult();
-      const merge = this.hallwayMergeResult();
-      if (!vr || !uvNeg || !residual || !merge) return;
-
-      const findings: string[] = [
-        ...uvNeg.traces.filter((t) => t.severity !== 'info').map((t) => `[${t.stepId}] ${t.message}`),
-        ...residual.traces.filter((t) => t.severity !== 'info').map((t) => `[${t.stepId}] ${t.message}`),
-        ...merge.traces.filter((t) => t.severity !== 'info').map((t) => `[${t.stepId}] ${t.message}`),
-      ];
-
-      const categoryCount = vr.artifact.cells.reduce<Record<string, number>>((acc, c) => {
-        const cat = c.hallway ? 'circulation' : c.pkg ? 'boundary' : 'room';
-        acc[cat] = (acc[cat] ?? 0) + 1;
-        return acc;
-      }, {});
-
-      const report: PipelineReport = {
-        id: `pipeline-diag-${vr.artifact.layoutId}-${Date.now()}`,
-        reportKind: 'layout-pass',
-        lifecycle: vr.artifact.accepted ? 'passed' : 'captured',
-        runId: vr.artifact.layoutId,
-        outputId: vr.artifact.layoutId,
-        stageId: 'processing.pipeline-diagnostic',
-        timestamp: new Date().toISOString(),
-        sourceId: vr.artifact.sourceCaptureRecordId,
-        sourceVersion: '1',
-        inputSummary: {
-          activeRoomInstances: vr.artifact.cells.filter((c) => !c.pkg && !c.hallway).length,
-          activeRoomTypes: new Set(vr.artifact.cells.map((c) => c.typeId)).size,
-          frontageSegments: 0,
-        },
-        artifactSummary: {
-          polygonCount: vr.artifact.cells.length,
-          categories: categoryCount,
-        },
-        validationSummary: {
-          status: findings.length > 0 ? 'warn' : 'pass',
-          findings,
-        },
-        selectionMetrics: {
-          score: 0,
-          reason: vr.artifact.accepted ? 'accepted' : `culled: ${vr.artifact.cullReasons.join(', ')}`,
-        },
-        artifactContent: {
-          polygons: vr.artifact.cells.map((c) => ({
-            id: c.id,
-            label: c.label || c.typeId,
-            category: (c.hallway ? 'circulation' : c.pkg ? 'boundary' : 'room') as 'room' | 'circulation' | 'boundary',
-            color: c.color,
-            vertices: c.worldPoints.map((p) => ({ x: p.x, y: p.y })),
-          })),
-        },
-      };
-
-      void this.reportingEndpointService.postReport(report);
+      const snapshot = this.livePipelineSnapshot();
+      if (!snapshot) return;
+      void this.processingPipelineService.postVerificationDiagnostic(snapshot);
     });
   }
 
   protected readonly lotGeometry = this.lotGeometryService.getActiveLotGeometry();
-  protected readonly activeCaptureArtifact = computed(() => this.simulationStageService.captureArtifacts()[0] ?? null);
-
-  protected readonly verificationArguments: VerificationArguments = (() => {
-    const source = this.sourceReadService.getActiveSourceSnapshot().source;
-    const openAccessTypeIds = source.roomCatalog
-      .filter((r) => r.tags.includes('open_access'))
-      .map((r) => r.id);
-    const criticalPairs = [
-      ...source.settings.rules.special
-        .filter((rule) => rule.note?.toLowerCase().includes('touch mode'))
-        .flatMap((rule) => {
-          const pairs = [];
-          for (let i = 0; i < rule.rooms.length - 1; i++) {
-            for (let j = i + 1; j < rule.rooms.length; j++) {
-              pairs.push({ typeA: rule.rooms[i], typeB: rule.rooms[j], label: rule.label });
-            }
-          }
-          return pairs;
-        }),
-      ...source.settings.rules.blockers
-        .filter((rule) => rule.rooms.length === 2)
-        .map((rule) => ({ typeA: rule.rooms[0], typeB: rule.rooms[1], label: rule.label })),
+  protected readonly liveCaptureArtifact = computed(() => this.simulationStageService.captureArtifacts()[0] ?? null);
+  protected readonly livePipelineSnapshot = computed(() => {
+    const artifact = this.liveCaptureArtifact();
+    return artifact
+      ? this.processingPipelineService.runFromCapture(artifact, 'verification-page checkpoint')
+      : null;
+  });
+  protected readonly pipelineSnapshot = computed(() =>
+    this.livePipelineSnapshot() ?? this.workflowVisualStateService.latestRenderableSnapshot(),
+  );
+  protected readonly activeCaptureArtifact = computed(() =>
+    this.liveCaptureArtifact() ?? this.pipelineSnapshot()?.capture ?? null,
+  );
+  protected readonly verificationResult = computed(() => this.pipelineSnapshot()?.verificationResult ?? null);
+  protected readonly stageStatusLabel = computed(() => {
+    const vr = this.verificationResult();
+    if (!vr) return 'Waiting for verification input';
+    return vr.artifact.accepted ? 'Layout passed verification' : 'Layout failed verification';
+  });
+  protected readonly stageStatusTone = computed<'ready' | 'attention'>(() => {
+    const vr = this.verificationResult();
+    return vr?.artifact.accepted ? 'ready' : 'attention';
+  });
+  protected readonly stageSummary = computed(() => {
+    const vr = this.verificationResult();
+    if (!vr) {
+      return 'Verification begins after Processing finishes a cleaned layout that is ready to judge.';
+    }
+    if (vr.artifact.accepted) {
+      return 'This layout passed the current verification checks and can move forward into downstream comparison and construction staging.';
+    }
+    return 'This layout did not pass verification yet. Use the highlighted layout and failure groups below to see what is blocking it.';
+  });
+  protected readonly stageNextAction = computed(() => {
+    const vr = this.verificationResult();
+    if (!vr) {
+      return 'Go to Processing first so Verification has a cleaned layout to inspect.';
+    }
+    if (vr.artifact.accepted) {
+      return 'Open Candidate Gallery or Construction Output next to compare and stage this verified layout.';
+    }
+    return 'Review the highlighted failure categories first, then trace the problem rooms back through Processing or Simulation if needed.';
+  });
+  protected readonly failedCheckCount = computed(() => this.checkSummaries().filter((summary) => !summary.passed).length);
+  protected readonly failedCellCount = computed(() => this.inspectorCells().filter((cell) => Boolean(cell.failureStroke)).length);
+  protected readonly highlightRows = computed<readonly VerificationHighlightRow[]>(() => {
+    const vr = this.verificationResult();
+    return [
+      { label: 'Current status', value: this.stageStatusLabel() },
+      { label: 'Checks failing', value: String(this.failedCheckCount()) },
+      { label: 'Problem rooms', value: String(this.failedCellCount()) },
+      { label: 'Cells reviewed', value: vr ? String(vr.artifact.cells.length) : '0' },
     ];
-    const frontageBuildableEdges = this.lotGeometry.lotSegments
-      .map((seg, i) => ({
-        isRrow: seg.isRrow,
-        from: this.lotGeometry.buildablePoints[i],
-        to: this.lotGeometry.buildablePoints[(i + 1) % this.lotGeometry.buildablePoints.length],
-      }))
-      .filter((e) => e.isRrow)
-      .map((e) => ({ from: e.from, to: e.to }));
-    return {
-      deficiencyThreshold: 0.75,
-      aspectRatioThreshold: 4.5,
-      openAccessTypeIds,
-      foyerTypeIds: ['foyer'],
-      criticalPairs,
-      adjacencyEdgeEpsilon: 1e-3,
-      garageTypeIds: ['garage'],
-      frontageBuildableEdges,
-      sliverMinDimension: 0.5,
-    };
-  })();
-
-  private readonly provisionalArguments: ProvisionalCellGenerationArguments = {
-    buildablePoints: this.lotGeometry.buildablePoints,
-    snapToAxis: false,
-    looseBisector: true,
-    fillerWeightScale: 0.35,
-    hallwayWeightScale: 0.25,
-  };
-  private readonly hallwayArguments: HallwayInjectionArguments = {
-    buildablePoints: this.lotGeometry.buildablePoints,
-    hallwayTargetSquareMeters: 2,
-    spacingMultiplier: 3,
-    minHallwayAreaSquareMeters: 0.5,
-    rebalanceIterations: 24,
-    rebalanceGain: 0.12,
-    roomDriftGain: 0.08,
-    hallwayDriftGain: 0.14,
-    stableDeviation: 0.02,
-    stableRunsRequired: 3,
-  };
-  private readonly massBalanceArguments: MassBalanceRenegotiationArguments = {
-    buildablePoints: this.lotGeometry.buildablePoints,
-    rebalanceIterations: 18,
-    rebalanceGain: 0.05,
-    stableDeviation: 0.02,
-    stableRunsRequired: 3,
-    roomDriftGain: 0.05,
-    hallwayDriftGain: 0.08,
-  };
-  private readonly warpedDiagnosticArguments: WarpedDiagnosticStagingArguments = {
-    buildablePoints: this.lotGeometry.buildablePoints,
-    rebalanceIterations: 18,
-    rebalanceGain: 0.18,
-    stableDeviation: 0.02,
-    stableRunsRequired: 3,
-    roomDriftGain: 0.05,
-    hallwayDriftGain: 0.08,
-  };
-  private readonly uvEdgeNegotiationArguments: UvEdgeNegotiationArguments = {
-    quadPoints: this.lotGeometry.buildablePoints,
-    snapThreshold: 0.05,
-    majorAxisSnapMultiplier: 1.5,
-    minExtent: 0.04,
-    shiftGain: 0.05,
-    maxPasses: 8,
-    stableShift: 1e-4,
-    targetAspectRatio: 4.5,
-    maxAspectPasses: 10,
-  };
-  private readonly residualUvAbsorptionArguments: ResidualUvAbsorptionArguments = {
-    fillerColor: '#e8dfc8',
-    hallwayColor: '#d4d0c0',
-  };
-  private readonly hallwayMergeArguments: HallwayMergeArguments = { edgeMatchEpsilon: 1e-3 };
-  private readonly finalStagingArguments: FinalStagingArguments = { stageLabel: 'verification-page checkpoint' };
-  private readonly canonicalGeometryArguments: CanonicalGeometryArguments = {
-    vertexSnapGridMeters: 0.001,
-    edgeSplitToleranceMeters: 0.001,
-    minSegmentLengthMeters: 0.01,
-  };
-
-  private readonly provisionalResult = computed(() => {
-    const artifact = this.activeCaptureArtifact();
-    if (!artifact) return null;
-    return this.provisionalCellGenerationService.run({
-      artifact,
-      artifactRef: { layoutId: artifact.layoutId, sourceStageId: 'layout-exploration.capture', sourceScore: artifact.sourceScore },
-      arguments: this.provisionalArguments,
-    });
   });
-
-  private readonly hallwayResult = computed(() => {
-    const provisionalResult = this.provisionalResult();
-    if (!provisionalResult) return null;
-    this.processingOrchestratorService.runOrderedSteps(
-      { artifact: this.activeCaptureArtifact()!, artifactRef: { layoutId: this.activeCaptureArtifact()!.layoutId, sourceStageId: 'layout-exploration.capture', sourceScore: this.activeCaptureArtifact()!.sourceScore }, arguments: this.provisionalArguments },
-      [this.provisionalCellGenerationService],
-    );
-    return this.hallwayInjectionService.run({
-      artifact: provisionalResult.artifact,
-      artifactRef: { layoutId: provisionalResult.artifact.layoutId, sourceStageId: 'processing.provisional_cells', sourceScore: this.activeCaptureArtifact()?.sourceScore },
-      arguments: this.hallwayArguments,
-    });
-  });
-
-  private readonly warpedDiagnosticResult = computed(() => {
-    const hallwayResult = this.hallwayResult();
-    if (!hallwayResult) return null;
-    return this.warpedDiagnosticStagingService.run({
-      artifact: hallwayResult.artifact,
-      artifactRef: { layoutId: hallwayResult.artifact.layoutId, sourceStageId: 'processing.hallway_injection', sourceScore: this.activeCaptureArtifact()?.sourceScore },
-      arguments: this.warpedDiagnosticArguments,
-    });
-  });
-
-  private readonly uvEdgeNegotiationResult = computed(() => {
-    const warpedDiagnosticResult = this.warpedDiagnosticResult();
-    if (!warpedDiagnosticResult) return null;
-    return this.uvEdgeNegotiationService.run({
-      artifact: warpedDiagnosticResult.artifact,
-      artifactRef: { layoutId: warpedDiagnosticResult.artifact.layoutId, sourceStageId: 'processing.warped_diagnostic', sourceScore: this.activeCaptureArtifact()?.sourceScore },
-      arguments: this.uvEdgeNegotiationArguments,
-    });
-  });
-
-  private readonly residualUvAbsorptionResult = computed(() => {
-    const uvEdgeNegotiationResult = this.uvEdgeNegotiationResult();
-    if (!uvEdgeNegotiationResult) return null;
-    return this.residualUvAbsorptionService.run({
-      artifact: uvEdgeNegotiationResult.artifact,
-      artifactRef: { layoutId: uvEdgeNegotiationResult.artifact.layoutId, sourceStageId: 'processing.uv_edge_negotiation', sourceScore: this.activeCaptureArtifact()?.sourceScore },
-      arguments: this.residualUvAbsorptionArguments,
-    });
-  });
-
-  private readonly hallwayMergeResult = computed(() => {
-    const residualUvAbsorptionResult = this.residualUvAbsorptionResult();
-    if (!residualUvAbsorptionResult) return null;
-    return this.hallwayMergeService.run({
-      artifact: residualUvAbsorptionResult.artifact,
-      artifactRef: { layoutId: residualUvAbsorptionResult.artifact.layoutId, sourceStageId: 'processing.residual_uv_absorption', sourceScore: this.activeCaptureArtifact()?.sourceScore },
-      arguments: this.hallwayMergeArguments,
-    });
-  });
-
-  private readonly finalStagingResult = computed(() => {
-    const hallwayMergeResult = this.hallwayMergeResult();
-    if (!hallwayMergeResult) return null;
-    return this.finalStagingService.run({
-      artifact: hallwayMergeResult.artifact,
-      artifactRef: { layoutId: hallwayMergeResult.artifact.layoutId, sourceStageId: 'processing.hallway_merge', sourceScore: this.activeCaptureArtifact()?.sourceScore },
-      arguments: this.finalStagingArguments,
-    });
-  });
-
-  private readonly canonicalGeometryResult = computed(() => {
-    const finalStagingResult = this.finalStagingResult();
-    if (!finalStagingResult) return null;
-    return this.canonicalGeometryService.run({
-      artifact: finalStagingResult.artifact,
-      artifactRef: { layoutId: finalStagingResult.artifact.layoutId, sourceStageId: 'processing.final_staging', sourceScore: this.activeCaptureArtifact()?.sourceScore },
-      arguments: this.canonicalGeometryArguments,
-    });
-  });
-
-  protected readonly verificationResult = computed(() => {
-    const canonicalGeometryResult = this.canonicalGeometryResult();
-    if (!canonicalGeometryResult) return null;
-    return this.verificationService.run({
-      artifact: canonicalGeometryResult.artifact,
-      artifactRef: { layoutId: canonicalGeometryResult.artifact.layoutId, sourceStageId: 'processing.canonical_geometry', sourceScore: this.activeCaptureArtifact()?.sourceScore },
-      arguments: this.verificationArguments,
-    });
-  });
+  protected readonly failingCheckSummaries = computed(() => this.checkSummaries().filter((summary) => !summary.passed));
+  protected readonly passingCheckSummaries = computed(() => this.checkSummaries().filter((summary) => summary.passed));
 
   protected readonly checkSummaries = computed<readonly CheckSummary[]>(() => {
     const vr = this.verificationResult();

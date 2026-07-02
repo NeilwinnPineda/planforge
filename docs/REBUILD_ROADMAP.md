@@ -6,6 +6,33 @@ This roadmap tracks the incremental rebuild of `apps/planforge`.
 
 The rebuild target is a production-oriented procedural generation app that takes a structured design source and outputs polygonal building-layout geometry with strong reporting, inspection, and stage boundaries.
 
+## Current Priority
+
+The current priority is app viability.
+
+That means the next phase should optimize for making `planforge` feel more usable as a standalone generator product:
+
+- clearer workflow
+- stronger continuity between stages
+- better candidate comparison and decision support
+- clearer construction/export readiness
+
+Deepening Revit handoff behavior is still important, but it is not the lead priority until the app itself feels worth handing off from.
+
+## Current UX Cleanup Contract
+
+The active route-cleanup and visual-role checklist now lives in:
+
+- `docs/TAB_ROLE_AND_VISUAL_REDESIGN_CHECKLIST.md`
+
+That file should drive page cleanup work before random visual iteration.
+
+The current policy is:
+
+- each route must have one clear stage role
+- each route must have one dominant primary surface
+- each route should be visually designed for its function, not forced into one generic dashboard pattern
+
 ## Current Slice
 
 ### Slice 0 - Foundation Workspace
@@ -231,6 +258,13 @@ Recent post-checkpoint tuning on the simulation seam now includes:
   - one primary simulation instance
   - three hard-cascaded sibling instances for this checkpoint
   - one score-sorted cross-instance capture gallery compiled from accepted simulation outputs
+
+Parallelism note for future work:
+
+- the current fixed simulation cluster is acceptable for the current checkpoint
+- future orchestration should move toward dynamic parallelism instead of a permanently fixed sibling count
+- dynamic scaling should respond to workload, capture yield, machine capacity, and downstream backlog instead of only using one hard-coded cadence and target count
+- when that future change happens, it should remain service-owned orchestration logic rather than route-owned UI behavior
 
 ### Checkpoint Rescan
 
@@ -755,6 +789,34 @@ Delivered:
   - `OPTIONS` preflight handler and `Access-Control-Allow-Origin: *` on all responses (CORS fix)
 
 ## Current Status
+
+### Validation Snapshot
+
+Validated locally on 2026-07-02 after service-boundary extraction:
+
+- `npm.cmd run build` passes
+- build still reports an initial-bundle budget warning:
+  - actual `613.70 kB`
+  - budget `500 kB`
+  - overage `113.70 kB`
+- `npm.cmd test -- --watch=false` passes with `34` tests across `6` files
+- `npm.cmd run test:contracts` passes
+- `npm.cmd run debug:runtime-inspection` passes on `/simulation`
+  - `14` preview bubbles observed
+  - `0` uncaught exceptions
+  - `allowSignalWrites` deprecation warnings still present
+  - `/favicon.ico` still returns `404` during local serve
+- `npm.cmd run test:e2e` passes with `22` Playwright tests
+
+Operational caveat:
+
+- `npm.cmd run export:live` is a long-running accepted-layout search, not a quick smoke command
+- it currently targets `1000` accepted layouts before emitting `generated-exports/live-layout-contract.json`
+
+Current service-boundary note:
+
+- `ProcessingPipelineService` now owns the shared downstream capture-to-verification chain used by the Processing route, the Verification route, and `VerificationOrchestratorService`
+- `ConstructionPageComponent` now consumes service-owned assembled outputs from `ConstructionOutputService` instead of re-running wall/door/window derivation in the page
 
 | Stage | Status |
 |---|---|

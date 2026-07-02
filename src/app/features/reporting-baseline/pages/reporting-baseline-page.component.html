@@ -1,52 +1,74 @@
-<section class="reporting-grid">
-  <article class="reporting-card reporting-card--wide">
-    <p class="reporting-card__eyebrow">Reporting baseline</p>
-    <h2>Early endpoint reporting for simulation/pass-style outputs</h2>
-    <p>
-      This slice establishes typed report payloads, endpoint logging, and self-test records that
-      mimic the first meaningful outputs we want to track historically.
-    </p>
-    <div class="reporting-meta-strip">
+<section class="reporting-page">
+  <article class="reporting-hero">
+    <div class="reporting-hero__copy">
+      <p class="reporting-card__eyebrow">Reporting</p>
+      <h2>Track what the app would preserve, compare, and hand off later</h2>
+      <p class="reporting-card__detail">
+        Use this stage to exercise report contracts early, inspect payload shape, and confirm that
+        downstream history capture is becoming stable enough to trust.
+      </p>
+    </div>
+    <div class="reporting-hero__status">
       <span>Source {{ localSourceId }}</span>
       <span>Validation {{ localSourceStatus }}</span>
       <span>Reports {{ selfTestReports.length }}</span>
     </div>
   </article>
 
-  <article class="reporting-card">
-    <p class="reporting-card__eyebrow">Self-test actions</p>
-    <h2>Exercise the endpoint early</h2>
-    <p>{{ endpointStatusText }}</p>
-    <div class="reporting-action-row">
-      <button type="button" (click)="sendSelfTestReports()">Send self-test reports</button>
-      <button type="button" (click)="loadHistory()">Load report history</button>
+  <section class="reporting-workspace">
+    <aside class="reporting-sidebar">
+      <article class="reporting-card">
+        <p class="reporting-card__eyebrow">Self-test actions</p>
+        <h2>Exercise the reporting endpoint</h2>
+        <p class="reporting-card__detail">{{ endpointStatusText }}</p>
+        <div class="reporting-action-row">
+          <button type="button" class="reporting-action-btn" (click)="sendSelfTestReports()">Send self-test reports</button>
+          <button type="button" class="reporting-action-btn" (click)="loadHistory()">Load report history</button>
+        </div>
+      </article>
+
+      <article class="reporting-card">
+        <p class="reporting-card__eyebrow">Why this exists</p>
+        <h2>Historical inspection starts before full simulation</h2>
+        <ul class="reporting-list">
+          <li>Report contracts are live before the first rebuilt generator stage lands.</li>
+          <li>Simulation-capture and pass-style outputs are already inspectable.</li>
+          <li>Endpoint logging is testable before the pipeline grows large.</li>
+        </ul>
+      </article>
+    </aside>
+
+    <div class="reporting-main">
+      <article class="reporting-card">
+        <div class="reporting-section-heading">
+          <div>
+            <p class="reporting-card__eyebrow">Prepared reports</p>
+            <h2>Current report payloads</h2>
+            <p class="reporting-card__detail">
+              These are the baseline report artifacts currently ready for endpoint and history checks.
+            </p>
+          </div>
+        </div>
+
+        <div class="reporting-report-list">
+          <div *ngFor="let report of selfTestReports" class="reporting-report-row">
+            <strong>{{ report.reportKind }}</strong>
+            <span>{{ report.stageId }}</span>
+            <span>{{ polygonLabel(report) }}</span>
+            <p>{{ report.selectionMetrics.reason }}</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="reporting-card">
+        <div class="reporting-section-heading">
+          <div>
+            <p class="reporting-card__eyebrow">Latest history snapshot</p>
+            <h2>Most recent report response</h2>
+          </div>
+        </div>
+        <pre class="reporting-history">{{ lastHistorySnapshot | json }}</pre>
+      </article>
     </div>
-  </article>
-
-  <article class="reporting-card">
-    <p class="reporting-card__eyebrow">Why this exists</p>
-    <h2>Historical inspection starts before full simulation</h2>
-    <ul>
-      <li>Report contracts are live before the first rebuilt generator stage lands.</li>
-      <li>Simulation-capture and pass-style outputs are already inspectable.</li>
-      <li>Endpoint logging is testable before the pipeline grows large.</li>
-    </ul>
-  </article>
-
-  <article class="reporting-card reporting-card--wide">
-    <p class="reporting-card__eyebrow">Prepared reports</p>
-    <div class="reporting-report-list">
-      <div *ngFor="let report of selfTestReports" class="reporting-report-row">
-        <strong>{{ report.reportKind }}</strong>
-        <span>{{ report.stageId }}</span>
-        <span>{{ polygonLabel(report) }}</span>
-        <p>{{ report.selectionMetrics.reason }}</p>
-      </div>
-    </div>
-  </article>
-
-  <article class="reporting-card reporting-card--wide">
-    <p class="reporting-card__eyebrow">Latest history snapshot</p>
-    <pre class="reporting-history">{{ lastHistorySnapshot | json }}</pre>
-  </article>
+  </section>
 </section>

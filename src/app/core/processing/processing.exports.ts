@@ -26,6 +26,11 @@ export type {
 } from './models/layout-processing-step.model';
 export { LayoutProcessingOrchestratorService } from './layout-processing-orchestrator.service';
 export type {
+  ProcessingPipelineArgumentsBundle,
+  ProcessingPipelineSnapshot,
+} from './processing-pipeline.service';
+export { ProcessingPipelineService } from './processing-pipeline.service';
+export type {
   FinalStagingArguments,
   FinalStagingMetrics,
 } from './final-staging.service';

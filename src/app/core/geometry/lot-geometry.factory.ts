@@ -27,24 +27,36 @@ export function deriveLotGeometry(lotSegments: ProjectLotSegment[]): LotGeometry
   const plottedLotChain = plotLotChain(lotSegments);
   const lotPoints = plottedLotChain.slice(0, -1);
   const buildablePoints = buildBuildablePolygon(lotPoints, lotSegments);
+  const closureSegment = getClosureSegment(plottedLotChain);
+  const lotAreaSquareMeters = polygonArea(lotPoints);
+  const buildableAreaSquareMeters = polygonArea(buildablePoints);
+  const issues = buildGeometryIssues(
+    lotPoints,
+    lotSegments,
+    buildablePoints,
+    lotAreaSquareMeters,
+    buildableAreaSquareMeters,
+  );
 
   return {
     lotSegments: lotSegments.map((segment) => ({ ...segment })),
     lotPoints,
     buildablePoints,
-    lotAreaSquareMeters: polygonArea(lotPoints),
-    buildableAreaSquareMeters: polygonArea(buildablePoints),
+    lotAreaSquareMeters,
+    buildableAreaSquareMeters,
     lotBounds: getGeometryBounds(lotPoints),
     buildableBounds: getGeometryBounds(buildablePoints),
     frontageSegments: lotSegments.filter((segment) => segment.isRrow).length,
     closureErrorMeters: getClosureErrorMeters(plottedLotChain),
+    closureSegment,
+    isBuildable: issues.length === 0,
+    issues,
   };
 }
 
 function parseBearingToRadians(bearing: string): number {
-  const match = bearing
-    .trim()
-    .match(/^([NS])\s*(\d+)(?:Â°|°|\s)\s*(\d+)(?:'|\s)?\s*([EW])$/i);
+  const normalizedBearing = bearing.replace(/Â°/g, '\u00B0').trim();
+  const match = normalizedBearing.match(/^([NS])\s*(\d+)(?:\u00B0|\s)\s*(\d+)(?:'|\s)?\s*([EW])$/i);
 
   if (!match) {
     throw new Error(`Invalid bearing format: ${bearing}`);
@@ -133,6 +145,75 @@ function buildBuildablePolygon(
   });
 }
 
+function buildGeometryIssues(
+  lotPoints: NamedGeometryPoint[],
+  lotSegments: ProjectLotSegment[],
+  buildablePoints: NamedGeometryPoint[],
+  lotAreaSquareMeters: number,
+  buildableAreaSquareMeters: number,
+): string[] {
+  const issues: string[] = [];
+
+  if (lotPoints.length < 3 || lotAreaSquareMeters <= 0) {
+    issues.push('Lot polygon is invalid or degenerate.');
+  }
+
+  if (buildablePoints.length < 3) {
+    issues.push('Buildable polygon could not be resolved from the current setbacks.');
+  }
+
+  if (buildablePoints.some((point) => !Number.isFinite(point.x) || !Number.isFinite(point.y))) {
+    issues.push('Buildable polygon contains invalid coordinates.');
+  }
+
+  if (buildableAreaSquareMeters <= 0) {
+    issues.push('Buildable area is zero or negative.');
+  }
+
+  if (
+    buildablePoints.length >= 3
+    && buildablePoints.some((point) => !isPointInsideAllSetbackHalfPlanes(point, lotPoints, lotSegments))
+  ) {
+    issues.push('Buildable polygon falls outside one or more setback limits.');
+  }
+
+  return issues;
+}
+
+function isPointInsideAllSetbackHalfPlanes(
+  point: GeometryPoint,
+  lotPoints: NamedGeometryPoint[],
+  lotSegments: ProjectLotSegment[],
+): boolean {
+  const polygonCenter = getPolygonCenter(lotPoints);
+
+  return lotPoints.every((lotPoint, index) => {
+    const nextPoint = lotPoints[(index + 1) % lotPoints.length];
+    const segment = lotSegments[index];
+    const dx = nextPoint.x - lotPoint.x;
+    const dy = nextPoint.y - lotPoint.y;
+    const edgeLength = Math.hypot(dx, dy);
+
+    if (edgeLength <= 1e-9) {
+      return false;
+    }
+
+    const normal = { x: -dy / edgeLength, y: dx / edgeLength };
+    const midpoint = {
+      x: (lotPoint.x + nextPoint.x) / 2,
+      y: (lotPoint.y + nextPoint.y) / 2,
+    };
+    const inwardNormal =
+      (polygonCenter.x - midpoint.x) * normal.x + (polygonCenter.y - midpoint.y) * normal.y >= 0
+        ? normal
+        : { x: -normal.x, y: -normal.y };
+    const signedInsetDistance =
+      (point.x - lotPoint.x) * inwardNormal.x + (point.y - lotPoint.y) * inwardNormal.y;
+
+    return signedInsetDistance + 1e-6 >= segment.setback;
+  });
+}
+
 function getLineIntersection(lineA: OffsetLine, lineB: OffsetLine): GeometryPoint {
   const denominator =
     (lineA.x1 - lineA.x2) * (lineB.y1 - lineB.y2)
@@ -170,6 +251,15 @@ function polygonArea(points: Array<GeometryPoint>): number {
 }
 
 function getGeometryBounds(points: Array<GeometryPoint>): GeometryBounds {
+  if (!points.length) {
+    return {
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+    };
+  }
+
   return {
     minX: Math.min(...points.map((point) => point.x)),
     maxX: Math.max(...points.map((point) => point.x)),
@@ -204,5 +294,21 @@ function getClosureErrorMeters(points: NamedGeometryPoint[]): number {
 
   const lastPoint = points[points.length - 1];
   return Math.hypot(lastPoint.x, lastPoint.y);
+}
+
+function getClosureSegment(points: NamedGeometryPoint[]): { from: GeometryPoint; to: GeometryPoint } | null {
+  if (points.length < 2) {
+    return null;
+  }
+
+  const lastPoint = points[points.length - 1];
+  if (Math.hypot(lastPoint.x, lastPoint.y) <= 1e-6) {
+    return null;
+  }
+
+  return {
+    from: { x: lastPoint.x, y: lastPoint.y },
+    to: { x: points[0].x, y: points[0].y },
+  };
 }
 

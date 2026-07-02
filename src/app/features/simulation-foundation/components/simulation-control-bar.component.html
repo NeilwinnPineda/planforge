@@ -1,10 +1,9 @@
 <section class="simulation-bar">
   <div class="simulation-bar__controls">
     <button type="button" class="simulation-bar__btn simulation-bar__btn--primary" (click)="onPrimaryAction()">
-      {{ isRunning() ? 'Pause All' : 'Run All' }}
+      {{ isRunning() ? 'Pause' : 'Run' }}
     </button>
-    <button type="button" class="simulation-bar__btn" [disabled]="!isRunning()" (click)="onStop()">Pause now</button>
-    <button type="button" class="simulation-bar__btn" (click)="onClear()">Clear cluster</button>
+    <button type="button" class="simulation-bar__btn" (click)="onClear()">Reset</button>
   </div>
 
   <div class="simulation-bar__metrics">

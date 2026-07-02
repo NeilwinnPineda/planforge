@@ -1,74 +1,308 @@
-<section class="source-grid">
-  <article class="source-card source-card--wide">
-    <p class="source-card__eyebrow">Source intake</p>
-    <h2>{{ sourceSnapshot.source.meta.title }}</h2>
-    <p>{{ sourceSnapshot.source.meta.summary }}</p>
-    <div class="source-meta-strip">
-      <span>ID {{ sourceSnapshot.source.meta.id }}</span>
-      <span>Version {{ sourceSnapshot.source.meta.version }}</span>
-      <span>Mode {{ sourceSnapshot.source.meta.authoringMode }}</span>
-      <span [ngClass]="validationClass(sourceSnapshot.validation.status)">
-        Validation {{ sourceSnapshot.validation.status }}
-      </span>
+<section class="source-page">
+  <article class="source-hero">
+    <div class="source-hero__main">
+      <div class="source-hero__copy">
+        <p class="source-card__eyebrow">Program setup</p>
+        <h2>Shape the house brief before generation starts</h2>
+        <p class="source-card__detail source-card__detail--lead">
+          {{ stageSummary() }}
+        </p>
+      </div>
+
+      <div class="source-hero__status-card">
+        <span class="source-stage-pill" [ngClass]="stageToneClass()">
+          {{ stageStatusLabel() }}
+        </span>
+        <p class="source-hero__next-label">Next action</p>
+        <p class="source-hero__next-copy">{{ stageNextAction() }}</p>
+      </div>
     </div>
-  </article>
 
-  <article class="source-card">
-    <p class="source-card__eyebrow">Intent</p>
-    <h2>{{ sourceSnapshot.source.intent.projectKind }}</h2>
-    <p>{{ sourceSnapshot.source.intent.primaryGoal }}</p>
-    <p class="source-card__detail">{{ sourceSnapshot.source.intent.narrative }}</p>
-  </article>
-
-  <article class="source-card">
-    <p class="source-card__eyebrow">Counts</p>
-    <div class="source-metric-grid">
-      <div *ngFor="let row of sourceMetrics" class="source-metric">
+    <div class="source-highlights">
+      <div *ngFor="let row of highlightRows()" class="source-highlight">
         <span>{{ row.label }}</span>
         <strong>{{ row.value }}</strong>
       </div>
     </div>
-  </article>
 
-  <article class="source-card">
-    <p class="source-card__eyebrow">Priorities</p>
-    <ul class="source-list">
-      <li *ngFor="let priority of priorityRows">{{ priority }}</li>
-    </ul>
-  </article>
-
-  <article class="source-card">
-    <p class="source-card__eyebrow">Active program</p>
-    <div class="source-program-list">
-      <div *ngFor="let row of activeProgramRows" class="source-program-row">
-        <strong>{{ row.roomId }}</strong>
-        <span>{{ row.count }}</span>
-      </div>
+    <div class="source-hero__status">
+      <span>Source {{ sourceSnapshot().origin }}</span>
+      <span>ID {{ sourceSnapshot().source.meta.id }}</span>
+      <span [ngClass]="validationClass(sourceSnapshot().validation.status)">
+        Validation {{ sourceSnapshot().validation.status }}
+      </span>
     </div>
   </article>
 
-  <article class="source-card source-card--wide">
-    <p class="source-card__eyebrow">Validation messages</p>
-    <div class="source-validation-list">
-      <div
-        *ngFor="let message of validationMessages"
-        class="source-validation-row"
-        [ngClass]="validationClass(message.level)"
-      >
-        <strong>{{ message.level }}</strong>
-        <span>{{ message.scope }}</span>
-        <p>{{ message.message }}</p>
-      </div>
-    </div>
-  </article>
+  <section class="source-workspace">
+    <div class="source-main">
+      <article class="source-card source-card--health">
+        <div class="source-section-heading source-section-heading--stack">
+          <div>
+            <p class="source-card__eyebrow">Brief readiness</p>
+            <h2>Can this project brief move forward?</h2>
+            <p class="source-section-note">
+              Check this first before spending time on the lot, generation, or simulation.
+            </p>
+          </div>
+          <span class="source-stage-pill" [ngClass]="stageToneClass()">
+            {{ sourceSnapshot().validation.status }}
+          </span>
+        </div>
 
-  <article class="source-card source-card--wide">
-    <p class="source-card__eyebrow">AI comments</p>
-    <div class="source-comment-list">
-      <div *ngFor="let comment of sourceComments" class="source-comment-row">
-        <strong>{{ comment.scope }}</strong>
-        <p>{{ comment.comment }}</p>
-      </div>
+        <div class="source-health-grid">
+          <div *ngFor="let row of validationSummaryRows()" class="source-health-item">
+            <span>{{ row.label }}</span>
+            <strong>{{ row.value }}</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="source-card">
+        <div class="source-section-heading">
+          <div>
+            <p class="source-card__eyebrow">Room program</p>
+            <h2>Active rooms</h2>
+            <p class="source-section-note">
+              This is the main house brief editor. Add only the rooms you want the generator to actively solve for.
+            </p>
+          </div>
+          <div class="source-add-room">
+            <label class="source-form-label" for="room-to-add">Add room type</label>
+            <div class="source-add-room__controls">
+              <div class="source-select-shell">
+                <select
+                  id="room-to-add"
+                  class="source-select"
+                  [value]="selectedRoomToAdd"
+                  (change)="onRoomSelectionChanged($event)"
+                >
+                  <option value="">Choose a room type</option>
+                  <option *ngFor="let room of availableRoomOptions()" [value]="room.id">
+                    {{ room.label }}
+                  </option>
+                </select>
+              </div>
+              <button
+                type="button"
+                class="source-action-btn"
+                [disabled]="!selectedRoomToAdd"
+                (click)="addSelectedRoom()"
+              >
+                Add Room
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="source-toolbar">
+          <span>{{ activeProgramRows().length }} active room types</span>
+          <span>{{ sourceSnapshot().validation.counts.activeRoomInstances }} total room instances</span>
+          <span>{{ availableRoomOptions().length }} more room types available</span>
+        </div>
+
+        <div *ngIf="activeProgramRows().length > 0; else emptyProgram" class="source-table-wrap">
+          <table class="source-table">
+            <thead>
+              <tr>
+                <th>Room</th>
+                <th>Count</th>
+                <th>Tags</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let room of activeProgramRows()">
+                <td>
+                  <div class="source-room-cell">
+                    <span class="source-room-swatch" [style.background]="room.color"></span>
+                    <div>
+                      <strong>{{ room.label }}</strong>
+                      <p>{{ room.shortLabel }} · {{ room.roomId }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="source-count-cell">
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    class="source-number-input"
+                    [value]="room.count"
+                    (change)="onProgramCountChanged(room.roomId, $event)"
+                  />
+                </td>
+                <td>{{ room.tags.length > 0 ? room.tags.join(', ') : 'None' }}</td>
+                <td>
+                  <button type="button" class="source-remove-btn" (click)="removeRoom(room.roomId)">
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <details class="source-disclosure" open>
+        <summary>Validation notes</summary>
+        <div class="source-disclosure__content">
+          <div class="source-validation-list">
+            <div
+              *ngFor="let message of validationMessages()"
+              class="source-validation-row"
+              [ngClass]="validationClass(message.level)"
+            >
+              <strong>{{ message.level }}</strong>
+              <span>{{ message.scope }}</span>
+              <p>{{ message.message }}</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <article class="source-card">
+        <div class="source-section-heading">
+          <div>
+            <p class="source-card__eyebrow">Adjacency matrix</p>
+            <h2>Room relationships</h2>
+            <p class="source-section-note">
+              Use this only for intent. Keep most pairs neutral and raise scores only where the relationship really matters.
+            </p>
+          </div>
+        </div>
+
+        <div class="source-score-legend">
+          <span *ngFor="let row of scoreLegend">{{ row.score }} = {{ row.meaning }}</span>
+        </div>
+
+        <div *ngIf="adjacencyRooms().length > 0; else emptyMatrix" class="source-table-wrap source-table-wrap--matrix">
+          <table class="source-table source-table--matrix source-table--matrix-compact">
+            <thead>
+              <tr>
+                <th>Room</th>
+                <th *ngFor="let column of adjacencyRooms()">{{ column.shortLabel }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of adjacencyRooms()">
+                <th>{{ row.shortLabel }}</th>
+                <td *ngFor="let column of adjacencyRooms()" [ngClass]="scoreTone(matrixScore(row.roomId, column.roomId))">
+                  <ng-container *ngIf="row.roomId === column.roomId; else editableMatrixCell">
+                    <span
+                      class="source-matrix-lock source-matrix-lock--compact"
+                      [ngClass]="scoreTone(matrixScore(row.roomId, column.roomId))"
+                    >
+                      {{ matrixScore(row.roomId, column.roomId) }}
+                    </span>
+                  </ng-container>
+                  <ng-template #editableMatrixCell>
+                    <div
+                      class="source-select-shell source-select-shell--matrix-compact"
+                      [ngClass]="scoreTone(matrixScore(row.roomId, column.roomId))"
+                    >
+                      <select
+                        class="source-select source-select--matrix-compact"
+                        [ngClass]="scoreTone(matrixScore(row.roomId, column.roomId))"
+                        [value]="matrixScore(row.roomId, column.roomId)"
+                        (change)="onAdjacencyScoreChanged(row.roomId, column.roomId, $event)"
+                      >
+                        <option [value]="5">5</option>
+                        <option [value]="4">4</option>
+                        <option [value]="3">3</option>
+                        <option [value]="2">2</option>
+                        <option [value]="1">1</option>
+                      </select>
+                    </div>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <details class="source-inline-disclosure">
+          <summary>Show default matrix reference</summary>
+          <p class="source-inline-note">
+            Baseline scores from the default source for the active room set.
+          </p>
+          <div *ngIf="adjacencyRooms().length > 0" class="source-table-wrap source-table-wrap--matrix source-table-wrap--reference">
+            <table class="source-table source-table--matrix source-table--matrix-compact source-table--reference">
+              <thead>
+                <tr>
+                  <th>Room</th>
+                  <th *ngFor="let column of adjacencyRooms()">{{ column.shortLabel }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of adjacencyRooms()">
+                  <th>{{ row.shortLabel }}</th>
+                  <td *ngFor="let column of adjacencyRooms()" [ngClass]="scoreTone(defaultMatrixScore(row.roomId, column.roomId))">
+                    <span
+                      class="source-matrix-lock source-matrix-lock--compact"
+                      [ngClass]="scoreTone(defaultMatrixScore(row.roomId, column.roomId))"
+                    >
+                      {{ defaultMatrixScore(row.roomId, column.roomId) }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </article>
+
+      <details class="source-disclosure">
+        <summary>Source comments</summary>
+        <div class="source-disclosure__content">
+          <div class="source-comment-list">
+            <div *ngFor="let comment of sourceComments()" class="source-comment-row">
+              <strong>{{ comment.scope }}</strong>
+              <p>{{ comment.comment }}</p>
+            </div>
+          </div>
+        </div>
+      </details>
     </div>
-  </article>
+
+    <aside class="source-sidebar">
+      <article class="source-card">
+        <p class="source-card__eyebrow">Project brief</p>
+        <h2>{{ sourceSnapshot().source.intent.projectKind }}</h2>
+        <p>{{ sourceSnapshot().source.intent.primaryGoal }}</p>
+        <p class="source-card__detail">{{ sourceSnapshot().source.intent.narrative }}</p>
+      </article>
+
+      <article class="source-card">
+        <p class="source-card__eyebrow">At a glance</p>
+        <div class="source-metric-grid">
+          <div *ngFor="let row of sourceMetrics()" class="source-metric">
+            <span>{{ row.label }}</span>
+            <strong>{{ row.value }}</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="source-card">
+        <p class="source-card__eyebrow">Priorities</p>
+        <ul class="source-list">
+          <li *ngFor="let priority of priorityRows()">{{ priority }}</li>
+        </ul>
+      </article>
+    </aside>
+  </section>
 </section>
+
+<ng-template #emptyProgram>
+  <div class="source-empty-state">
+    <strong>No active rooms yet.</strong>
+    <p>Add a room from the catalog to begin shaping the program.</p>
+  </div>
+</ng-template>
+
+<ng-template #emptyMatrix>
+  <div class="source-empty-state">
+    <strong>No adjacency matrix to edit yet.</strong>
+    <p>Add active rooms first, then define how strongly they should attract or avoid each other.</p>
+  </div>
+</ng-template>

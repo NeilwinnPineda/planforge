@@ -69,6 +69,7 @@ export class SimulationStageService {
   }
 
   ensureAutoRun(): void {
+    this.ensureClusterSize();
     this.getActiveInstance().ensureAutoRun();
     this.startSimulationSystem();
   }
@@ -78,8 +79,8 @@ export class SimulationStageService {
   }
 
   startSimulationSystem(): void {
+    this.ensureClusterSize();
     this.instances.forEach((instance) => instance.startSimulationSystem());
-    this.startAutoSpawnLoop();
   }
 
   stopSimulation(): void {
@@ -206,5 +207,12 @@ export class SimulationStageService {
 
   private hasRunningInstance(): boolean {
     return [...this.instances.values()].some((instance) => instance.snapshot().isRunning);
+  }
+
+  private ensureClusterSize(): void {
+    while (this.instances.size < this.autoInstanceTargetCount) {
+      const nextInstanceId = `simulation-${this.instances.size + 1}`;
+      this.ensureInstance(nextInstanceId);
+    }
   }
 }

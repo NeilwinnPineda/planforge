@@ -1,8 +1,9 @@
-import { DecimalPipe, NgFor, NgIf, PercentPipe } from '@angular/common';
+import { DecimalPipe, NgClass, NgFor, NgIf, PercentPipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ConstructionOutputService, type ConstructionOutput } from '../../../core/construction/construction-output.service';
 import { ConstructionContractPushService } from '../../../core/construction/construction-contract-push.service';
 import type { VerifiedLayoutArtifact } from '../../../core/processing/processing.exports';
+import { WorkflowVisualStateService } from '../../../core/processing/workflow-visual-state.service';
 
 interface GalleryCard {
   readonly rank: number;
@@ -37,6 +38,16 @@ interface ScoreRow {
   readonly value: number;
 }
 
+interface GalleryHighlightRow {
+  readonly label: string;
+  readonly value: string;
+}
+
+interface GalleryDecisionRow {
+  readonly label: string;
+  readonly value: string;
+}
+
 const MINI_W = 240;
 const MINI_H = 150;
 const MINI_PAD = 10;
@@ -47,13 +58,14 @@ const DETAIL_PAD = 20;
 @Component({
   selector: 'app-gallery-page',
   standalone: true,
-  imports: [DecimalPipe, NgFor, NgIf, PercentPipe],
+  imports: [DecimalPipe, NgClass, NgFor, NgIf, PercentPipe],
   templateUrl: './gallery-page.component.html',
   styleUrl: './gallery-page.component.scss',
 })
 export class GalleryPageComponent {
   private readonly outputsService = inject(ConstructionOutputService);
   protected readonly pushService = inject(ConstructionContractPushService);
+  private readonly workflowVisualStateService = inject(WorkflowVisualStateService);
 
   protected readonly selectedId = signal<string | null>(null);
 
@@ -83,6 +95,45 @@ export class GalleryPageComponent {
       doorCount: output.doorPlacements.length,
     })),
   );
+  protected readonly stageStatusLabel = computed(() => {
+    const count = this.cards().length;
+    if (count === 0) return 'Waiting for accepted layouts';
+    if (count === 1) return 'One candidate ready for review';
+    return `${count} candidates ready for comparison`;
+  });
+  protected readonly stageStatusTone = computed<'attention' | 'review' | 'ready'>(() => {
+    const count = this.cards().length;
+    if (count === 0) return 'attention';
+    if (count === 1) return 'review';
+    return 'ready';
+  });
+  protected readonly stageSummary = computed(() => {
+    const count = this.cards().length;
+    if (count === 0) {
+      return 'Use this stage to compare accepted layouts after verification and choose which one is strongest before downstream handoff.';
+    }
+
+    return `Use this stage to compare accepted layouts side by side and decide which one deserves to move forward. There ${count === 1 ? 'is' : 'are'} currently ${count} candidate${count === 1 ? '' : 's'} available for review.`;
+  });
+  protected readonly stageNextAction = computed(() => {
+    const count = this.cards().length;
+    if (count === 0) {
+      return 'Go back to Simulation, Processing, and Verification so accepted layouts can flow into the gallery.';
+    }
+    if (count === 1) {
+      return 'Inspect the selected candidate carefully, then keep exploring if you want more options to compare.';
+    }
+    return 'Compare the top candidates, focus on differences that matter, and keep the strongest layout in view for downstream handoff.';
+  });
+  protected readonly highlightRows = computed<readonly GalleryHighlightRow[]>(() => {
+    const selected = this.selectedCard();
+    return [
+      { label: 'Current status', value: this.stageStatusLabel() },
+      { label: 'Candidates', value: String(this.cards().length) },
+      { label: 'Best score', value: this.cards().length ? this.cards()[0].output.entry.score.toFixed(3) : '0.000' },
+      { label: 'Selected layout', value: selected?.output.entry.artifact.layoutId ?? 'none yet' },
+    ];
+  });
 
   protected readonly selectedCard = computed((): GalleryCard | null => {
     const id = this.selectedId();
@@ -90,10 +141,32 @@ export class GalleryPageComponent {
       ?? this.cards()[0]
       ?? null;
   });
+  protected readonly decisionRows = computed<readonly GalleryDecisionRow[]>(() => {
+    const sel = this.selectedCard();
+    if (!sel) {
+      return [
+        { label: 'Decision state', value: 'No accepted layout to compare yet' },
+        { label: 'What to look for', value: 'Wait for accepted verified outputs before making a selection' },
+        { label: 'Next move', value: this.stageNextAction() },
+      ];
+    }
+
+    return [
+      { label: 'Selected rank', value: `#${sel.rank}` },
+      { label: 'Selection reason', value: 'Compare score, room count, hallway share, and verification checks before treating this as the best option.' },
+      { label: 'Next move', value: this.stageNextAction() },
+    ];
+  });
 
   protected readonly detailCells = computed((): readonly DetailCell[] =>
     this.buildDetailCells(this.selectedCard()?.output.entry.artifact ?? null),
   );
+  protected readonly fallbackArtifact = computed(() => this.workflowVisualStateService.latestRenderableSnapshot()?.verificationResult.artifact ?? null);
+  protected readonly fallbackDetailCells = computed(() => this.buildDetailCells(this.fallbackArtifact()));
+
+  protected stageToneClass(): string {
+    return `gallery-stage-pill--${this.stageStatusTone()}`;
+  }
 
   protected select(id: string): void {
     this.selectedId.set(id);

@@ -1,10 +1,12 @@
 import { DecimalPipe, NgFor, NgIf, PercentPipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
-import { analyzeConstructionExternalWalls } from '../../../core/construction/external-wall.factory';
-import { buildDoorPlacements, type ConstructionDoorPlacement } from '../../../core/construction/door-placement.factory';
-import { buildWindowPlacements, type ConstructionWindowPlacement } from '../../../core/construction/window-placement.factory';
-import { type GalleryEntry, LayoutGalleryService } from '../../../core/processing/layout-gallery.service';
+import type { ConstructionExternalWallAnalysis } from '../../../core/construction/external-wall.factory';
+import type { ConstructionDoorPlacement } from '../../../core/construction/door-placement.factory';
+import type { ConstructionWindowPlacement } from '../../../core/construction/window-placement.factory';
+import { ConstructionOutputService } from '../../../core/construction/construction-output.service';
+import { type GalleryEntry } from '../../../core/processing/layout-gallery.service';
 import type { VerifiedLayoutArtifact } from '../../../core/processing/processing.exports';
+import { WorkflowVisualStateService } from '../../../core/processing/workflow-visual-state.service';
 
 interface ConstructionChecklistRow {
   readonly label: string;
@@ -77,6 +79,11 @@ interface PreviewProjection {
   readonly scale: number;
 }
 
+interface ConstructionHighlightRow {
+  readonly label: string;
+  readonly value: string;
+}
+
 @Component({
   selector: 'app-construction-page',
   standalone: true,
@@ -85,36 +92,61 @@ interface PreviewProjection {
   styleUrl: './construction-page.component.scss',
 })
 export class ConstructionPageComponent {
-  private readonly galleryService = inject(LayoutGalleryService);
+  private readonly constructionOutputService = inject(ConstructionOutputService);
+  private readonly workflowVisualStateService = inject(WorkflowVisualStateService);
 
-  protected readonly acceptedLayouts = this.galleryService.entries;
-  protected readonly topLayout = computed(() => this.acceptedLayouts()[0] ?? null);
+  protected readonly topOutput = computed(() => this.constructionOutputService.outputs()[0] ?? null);
+  protected readonly topLayout = computed(() => this.topOutput()?.entry ?? null);
+  protected readonly fallbackVerificationSnapshot = computed(() =>
+    this.topLayout() ? null : this.workflowVisualStateService.latestRenderableSnapshot(),
+  );
+  protected readonly fallbackArtifact = computed(() => this.fallbackVerificationSnapshot()?.verificationResult.artifact ?? null);
+  protected readonly fallbackFailure = this.workflowVisualStateService.latestFailure;
   protected readonly previewCells = computed(() => this.buildPreviewCells(this.topLayout()?.artifact ?? null));
+  protected readonly fallbackPreviewCells = computed(() => this.buildPreviewCells(this.fallbackArtifact()));
   protected readonly interiorWalls = computed(() => this.buildInteriorWalls(this.topLayout()?.artifact ?? null));
-  private readonly externalWallAnalysis = computed(() => {
-    const artifact = this.topLayout()?.artifact ?? null;
-    return artifact ? analyzeConstructionExternalWalls(artifact) : null;
-  });
-  protected readonly externalWalls = computed(() => this.buildExternalWalls(this.externalWallAnalysis()));
+  protected readonly externalWalls = computed(() => this.buildExternalWalls(this.topOutput()?.analysis ?? null));
   protected readonly externalWallLoops = computed(() => this.buildExternalWallLoops(this.externalWalls()));
-  protected readonly doorPlacements = computed(() => {
-    const analysis = this.externalWallAnalysis();
-    const artifact = this.topLayout()?.artifact ?? null;
-    if (!analysis || !artifact) return [];
-    return buildDoorPlacements(artifact, analysis.segments);
-  });
+  protected readonly doorPlacements = computed(() => this.topOutput()?.doorPlacements ?? []);
   protected readonly doorMarkers = computed(() => this.deriveDoorMarkers(this.doorPlacements()));
-  protected readonly windowPlacements = computed(() => {
-    const analysis = this.externalWallAnalysis();
-    if (!analysis) return [];
-    const doorWallIds = new Set(
-      this.doorPlacements()
-        .filter((d) => d.wallId !== null)
-        .map((d) => d.wallId as string),
-    );
-    return buildWindowPlacements(analysis.segments, doorWallIds);
-  });
+  protected readonly windowPlacements = computed(() => this.topOutput()?.windowPlacements ?? []);
   protected readonly windowMarkers = computed(() => this.deriveWindowMarkers(this.windowPlacements()));
+  protected readonly stageStatusLabel = computed(() => {
+    if (this.topLayout()) return 'Ready for construction review';
+    if (this.fallbackArtifact()) return 'Waiting for verified layout - showing last reviewed attempt';
+    return 'Waiting for verified layout';
+  });
+  protected readonly stageStatusTone = computed<'ready' | 'attention'>(() => (
+    this.topLayout() ? 'ready' : 'attention'
+  ));
+  protected readonly stageSummary = computed(() => {
+    if (this.topLayout()) {
+      return 'This page turns a verified layout into a construction-facing preview so you can inspect walls, doors, windows, and readiness before any downstream handoff.';
+    }
+    if (this.fallbackArtifact()) {
+      return 'No accepted construction candidate is ready yet, but this page is keeping the last reviewed layout visible so you can still see what the pipeline is producing while waiting on a clean pass.';
+    }
+    return 'Construction Output only becomes useful after Verification has produced at least one layout worth carrying forward.';
+  });
+  protected readonly stageNextAction = computed(() => {
+    if (this.topLayout()) {
+      return 'Review the construction preview first, then confirm readiness and inspect walls, windows, and doors before any export or Revit handoff.';
+    }
+    if (this.fallbackArtifact()) {
+      return 'Use this fallback preview for context, then return to Verification or Simulation to fix what is blocking a construction-ready candidate.';
+    }
+    return 'Go back to Verification and Candidate Gallery first so this stage has a verified layout to stage.';
+  });
+  protected readonly highlightRows = computed<readonly ConstructionHighlightRow[]>(() => {
+    const layout = this.topLayout();
+    const fallbackArtifact = this.fallbackArtifact();
+    return [
+      { label: 'Current status', value: this.stageStatusLabel() },
+      { label: 'Real rooms', value: layout ? String(this.realRoomCount(layout)) : fallbackArtifact ? String(fallbackArtifact.cells.filter((cell) => !cell.pkg && !cell.hallway).length) : '0' },
+      { label: 'Window placements', value: String(this.windowPlacements().length) },
+      { label: 'Door placements', value: String(this.doorPlacements().length) },
+    ];
+  });
   protected readonly checklist = computed<readonly ConstructionChecklistRow[]>(() => {
     const top = this.topLayout();
 
@@ -205,7 +237,7 @@ export class ConstructionPageComponent {
     );
   }
 
-  private buildExternalWalls(analysis: ReturnType<typeof analyzeConstructionExternalWalls> | null): readonly ConstructionWallSegment[] {
+  private buildExternalWalls(analysis: ConstructionExternalWallAnalysis | null): readonly ConstructionWallSegment[] {
     if (!analysis?.segments.length) return [];
 
     const artifact = this.topLayout()?.artifact ?? null;

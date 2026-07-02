@@ -28,7 +28,7 @@ describe('SimulationControlBarComponent', () => {
     expect(startSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('emits stop and clear actions from the secondary controls', () => {
+  it('emits stop from the primary control while running and clear from reset', () => {
     const stopSpy = vi.fn();
     const clearSpy = vi.fn();
     fixture.componentRef.setInput('isRunning', true);
@@ -38,8 +38,8 @@ describe('SimulationControlBarComponent', () => {
     fixture.componentInstance.clearRequested.subscribe(clearSpy);
 
     const buttons = fixture.nativeElement.querySelectorAll('.simulation-bar__btn') as NodeListOf<HTMLButtonElement>;
+    buttons[0].click();
     buttons[1].click();
-    buttons[2].click();
 
     expect(stopSpy).toHaveBeenCalledTimes(1);
     expect(clearSpy).toHaveBeenCalledTimes(1);

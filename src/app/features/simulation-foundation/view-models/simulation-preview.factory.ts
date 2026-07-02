@@ -1,4 +1,7 @@
-import type { LotGeometryResult } from '../../../core/geometry/geometry.exports';
+import {
+  createSvgViewportFit,
+  type LotGeometryResult,
+} from '../../../core/geometry/geometry.exports';
 import type { SimulationBubbleState } from '../../../core/simulation/simulation.exports';
 
 export interface SimulationPreviewBubble {
@@ -11,6 +14,9 @@ export interface SimulationPreviewBubble {
 }
 
 export interface SimulationPreviewModel {
+  viewBox: string;
+  width: number;
+  height: number;
   lotPolygon: string;
   buildablePolygon: string;
   bubbles: SimulationPreviewBubble[];
@@ -27,22 +33,14 @@ export function buildSimulationPreview(
   bubbles: SimulationBubbleState[],
   viewport: { width: number; height: number; padding: number },
 ): SimulationPreviewModel {
-  const minX = lotGeometry.lotBounds.minX;
-  const maxX = lotGeometry.lotBounds.maxX;
-  const minY = lotGeometry.lotBounds.minY;
-  const maxY = lotGeometry.lotBounds.maxY;
-  const spanX = Math.max(1, maxX - minX);
-  const spanY = Math.max(1, maxY - minY);
-  const scale = Math.min(
-    (viewport.width - viewport.padding * 2) / spanX,
-    (viewport.height - viewport.padding * 2) / spanY,
-  );
-  const offsetX = (viewport.width - spanX * scale) / 2;
-  const offsetY = (viewport.height - spanY * scale) / 2;
-  const projectPoint = (point: { x: number; y: number }) => ({
-    x: Number((offsetX + (point.x - minX) * scale).toFixed(2)),
-    y: Number((viewport.height - (offsetY + (point.y - minY) * scale)).toFixed(2)),
+  const fittedViewport = createSvgViewportFit(lotGeometry.lotBounds, {
+    maxWidth: viewport.width,
+    maxHeight: viewport.height,
+    minWidth: Math.min(460, viewport.width),
+    minHeight: Math.min(300, viewport.height),
+    padding: viewport.padding,
   });
+  const projectPoint = (point: { x: number; y: number }) => fittedViewport.projectPoint(point);
   const toPolygon = (points: Array<{ x: number; y: number }>) =>
     points
       .map((point) => {
@@ -54,6 +52,9 @@ export function buildSimulationPreview(
   const placedBubbles = bubbles.filter((bubble) => bubble.placed);
 
   return {
+    viewBox: fittedViewport.viewBox,
+    width: fittedViewport.width,
+    height: fittedViewport.height,
     lotPolygon: toPolygon(lotGeometry.lotPoints),
     buildablePolygon: toPolygon(lotGeometry.buildablePoints),
     bubbles: placedBubbles.map((bubble) => {
@@ -63,7 +64,7 @@ export function buildSimulationPreview(
         color: bubble.color,
         cx: projectedCenter.x,
         cy: projectedCenter.y,
-        radiusPixels: Number((bubble.radiusMeters * scale).toFixed(2)),
+        radiusPixels: Number((bubble.radiusMeters * fittedViewport.scale).toFixed(2)),
         isGenerated: bubble.pkg || bubble.hallway,
       };
     }),

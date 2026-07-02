@@ -97,11 +97,37 @@ Contract boundary validation:
 
 1. `npm.cmd run test:contracts`
 
+## Current Validation Snapshot
+
+Validated locally on 2026-07-02 after service-boundary extraction:
+
+- `npm.cmd run build` passes
+- current build warning: initial bundle is `613.70 kB`, which exceeds the configured `500 kB` budget by `113.70 kB`
+- `npm.cmd test -- --watch=false` passes with `34` tests across `6` files
+- `npm.cmd run test:contracts` passes
+- `npm.cmd run debug:runtime-inspection` passes on `/simulation`
+- runtime inspection observed `14` preview bubbles, `0` uncaught exceptions, `2` Angular deprecation warnings about `allowSignalWrites`, and a `404` for `/favicon.ico`
+- `npm.cmd run test:e2e` passes with `22` Playwright tests
+
+Operational note:
+
+- `npm.cmd run export:live` is not a quick smoke command; it runs a long accepted-layout search (`TARGET_COUNT = 1000`) before writing `generated-exports/live-layout-contract.json`
+- if interrupted early, the export file may not exist yet
+
+Repo naming note:
+
+- the workspace product name is `planforge`, but `package.json` still uses the historical package name `app-next`
+
+Service-boundary note:
+
+- Processing and Verification now share one service-owned downstream chain through `ProcessingPipelineService`
+- Construction page now consumes service-owned assembled outputs from `ConstructionOutputService` instead of rebuilding wall/door/window derivation locally
+
 ## Docs
 
 Start with:
 
 - `docs/README.md`
-- `docs/ARCHITECTURE_RULES.md`
+- `docs/PLANFORGE_CENTRAL_GUIDE.md`
 - `docs/REBUILD_ROADMAP.md`
-- `docs/SELF_TESTING_AND_REPORTING.md`
+- `docs/PLANFORGE_SYSTEM_GUIDE.md`

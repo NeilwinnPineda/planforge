@@ -1,0 +1,178 @@
+<section class="output-viewer">
+  <header class="output-viewer__hero">
+    <div>
+      <p class="output-viewer__eyebrow">Standalone Output Viewer</p>
+      <h2>Load a final contract and inspect the layout directly.</h2>
+      <p class="output-viewer__summary">
+        This page is only for final export review. Load a generated contract JSON, check the layout, and ignore the rest of the pipeline.
+      </p>
+    </div>
+    <div class="output-viewer__hero-actions">
+      <label class="output-viewer__upload">
+        <input type="file" accept="application/json,.json" (change)="onFileSelected($event)" />
+        <span>Load Contract JSON</span>
+      </label>
+      <button type="button" class="output-viewer__btn output-viewer__btn--ghost" (click)="clearViewer()">Clear</button>
+    </div>
+  </header>
+
+  <section class="output-viewer__workspace">
+    <article class="output-viewer__panel output-viewer__panel--input">
+      <div class="output-viewer__panel-head">
+        <div>
+          <p class="output-viewer__kicker">Input</p>
+          <h3>Contract source</h3>
+        </div>
+        <span class="output-viewer__chip">{{ fileName() }}</span>
+      </div>
+
+      <p class="output-viewer__hint">
+        Use a file from <code>generated-exports</code>, or paste contract JSON below.
+      </p>
+
+      <textarea
+        class="output-viewer__textarea"
+        [value]="rawJson()"
+        (input)="onJsonInput($event)"
+        placeholder="{&#10;  &quot;schemaVersion&quot;: &quot;1.0&quot;,&#10;  &quot;layoutId&quot;: &quot;...&quot;&#10;}"
+      ></textarea>
+
+      <div class="output-viewer__input-actions">
+        <button type="button" class="output-viewer__btn" (click)="loadFromText()">Parse Pasted JSON</button>
+      </div>
+
+      <p *ngIf="parseError() as error" class="output-viewer__error">{{ error }}</p>
+    </article>
+
+    <ng-container *ngIf="contract() as contract; else emptyState">
+      <article class="output-viewer__panel output-viewer__panel--canvas">
+        <div class="output-viewer__panel-head">
+          <div>
+            <p class="output-viewer__kicker">Layout</p>
+            <h3>Final output preview</h3>
+          </div>
+          <span class="output-viewer__chip">Score {{ contract.score | number:'1.3-3' }}</span>
+        </div>
+
+        <svg class="output-viewer__svg" [attr.viewBox]="'0 0 ' + viewerWidth + ' ' + viewerHeight" preserveAspectRatio="xMidYMid meet">
+          <rect x="0" y="0" [attr.width]="viewerWidth" [attr.height]="viewerHeight" class="output-viewer__svg-bg" />
+
+          <g *ngFor="let cell of cellPolygons()">
+            <polygon
+              [attr.points]="cell.points"
+              [attr.fill]="cell.color"
+              class="output-viewer__cell"
+              [class.output-viewer__cell--generated]="cell.generated"
+            />
+            <text [attr.x]="cell.centerX" [attr.y]="cell.centerY" class="output-viewer__cell-label">{{ cell.label }}</text>
+          </g>
+
+          <line
+            *ngFor="let wall of wallSegments(); trackBy: trackBySegment"
+            [attr.x1]="wall.x1"
+            [attr.y1]="wall.y1"
+            [attr.x2]="wall.x2"
+            [attr.y2]="wall.y2"
+            class="output-viewer__wall"
+          />
+
+          <line
+            *ngFor="let window of windowSegments()"
+            [attr.x1]="window.x1"
+            [attr.y1]="window.y1"
+            [attr.x2]="window.x2"
+            [attr.y2]="window.y2"
+            class="output-viewer__window"
+          />
+
+          <line
+            *ngFor="let door of doorSegments()"
+            [attr.x1]="door.x1"
+            [attr.y1]="door.y1"
+            [attr.x2]="door.x2"
+            [attr.y2]="door.y2"
+            class="output-viewer__door"
+          />
+        </svg>
+      </article>
+
+      <section class="output-viewer__details">
+        <article class="output-viewer__panel">
+          <div class="output-viewer__panel-head">
+            <div>
+              <p class="output-viewer__kicker">Summary</p>
+              <h3>What this output contains</h3>
+            </div>
+          </div>
+
+          <div class="output-viewer__summary-grid">
+            <div *ngFor="let row of summaryRows(); trackBy: trackByLabel" class="output-viewer__summary-card">
+              <span>{{ row.label }}</span>
+              <strong>{{ row.value }}</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="output-viewer__panel">
+          <div class="output-viewer__panel-head">
+            <div>
+              <p class="output-viewer__kicker">Rooms</p>
+              <h3>Real spaces</h3>
+            </div>
+            <span class="output-viewer__chip">{{ roomCells().length }}</span>
+          </div>
+
+          <div class="output-viewer__list">
+            <div *ngFor="let cell of roomCells(); trackBy: trackByCell" class="output-viewer__list-row">
+              <div class="output-viewer__room-meta">
+                <span class="output-viewer__swatch" [style.background]="cell.color"></span>
+                <div>
+                  <strong>{{ cell.label }}</strong>
+                  <span>{{ cell.typeId }}</span>
+                </div>
+              </div>
+              <strong>{{ cell.areaSquareMeters | number:'1.2-2' }} sq m</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="output-viewer__panel">
+          <div class="output-viewer__panel-head">
+            <div>
+              <p class="output-viewer__kicker">Generated</p>
+              <h3>Hallways and fillers</h3>
+            </div>
+            <span class="output-viewer__chip">{{ generatedCells().length }}</span>
+          </div>
+
+          <div class="output-viewer__list" *ngIf="generatedCells().length; else noGenerated">
+            <div *ngFor="let cell of generatedCells(); trackBy: trackByCell" class="output-viewer__list-row">
+              <div class="output-viewer__room-meta">
+                <span class="output-viewer__swatch" [style.background]="cell.color"></span>
+                <div>
+                  <strong>{{ cell.label }}</strong>
+                  <span>{{ cell.hallway ? 'hallway' : 'filler / pkg' }}</span>
+                </div>
+              </div>
+              <strong>{{ cell.areaSquareMeters | number:'1.2-2' }} sq m</strong>
+            </div>
+          </div>
+        </article>
+      </section>
+    </ng-container>
+
+    <ng-template #emptyState>
+      <article class="output-viewer__panel output-viewer__panel--empty">
+        <p class="output-viewer__kicker">No output loaded</p>
+        <h3>Load a contract JSON to see the final layout.</h3>
+        <p class="output-viewer__hint">
+          The viewer stays focused on final output only, so it does not depend on simulation state or the other tabs.
+        </p>
+      </article>
+    </ng-template>
+
+    <ng-template #noGenerated>
+      <p class="output-viewer__hint">This export does not include generated hallway or filler cells.</p>
+    </ng-template>
+  </section>
+</section>

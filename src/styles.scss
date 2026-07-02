@@ -1,8 +1,29 @@
 :root {
   color-scheme: light;
   font-family: 'Segoe UI', system-ui, sans-serif;
-  background: #f4f1eb;
+  background: #efeae1;
   color: #201c18;
+  --app-bg: #efeae1;
+  --panel-bg: #fffdfa;
+  --panel-bg-soft: #f8f3ea;
+  --panel-bg-muted: #f3ede3;
+  --panel-border: #d9cfbf;
+  --panel-border-strong: #c8bca8;
+  --panel-text: #2b2621;
+  --panel-text-muted: #62584d;
+  --panel-shadow: 0 10px 24px rgba(72, 54, 35, 0.06);
+  --control-height: 42px;
+  --control-radius: 12px;
+  --panel-radius: 18px;
+  --chip-radius: 999px;
+  --accent-warm: #9c7745;
+  --accent-warm-soft: #efe0bf;
+  --accent-cool: #456c82;
+  --accent-cool-soft: #d9e7ee;
+  --accent-danger: #9b4f45;
+  --accent-danger-soft: #f5dfd8;
+  --accent-success: #567a44;
+  --accent-success-soft: #dce9d2;
 }
 
 * {
@@ -19,6 +40,9 @@ body {
 
 body {
   min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.75), transparent 34%),
+    linear-gradient(180deg, #f4efe7, var(--app-bg));
 }
 
 button,

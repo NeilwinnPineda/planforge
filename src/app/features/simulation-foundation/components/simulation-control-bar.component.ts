@@ -29,10 +29,6 @@ export class SimulationControlBarComponent {
     this.startRequested.emit();
   }
 
-  protected onStop(): void {
-    this.stopRequested.emit();
-  }
-
   protected onClear(): void {
     this.clearRequested.emit();
   }

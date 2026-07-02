@@ -1,19 +1,86 @@
-.generation-grid {
+.generation-page {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.generation-hero {
+  display: grid;
   gap: 16px;
+  padding: 24px 26px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--panel-radius);
+  background:
+    linear-gradient(135deg, rgba(239, 224, 191, 0.86), rgba(255, 253, 249, 0.98)),
+    var(--panel-bg);
+  box-shadow: var(--panel-shadow);
+}
+
+.generation-hero__copy {
+  display: grid;
+  gap: 8px;
+}
+
+.generation-card h2,
+.generation-card p,
+.generation-hero__copy h2 {
+  margin: 0;
+}
+
+.generation-hero__status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.generation-hero__status span,
+.generation-status-chip {
+  min-height: 34px;
+  padding: 7px 11px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--chip-radius);
+  color: #5a5148;
+  font-size: 0.84rem;
+  background: rgba(255, 253, 250, 0.94);
+}
+
+.generation-status-chip {
+  font-weight: 700;
+}
+
+.generation-status-chip--ready {
+  border-color: #afc79b;
+  background: var(--accent-success-soft);
+  color: #355529;
+}
+
+.generation-workspace {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.generation-sidebar,
+.generation-main {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.generation-sidebar {
+  position: sticky;
+  top: 16px;
 }
 
 .generation-card {
   display: grid;
-  gap: 10px;
-  padding: 18px 20px;
-  border: 1px solid #d6d0c6;
-  background: #fffdf9;
-}
-
-.generation-card--wide {
-  grid-column: 1 / -1;
+  gap: 14px;
+  padding: 20px 22px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--panel-radius);
+  background: var(--panel-bg);
+  box-shadow: var(--panel-shadow);
+  min-width: 0;
 }
 
 .generation-card__eyebrow {
@@ -25,9 +92,42 @@
   text-transform: uppercase;
 }
 
-.generation-card h2,
-.generation-card p {
-  margin: 0;
+.generation-card__detail {
+  color: #5b534a;
+  line-height: 1.55;
+}
+
+.generation-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.generation-summary-list,
+.generation-band-list {
+  display: grid;
+  gap: 10px;
+}
+
+.generation-summary-row,
+.generation-metric,
+.generation-band-row,
+.generation-seed-row {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid #e8dece;
+  border-radius: 14px;
+  background: var(--panel-bg-soft);
+}
+
+.generation-summary-row span,
+.generation-metric span,
+.generation-band-row span,
+.generation-seed-row span {
+  color: #5b534a;
+  line-height: 1.5;
 }
 
 .generation-metric-grid {
@@ -36,27 +136,13 @@
   gap: 10px;
 }
 
-.generation-metric,
-.generation-band-row,
-.generation-seed-row {
-  display: grid;
-  gap: 4px;
-  padding: 10px;
-  border: 1px solid #ebe4d8;
-  background: #fcfaf5;
-}
-
-.generation-band-list,
-.generation-seed-list {
-  display: grid;
-  gap: 10px;
-}
-
 .generation-preview {
   display: block;
   width: 100%;
-  height: 360px;
-  border: 1px solid #ebe4d8;
+  height: auto;
+  max-height: 460px;
+  border: 1px solid #e8dece;
+  border-radius: 16px;
   background: #fcfaf5;
 }
 
@@ -68,6 +154,7 @@
   fill: rgba(142, 202, 230, 0.08);
   stroke: #618ea6;
   stroke-width: 2;
+  stroke-dasharray: 5 4;
 }
 
 .generation-preview__buildable {
@@ -77,8 +164,8 @@
 }
 
 .generation-preview__seed {
-  fill-opacity: 0.75;
-  stroke: rgba(40, 34, 28, 0.35);
+  fill-opacity: 0.82;
+  stroke: rgba(40, 34, 28, 0.42);
   stroke-width: 1;
 }
 
@@ -88,15 +175,29 @@
   font-weight: 700;
   text-anchor: middle;
   dominant-baseline: middle;
+  paint-order: stroke;
+  stroke: rgba(255, 253, 249, 0.9);
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }
 
-@media (max-width: 800px) {
-  .generation-grid,
-  .generation-metric-grid {
+.generation-seed-list {
+  display: grid;
+  gap: 10px;
+}
+
+@media (max-width: 1080px) {
+  .generation-workspace {
     grid-template-columns: 1fr;
   }
 
-  .generation-card--wide {
-    grid-column: auto;
+  .generation-sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .generation-metric-grid {
+    grid-template-columns: 1fr;
   }
 }

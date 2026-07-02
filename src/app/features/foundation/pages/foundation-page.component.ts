@@ -16,20 +16,20 @@ interface FoundationStageRow {
 export class FoundationPageComponent {
   protected readonly stageRows: readonly FoundationStageRow[] = [
     {
-      stage: 'Source intake',
-      purpose: 'Load typed design-source data and establish the canonical brief for the run.',
+      stage: 'Start with the project brief',
+      purpose: 'Review the project source, room program, and adjacency setup before running layout work.',
     },
     {
-      stage: 'Constraint derivation',
-      purpose: 'Turn source facts into generation constraints and stage-ready contracts.',
+      stage: 'Check the site and layout setup',
+      purpose: 'Confirm the lot shape, buildable area, and generation inputs that will shape the options.',
     },
     {
-      stage: 'Generation',
-      purpose: 'Produce candidate layouts that can later become canonical polygon outputs.',
+      stage: 'Generate and refine candidates',
+      purpose: 'Use generation, simulation, and processing views to shape candidates into stronger layouts.',
     },
     {
-      stage: 'Validation and reporting',
-      purpose: 'Inspect candidate quality and emit endpoint-visible records for historical review.',
+      stage: 'Verify and prepare the result',
+      purpose: 'Compare candidates, check readiness, and move the best layout toward construction output or export.',
     },
   ];
 }
