@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "diagnostic-1.0",
+  "scenario": {
+    "id": "wide-family-lot",
+    "title": "Wide Family Lot"
+  },
+  "exportedAtIso": "2026-07-02T09:50:38.686Z",
+  "cycle": 1,
+  "simulationOutcome": {
+    "status": "fail",
+    "reason": "Front-facing rooms are not yet touching the road edge within tolerance.",
+    "score": 0.7563,
+    "thresholdBefore": 0.6,
+    "thresholdAfter": 0.6,
+    "frontEdgePassed": false,
+    "attractionAverage": 0.9673,
+    "repelAverage": 0.666,
+    "evaluatedAtIso": "2026-07-02T09:50:38.678Z",
+    "reportStatus": "idle",
+    "reportMessage": null
+  },
+  "verificationAccepted": null,
+  "cullReasons": [],
+  "capture": null,
+  "verifiedArtifact": null
+}

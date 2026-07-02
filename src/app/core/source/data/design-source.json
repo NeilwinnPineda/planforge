@@ -1,21 +1,21 @@
 {
   "meta": {
-    "id": "minimal-residential-v1",
+    "id": "super-hard",
     "version": "0.2.0",
-    "title": "Minimal Residential — 9-Room Tight Lot",
-    "summary": "Lean 9-room single-storey residential program on a 14m x 20m rectangular lot. ~111 sqm program / ~150 sqm buildable = 74% utilization.",
+    "title": "Super Hard - Irregular Overcapacity Stress Case",
+    "summary": "Deliberately brutal single-storey source with an irregular narrow-front lot and overloaded mixed-use family brief intended to pressure geometry, circulation, and failure handling.",
     "authoringMode": "ai_editable_source"
   },
   "intent": {
     "projectKind": "Lot-aware detached residential house layout",
     "primaryGoal": "Generate buildable room layouts from source data, then promote the best candidates toward Revit-ready schematic geometry.",
-    "narrative": "Minimal single-storey residential brief. Stripped to core rooms only — no secondary bedrooms, no service rooms beyond laundry, no optional spaces. Rectangular 14x20m lot gives the generator a clean orthogonal envelope to work with.",
+    "narrative": "Deliberately brutal single-storey residential brief. This source combines a skewed six-edge lot, narrow frontage pressure, long depth, and an overloaded room count so the app is forced to reveal how it behaves under severe geometric and program stress.",
     "priorities": [
       "Master bed and master bath must be physically adjacent (touch mode).",
-      "Foyer must touch living room.",
-      "Kitchen and dining must be close.",
-      "Garage must face the street (front-facing).",
-      "Keep total program area well under 75% of buildable to avoid deficiency failures."
+      "Kitchen, dirty kitchen, pantry, and laundry should read as a service cluster.",
+      "Foyer and garage should still claim the road edge despite the constrained frontage.",
+      "Sleeping rooms should remain reachable through understandable circulation instead of random fragmentation.",
+      "The pipeline should fail clearly if the brief is too overloaded to resolve cleanly."
     ],
     "downstreamTargets": [
       "buildable lot envelope",
@@ -49,7 +49,7 @@
     },
     {
       "scope": "simulation.forces",
-      "comment": "Force values tune search behavior only — not design intent."
+      "comment": "Force values tune search behavior only - not design intent."
     }
   ],
   "roomCatalog": [
@@ -86,23 +86,41 @@
   "settings": {
     "lot": {
       "segments": [
-        { "point": "P1", "bearing": "N 89° 59' E", "distance": 14, "setback": 3, "isRrow": true },
-        { "point": "P2", "bearing": "N 0° 01' W", "distance": 20, "setback": 2 },
-        { "point": "P3", "bearing": "S 89° 59' W", "distance": 14, "setback": 2 },
-        { "point": "P4", "bearing": "S 0° 01' E", "distance": 20, "setback": 2 }
+        { "point": "P1", "bearing": "N 68 00 E", "distance": 8.6, "setback": 3.2, "isRrow": true },
+        { "point": "P2", "bearing": "N 15 00 W", "distance": 7.2, "setback": 2.1 },
+        { "point": "P3", "bearing": "N 58 00 W", "distance": 4.8, "setback": 2.3 },
+        { "point": "P4", "bearing": "N 8 00 W", "distance": 8.4, "setback": 2.4 },
+        { "point": "P5", "bearing": "S 78 00 W", "distance": 8.1, "setback": 2.2 },
+        { "point": "P6", "bearing": "S 6 00 E", "distance": 19.8, "setback": 2.1 }
       ]
     },
     "rooms": {
       "program": {
         "foyer": 1,
         "living": 1,
+        "family_room": 1,
         "dining": 1,
         "kitchen": 1,
+        "dirty_kitchen": 1,
+        "pantry": 1,
+        "breakfast_nook": 1,
         "master_bed": 1,
+        "master_closet": 1,
         "master_bath": 1,
-        "shared_bath": 1,
+        "kids_bed": 2,
+        "guest_bed": 1,
+        "shared_bath": 2,
         "laundry": 1,
-        "garage": 1
+        "utility": 1,
+        "storage": 1,
+        "mudroom": 1,
+        "garage": 1,
+        "office": 1,
+        "study": 1,
+        "playroom": 1,
+        "media_room": 1,
+        "gym": 1,
+        "powder_room": 1
       }
     },
     "generated": {
@@ -176,18 +194,18 @@
         },
         {
           "label": "Open Access Spine",
-          "rooms": ["foyer", "living", "dining", "kitchen"],
+          "rooms": ["foyer", "living", "family_room", "dining", "kitchen", "breakfast_nook"],
           "note": "Free-access / open area tag for circulation-facing spaces. Every other room must touch one of these."
         },
         {
           "label": "En-suite",
           "rooms": ["master_bed", "master_bath"],
-          "note": "Private master cluster — must be physically adjacent (touch mode enforced at review-critical)."
+          "note": "Private master cluster - must be physically adjacent (touch mode enforced at review-critical)."
         },
         {
           "label": "Service Core",
-          "rooms": ["kitchen", "laundry"],
-          "note": "Back-of-house service zone."
+          "rooms": ["kitchen", "dirty_kitchen", "pantry", "laundry", "utility"],
+          "note": "Back-of-house service zone under heavy adjacency pressure."
         },
         {
           "label": "Arrival Sequence",
@@ -198,7 +216,7 @@
       "blockers": [
         {
           "label": "All rooms touch an open-access space",
-          "rooms": ["foyer", "living", "dining", "kitchen"],
+          "rooms": ["foyer", "living", "family_room", "dining", "kitchen", "breakfast_nook"],
           "note": "Every active room must be adjacent to at least one open-access space to pass review-access."
         }
       ]
@@ -333,11 +351,11 @@
       }
     },
     "legacyPanelLayout": {
-      "lotWidthMeters": 14,
+      "lotWidthMeters": 9,
       "lotDepthMeters": 20,
-      "frontSetbackMeters": 3,
-      "sideSetbackMeters": 2,
-      "rearSetbackMeters": 2,
+      "frontSetbackMeters": 3.2,
+      "sideSetbackMeters": 2.1,
+      "rearSetbackMeters": 2.2,
       "panel4GridMeters": 0.5
     }
   }
