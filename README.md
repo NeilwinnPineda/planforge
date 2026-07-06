@@ -72,4 +72,5 @@ See [CONTRIBUTORS.md](CONTRIBUTORS.md)
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+[Business Source License 1.1](LICENSE) — converts to MIT on 2030-07-06.
+Non-production and non-commercial use permitted in the meantime.
