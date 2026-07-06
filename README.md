@@ -6,6 +6,16 @@ Live → [neilwinnpineda.github.io/planforge](https://neilwinnpineda.github.io/p
 
 ---
 
+## Status
+
+Early release — actively in development. The browser-side pipeline is complete end-to-end: program setup through physics simulation, verification, candidate selection, and typed contract export. The app is functional and deployed, but the UI is still rough in places and built for the developer workflow first.
+
+The next milestone is the Revit-side consumer: reading a delivered contract, previewing it as temporary geometry, and applying it behind an approval gate. That work is in progress.
+
+Not yet recommended for non-technical users or production use.
+
+---
+
 ## What it does
 
 Planforge is a browser-based layout generation tool for residential design. You define a room program, configure the site, and the system runs physics-based simulations to produce verified floor plan candidates — then packages the best result as a typed contract ready to deliver to a Revit model.
