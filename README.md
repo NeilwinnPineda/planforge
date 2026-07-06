@@ -66,6 +66,10 @@ npm run build
 - Revit bridge — .NET Framework 4.8 WPF add-in, local HTTP, ExternalEvent routing
 - Deployed via GitHub Actions to GitHub Pages
 
+## Contributors
+
+See [CONTRIBUTORS.md](CONTRIBUTORS.md)
+
 ## License
 
 MIT — see [LICENSE](LICENSE)
