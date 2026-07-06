@@ -5,6 +5,18 @@
   <title>Planforge</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    (function () {
+      var p = new URLSearchParams(window.location.search).get('p');
+      if (p) {
+        var decoded = decodeURIComponent(p);
+        window.history.replaceState(
+          null, null,
+          window.location.pathname + (decoded.charAt(0) === '?' ? '' : '/') + decoded
+        );
+      }
+    })();
+  </script>
 </head>
 <body>
   <app-root></app-root>
