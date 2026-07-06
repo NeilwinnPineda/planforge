@@ -1,133 +1,71 @@
 # Planforge
 
-`planforge` is the standalone app repo for the residential layout generator.
+**Residential layout generator — from project brief to construction-ready output.**
 
-It is intended to run independently as its own product workspace and also be consumed by the Revit-side workspace as a linked dependency during extension development.
+Live → [neilwinnpineda.github.io/planforge](https://neilwinnpineda.github.io/planforge/)
 
-## Repo Role
+---
 
-`planforge` owns the generator-side product concerns:
+## What it does
 
-- structured source intake
-- lot geometry derivation
-- deterministic generation
-- simulation
-- downstream processing
-- verification
-- construction-oriented export
-- browser-side reporting, diagnostics, and E2E
+Planforge is a browser-based layout generation tool for residential design. You define a room program, configure the site, and the system runs physics-based simulations to produce verified floor plan candidates — then packages the best result as a typed contract ready to deliver to a Revit model.
 
-`planforge` does not own:
+The workflow runs in ten stages:
 
-- Revit thread routing
-- Revit transactions
-- Revit preview/apply orchestration
-- Revit-specific family/document mutation rules
+| # | Stage | What happens |
+|---|---|---|
+| 01 | Program Setup | Define rooms, target areas, adjacency preferences, and design rules |
+| 02 | Site and Lot | Set lot segments, setbacks, RROW lines, and buildable envelope |
+| 03 | Generation | Seed room positions inside the buildable bounds using tag-based bias profiles |
+| 04 | Simulation | Run parallel bubble physics engines with heatmap feedback from prior successful runs |
+| 05 | Processing | Transform captures through Voronoi clipping, hallway injection, and UV edge negotiation |
+| 06 | Verification | Check nine layout rules: frontage, access, deficiency, aspect ratio, slivers, overlaps |
+| 07 | Candidate Gallery | Compare verified layouts and shortlist the strongest candidates |
+| 08 | Construction Output | Extract wall segments, door placements, and window placements |
+| 09 | Output Viewer | Inspect the full typed layout contract before delivery |
+| 10 | Reporting | Track pipeline reports and push history to the Revit endpoint |
 
-Those stay in the Revit host repo.
+## Verification
 
-## Relationship To `ProjectRevit`
+Every layout must pass nine checks before it is accepted:
 
-The intended repo shape is:
+1. No room below 75% of its target area
+2. No cell with aspect ratio ≥ 4.5:1
+3. BFS access reachability from foyer to all rooms
+4. Master bed adjacent to master bath; foyer adjacent to living
+5. Garage must touch the front boundary
+6. Foyer must touch the front boundary
+7. No non-support cell with a sliver dimension below threshold
+8. No overlapping cell pairs
 
-- `planforge` is the standalone app repo
-- `ProjectRevit` is the Revit extension repo
-- `ProjectRevit` can include `planforge` as a submodule or linked workspace for integrated development
+Layouts that fail any check are culled with reasons recorded on the artifact.
 
-That means this repo must remain valid on its own:
+## Revit integration
 
-- it should build on its own
-- it should serve on its own
-- it should test on its own
-- it should not depend on `testing/` paths from the Revit host repo as an ownership model
+Accepted layouts are exported as a typed `ConstructionContractExport` and pushed to a local Revit HTTP bridge running at `localhost:8765`. The companion Revit add-in stores contracts by layout ID and exposes them for a preview and apply workflow inside Revit 2024.
 
-Legacy references can still be traced from `ProjectRevit/testing/legacy-reference/app`, but that is migration context, not product ownership.
+## Running locally
 
-## Intended App Shape
-
-```text
-planforge/
-  src/
-    app/
-      shell/
-      features/
-        source-intake/
-        generation/
-        processing/
-        verification/
-        outputs/
-        construction/
-      core/
-        contracts/
-        export/
-        generation/
-        geometry/
-        integrations/
-        processing/
-        reporting/
-      shared/
-        ui/
-        utils/
-  docs/
-    README.md
-    architecture/
-    workflows/
-    exports/
-  e2e/
-  public/
-  scripts/
+```bash
+npm install
+npm start
 ```
 
-## Local Development
-
-Preferred local flow:
-
-1. `npm install`
-2. `npm.cmd start`
+Opens at `http://localhost:4200`.
 
 Production build:
 
-1. `npm run build`
+```bash
+npm run build
+```
 
-Browser E2E:
+## Tech stack
 
-1. `npm.cmd run test:e2e`
+- Angular 21.2 — standalone components, signals, computed()
+- Physics simulation — weighted Voronoi, SAT scoring, heatmap spawn bias
+- Revit bridge — .NET Framework 4.8 WPF add-in, local HTTP, ExternalEvent routing
+- Deployed via GitHub Actions to GitHub Pages
 
-Contract boundary validation:
+## License
 
-1. `npm.cmd run test:contracts`
-
-## Current Validation Snapshot
-
-Validated locally on 2026-07-02 after service-boundary extraction:
-
-- `npm.cmd run build` passes
-- current build warning: initial bundle is `613.70 kB`, which exceeds the configured `500 kB` budget by `113.70 kB`
-- `npm.cmd test -- --watch=false` passes with `34` tests across `6` files
-- `npm.cmd run test:contracts` passes
-- `npm.cmd run debug:runtime-inspection` passes on `/simulation`
-- runtime inspection observed `14` preview bubbles, `0` uncaught exceptions, `2` Angular deprecation warnings about `allowSignalWrites`, and a `404` for `/favicon.ico`
-- `npm.cmd run test:e2e` passes with `22` Playwright tests
-
-Operational note:
-
-- `npm.cmd run export:live` is not a quick smoke command; it runs a long accepted-layout search (`TARGET_COUNT = 1000`) before writing `generated-exports/live-layout-contract.json`
-- if interrupted early, the export file may not exist yet
-
-Repo naming note:
-
-- the workspace product name is `planforge`, but `package.json` still uses the historical package name `app-next`
-
-Service-boundary note:
-
-- Processing and Verification now share one service-owned downstream chain through `ProcessingPipelineService`
-- Construction page now consumes service-owned assembled outputs from `ConstructionOutputService` instead of rebuilding wall/door/window derivation locally
-
-## Docs
-
-Start with:
-
-- `docs/README.md`
-- `docs/PLANFORGE_CENTRAL_GUIDE.md`
-- `docs/REBUILD_ROADMAP.md`
-- `docs/PLANFORGE_SYSTEM_GUIDE.md`
+MIT — see [LICENSE](LICENSE)
