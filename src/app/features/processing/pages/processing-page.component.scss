@@ -89,19 +89,19 @@
 
 .processing-status-pill--ready,
 .processing-status-chip {
-  background: #ddeee2;
-  color: #255239;
+  background: var(--status-pass-bg);
+  color: var(--status-pass-ink);
 }
 
 .processing-status-pill--progress {
-  background: #d9e7ee;
-  color: #24485c;
+  background: var(--status-active-bg);
+  color: var(--status-active-ink);
 }
 
 .processing-status-pill--attention,
 .processing-status-chip--pending {
-  background: #edf1f4;
-  color: #51646f;
+  background: var(--status-idle-bg);
+  color: var(--status-idle-ink);
 }
 
 .processing-hero__next-label {
@@ -192,7 +192,7 @@
   text-align: center;
   gap: 0.4rem;
   color: #5c717d;
-  background: #f8fafc;
+  background: var(--canvas);
 }
 
 .processing-preview--placeholder p {
@@ -200,12 +200,12 @@
 }
 
 .processing-preview__bg {
-  fill: #f8fafc;
+  fill: var(--canvas);
 }
 
 .processing-preview__buildable {
-  fill: #eef4f8;
-  stroke: #577286;
+  fill: var(--buildable-fill);
+  stroke: var(--buildable-border);
   stroke-width: 1.2;
 }
 
@@ -287,13 +287,13 @@
 }
 
 .processing-diagnostic__status--pass {
-  background: #d4edda;
-  color: #155724;
+  background: var(--status-pass-bg);
+  color: var(--status-pass-ink);
 }
 
 .processing-diagnostic__status--fail {
-  background: #f8d7da;
-  color: #721c24;
+  background: var(--status-fail-bg);
+  color: var(--status-fail-ink);
 }
 
 .processing-diagnostic__bad {
@@ -479,3 +479,13 @@
     flex-direction: column;
   }
 }
+.processing-rail { display: flex; gap: 7px; overflow-x: auto; padding: 4px 2px 10px; }
+.processing-rail__step { display: grid; grid-template-columns: 28px minmax(120px, 1fr); align-items: center; gap: 7px; flex: 0 0 auto; padding: 8px 11px; border: 1px solid #d8cdbd; border-radius: 12px; background: #fffdf8; color: #53615a; text-align: left; cursor: pointer; }
+.processing-rail__step span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: #ede5d9; font-size: .68rem; }
+.processing-rail__step strong { font-size: .74rem; }
+.processing-rail__step--active { border-color: var(--status-active-ink); background: var(--status-active-bg); color: var(--status-active-ink); }
+.processing-rail__step--pending { opacity: .62; }
+.processing-step-nav { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; margin: 4px 0 10px; }
+.processing-step-nav button { min-height: 36px; padding: 7px 12px; border: 1px solid #cfc4b4; border-radius: 10px; background: #fffdf8; color: #40514a; font-weight: 750; cursor: pointer; }
+.processing-step-nav button:last-child { justify-self: end; }
+.processing-step-nav span { color: #776d62; font-size: .73rem; font-weight: 750; }

@@ -10,28 +10,15 @@
       </div>
 
       <div class="source-hero__status-card">
-        <span class="source-stage-pill" [ngClass]="stageToneClass()">
+        <app-status-pill [role]="statusRole()">
           {{ stageStatusLabel() }}
-        </span>
+        </app-status-pill>
         <p class="source-hero__next-label">Next action</p>
         <p class="source-hero__next-copy">{{ stageNextAction() }}</p>
       </div>
     </div>
 
-    <div class="source-highlights">
-      <div *ngFor="let row of highlightRows()" class="source-highlight">
-        <span>{{ row.label }}</span>
-        <strong>{{ row.value }}</strong>
-      </div>
-    </div>
-
-    <div class="source-hero__status">
-      <span>Source {{ sourceSnapshot().origin }}</span>
-      <span>ID {{ sourceSnapshot().source.meta.id }}</span>
-      <span [ngClass]="validationClass(sourceSnapshot().validation.status)">
-        Validation {{ sourceSnapshot().validation.status }}
-      </span>
-    </div>
+    <app-stat-strip [items]="highlightRows()" />
   </article>
 
   <section class="source-workspace">
@@ -45,9 +32,9 @@
               Check this first before spending time on the lot, generation, or simulation.
             </p>
           </div>
-          <span class="source-stage-pill" [ngClass]="stageToneClass()">
+          <app-status-pill [role]="statusRole()">
             {{ sourceSnapshot().validation.status }}
-          </span>
+          </app-status-pill>
         </div>
 
         <div class="source-health-grid">
@@ -96,8 +83,8 @@
         </div>
 
         <div class="source-toolbar">
-          <span>{{ activeProgramRows().length }} active room types</span>
-          <span>{{ sourceSnapshot().validation.counts.activeRoomInstances }} total room instances</span>
+          <span>{{ activeProgramRows().length }} room types in use</span>
+          <span>{{ sourceSnapshot().validation.counts.activeRoomInstances }} total rooms</span>
           <span>{{ availableRoomOptions().length }} more room types available</span>
         </div>
 
@@ -123,14 +110,11 @@
                   </div>
                 </td>
                 <td class="source-count-cell">
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
-                    class="source-number-input"
-                    [value]="room.count"
-                    (change)="onProgramCountChanged(room.roomId, $event)"
-                  />
+                  <div class="source-stepper" [attr.aria-label]="room.label + ' count'">
+                    <button type="button" (click)="adjustProgramCount(room.roomId, room.count, -1)" [disabled]="room.count <= 0">−</button>
+                    <strong>{{ room.count }}</strong>
+                    <button type="button" (click)="adjustProgramCount(room.roomId, room.count, 1)">+</button>
+                  </div>
                 </td>
                 <td>{{ room.tags.length > 0 ? room.tags.join(', ') : 'None' }}</td>
                 <td>
@@ -164,7 +148,7 @@
       <article class="source-card">
         <div class="source-section-heading">
           <div>
-            <p class="source-card__eyebrow">Adjacency matrix</p>
+            <p class="source-card__eyebrow">Adjacency</p>
             <h2>Room relationships</h2>
             <p class="source-section-note">
               Use this only for intent. Keep most pairs neutral and raise scores only where the relationship really matters.
@@ -177,44 +161,20 @@
         </div>
 
         <div *ngIf="adjacencyRooms().length > 0; else emptyMatrix" class="source-table-wrap source-table-wrap--matrix">
-          <table class="source-table source-table--matrix source-table--matrix-compact">
+          <table class="source-table source-table--matrix source-table--matrix-compact source-table--heatmap">
             <thead>
               <tr>
                 <th>Room</th>
-                <th *ngFor="let column of adjacencyRooms()">{{ column.shortLabel }}</th>
+                <th *ngFor="let column of adjacencyRooms(); let columnIndex = index">{{ column.shortLabel }}</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let row of adjacencyRooms()">
+              <tr *ngFor="let row of adjacencyRooms(); let rowIndex = index">
                 <th>{{ row.shortLabel }}</th>
-                <td *ngFor="let column of adjacencyRooms()" [ngClass]="scoreTone(matrixScore(row.roomId, column.roomId))">
-                  <ng-container *ngIf="row.roomId === column.roomId; else editableMatrixCell">
-                    <span
-                      class="source-matrix-lock source-matrix-lock--compact"
-                      [ngClass]="scoreTone(matrixScore(row.roomId, column.roomId))"
-                    >
-                      {{ matrixScore(row.roomId, column.roomId) }}
-                    </span>
-                  </ng-container>
-                  <ng-template #editableMatrixCell>
-                    <div
-                      class="source-select-shell source-select-shell--matrix-compact"
-                      [ngClass]="scoreTone(matrixScore(row.roomId, column.roomId))"
-                    >
-                      <select
-                        class="source-select source-select--matrix-compact"
-                        [ngClass]="scoreTone(matrixScore(row.roomId, column.roomId))"
-                        [value]="matrixScore(row.roomId, column.roomId)"
-                        (change)="onAdjacencyScoreChanged(row.roomId, column.roomId, $event)"
-                      >
-                        <option [value]="5">5</option>
-                        <option [value]="4">4</option>
-                        <option [value]="3">3</option>
-                        <option [value]="2">2</option>
-                        <option [value]="1">1</option>
-                      </select>
-                    </div>
-                  </ng-template>
+                <td *ngFor="let column of adjacencyRooms(); let columnIndex = index" [class.source-matrix-empty]="!showMatrixCell(rowIndex, columnIndex)">
+                  <button *ngIf="showMatrixCell(rowIndex, columnIndex)" type="button" class="source-heat-cell" [ngClass]="scoreTone(matrixScore(row.roomId, column.roomId))" [title]="row.label + ' and ' + column.label + ': ' + scoreLegend[5 - matrixScore(row.roomId, column.roomId)].meaning + '. Click to raise; shift-click to lower.'" (click)="adjustAdjacencyScore(row.roomId, column.roomId, matrixScore(row.roomId, column.roomId), $event)">
+                    {{ matrixScore(row.roomId, column.roomId) }}
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -294,15 +254,9 @@
 </section>
 
 <ng-template #emptyProgram>
-  <div class="source-empty-state">
-    <strong>No active rooms yet.</strong>
-    <p>Add a room from the catalog to begin shaping the program.</p>
-  </div>
+  <app-empty-state title="No active rooms yet" detail="Add a room from the catalog to begin shaping the program." mark="RM" />
 </ng-template>
 
 <ng-template #emptyMatrix>
-  <div class="source-empty-state">
-    <strong>No adjacency matrix to edit yet.</strong>
-    <p>Add active rooms first, then define how strongly they should attract or avoid each other.</p>
-  </div>
+  <app-empty-state title="No room relationships yet" detail="Add active rooms first, then define how strongly they should stay close or apart." mark="RL" />
 </ng-template>

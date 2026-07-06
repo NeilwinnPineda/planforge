@@ -34,6 +34,7 @@ export interface VerificationMetrics {
   readonly accessFailureCount: number;
   readonly adjacencyFailureCount: number;
   readonly garageFrontageFailureCount: number;
+  readonly foyerFrontageFailureCount: number;
   readonly sliverFailureCount: number;
   readonly overlapFailureCount: number;
 }
@@ -146,7 +147,22 @@ export class VerificationService {
       detail: 'garage does not touch the front buildable boundary — rooms blocking street frontage',
     }));
 
-    // 6. Sliver check — non-pkg, non-hallway cells below the minimum dimension threshold.
+    // 6. Foyer frontage check — foyer must touch the front buildable boundary.
+    const foyerTypeIdSet = new Set(foyerTypeIds);
+    const foyerCells = cells.filter((c) => foyerTypeIdSet.has(c.typeId));
+    const foyerHasFrontage = foyerCells.length === 0
+      || frontageBuildableEdges.length === 0
+      || foyerCells.some((foyer) =>
+          frontageBuildableEdges.some((fe) =>
+            this.sharesEdge(foyer.worldPoints, [fe.from, fe.to], adjacencyEdgeEpsilon)));
+    const foyerFrontageFailures: VerificationFailure[] = foyerHasFrontage ? [] : foyerCells.map((c) => ({
+      cellId: c.id,
+      label: c.label,
+      typeId: c.typeId,
+      detail: 'foyer does not touch the front buildable boundary',
+    }));
+
+    // 8. Sliver check — non-pkg, non-hallway cells below the minimum dimension threshold.
     // Hallways are narrow by design and must not be penalised for it.
     const sliverFailures: VerificationFailure[] = cells
       .filter((c) => !c.pkg && !c.hallway && this.minDimension(c.worldPoints) < sliverMinDimension)
@@ -157,7 +173,7 @@ export class VerificationService {
         detail: `min dimension ${this.minDimension(c.worldPoints).toFixed(3)} m < ${sliverMinDimension} m`,
       }));
 
-    // 7. Overlap check — non-pkg cell pairs whose polygons actually intersect (not just touch).
+    // 9. Overlap check — non-pkg cell pairs whose polygons actually intersect (not just touch).
     const overlapCellIndices = new Set<number>();
     const overlapDescriptions = new Map<number, string[]>();
     for (let i = 0; i < cells.length; i++) {
@@ -186,6 +202,7 @@ export class VerificationService {
     const accessCheck: VerificationCheckResult = { passed: accessFailures.length === 0, failures: accessFailures };
     const adjacencyCheck: VerificationCheckResult = { passed: adjacencyFailures.length === 0, failures: adjacencyFailures };
     const garageFrontageCheck: VerificationCheckResult = { passed: garageFrontageFailures.length === 0, failures: garageFrontageFailures };
+    const foyerFrontageCheck: VerificationCheckResult = { passed: foyerFrontageFailures.length === 0, failures: foyerFrontageFailures };
     const sliverCheck: VerificationCheckResult = { passed: sliverFailures.length === 0, failures: sliverFailures };
     const overlapCheck: VerificationCheckResult = { passed: overlapFailures.length === 0, failures: overlapFailures };
 
@@ -195,6 +212,7 @@ export class VerificationService {
     if (!accessCheck.passed) cullReasons.push(`access: ${accessFailures.map((f) => f.label).join(', ')}`);
     if (!adjacencyCheck.passed) cullReasons.push(`critical touch: ${adjacencyFailures.map((f) => f.label).join(', ')}`);
     if (!garageFrontageCheck.passed) cullReasons.push(`garage frontage: blocked from street boundary`);
+    if (!foyerFrontageCheck.passed) cullReasons.push(`foyer frontage: foyer does not touch the front boundary`);
     if (!sliverCheck.passed) cullReasons.push(`slivers: ${sliverFailures.map((f) => `${f.label} (${f.detail})`).join(', ')}`);
     if (!overlapCheck.passed) cullReasons.push(`overlaps: ${overlapFailures.map((f) => f.label).join(', ')}`);
 
@@ -212,6 +230,7 @@ export class VerificationService {
         accessCheck,
         adjacencyCheck,
         garageFrontageCheck,
+        foyerFrontageCheck,
         sliverCheck,
         overlapCheck,
         cullReasons,
@@ -225,6 +244,7 @@ export class VerificationService {
         accessFailureCount: accessFailures.length,
         adjacencyFailureCount: adjacencyFailures.length,
         garageFrontageFailureCount: garageFrontageFailures.length,
+        foyerFrontageFailureCount: foyerFrontageFailures.length,
         sliverFailureCount: sliverFailures.length,
         overlapFailureCount: overlapFailures.length,
       },

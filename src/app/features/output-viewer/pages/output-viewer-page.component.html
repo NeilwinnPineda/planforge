@@ -128,7 +128,7 @@
                 <span class="output-viewer__swatch" [style.background]="cell.color"></span>
                 <div>
                   <strong>{{ cell.label }}</strong>
-                  <span>{{ cell.typeId }}</span>
+                  <span>{{ cell.typeId }} type</span>
                 </div>
               </div>
               <strong>{{ cell.areaSquareMeters | number:'1.2-2' }} sq m</strong>
@@ -139,7 +139,7 @@
         <article class="output-viewer__panel">
           <div class="output-viewer__panel-head">
             <div>
-              <p class="output-viewer__kicker">Generated</p>
+              <p class="output-viewer__kicker">Support spaces</p>
               <h3>Hallways and fillers</h3>
             </div>
             <span class="output-viewer__chip">{{ generatedCells().length }}</span>
@@ -151,7 +151,7 @@
                 <span class="output-viewer__swatch" [style.background]="cell.color"></span>
                 <div>
                   <strong>{{ cell.label }}</strong>
-                  <span>{{ cell.hallway ? 'hallway' : 'filler / pkg' }}</span>
+                  <span>{{ cell.hallway ? 'Hallway' : 'Filler' }}</span>
                 </div>
               </div>
               <strong>{{ cell.areaSquareMeters | number:'1.2-2' }} sq m</strong>
@@ -172,7 +172,7 @@
     </ng-template>
 
     <ng-template #noGenerated>
-      <p class="output-viewer__hint">This export does not include generated hallway or filler cells.</p>
+      <p class="output-viewer__hint">This export does not include hallway or filler cells.</p>
     </ng-template>
   </section>
 </section>

@@ -7,6 +7,9 @@ import { ConstructionOutputService } from '../../../core/construction/constructi
 import { type GalleryEntry } from '../../../core/processing/layout-gallery.service';
 import type { VerifiedLayoutArtifact } from '../../../core/processing/processing.exports';
 import { WorkflowVisualStateService } from '../../../core/processing/workflow-visual-state.service';
+import { LayoutViewComponent, type LayoutViewLine, type LayoutViewMarker } from '../../../shared/layout-view/layout-view.component';
+import { StatusPillComponent } from '../../../shared/status-pill/status-pill.component';
+import { StatStripComponent } from '../../../shared/stat-strip/stat-strip.component';
 
 interface ConstructionChecklistRow {
   readonly label: string;
@@ -87,7 +90,7 @@ interface ConstructionHighlightRow {
 @Component({
   selector: 'app-construction-page',
   standalone: true,
-  imports: [DecimalPipe, NgFor, NgIf, PercentPipe],
+  imports: [DecimalPipe, NgFor, NgIf, PercentPipe, LayoutViewComponent, StatusPillComponent, StatStripComponent],
   templateUrl: './construction-page.component.html',
   styleUrl: './construction-page.component.scss',
 })
@@ -111,6 +114,22 @@ export class ConstructionPageComponent {
   protected readonly doorMarkers = computed(() => this.deriveDoorMarkers(this.doorPlacements()));
   protected readonly windowPlacements = computed(() => this.topOutput()?.windowPlacements ?? []);
   protected readonly windowMarkers = computed(() => this.deriveWindowMarkers(this.windowPlacements()));
+  protected readonly layoutInteriorWalls = computed<readonly LayoutViewLine[]>(() =>
+    this.interiorWalls().map((wall) => ({ x1: wall.fromX, y1: wall.fromY, x2: wall.toX, y2: wall.toY })),
+  );
+  protected readonly layoutExteriorWalls = computed<readonly LayoutViewLine[]>(() =>
+    this.externalWalls().map((wall) => ({ x1: wall.fromX, y1: wall.fromY, x2: wall.toX, y2: wall.toY })),
+  );
+  protected readonly layoutDoorMarkers = computed<readonly LayoutViewMarker[]>(() =>
+    this.doorMarkers().map((door) => ({
+      cx: door.cx,
+      cy: door.cy,
+      angle: door.angleDegrees,
+      width: door.widthPixels,
+      height: 6,
+      title: `${door.placement.ownerLabel} - ${door.placement.kind} ${door.placement.widthMeters}m`,
+    })),
+  );
   protected readonly stageStatusLabel = computed(() => {
     if (this.topLayout()) return 'Ready for construction review';
     if (this.fallbackArtifact()) return 'Waiting for verified layout - showing last reviewed attempt';

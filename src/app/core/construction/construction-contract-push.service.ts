@@ -1,6 +1,7 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { ConstructionOutputService } from './construction-output.service';
 import { buildConstructionContract } from './construction-contract.factory';
+import type { ConstructionOutput } from './construction-output.service';
 import type { ConstructionContractExport } from './construction-contract.model';
 
 export type ContractPushStatus = 'pending' | 'pushing' | 'pushed' | 'failed';
@@ -34,16 +35,15 @@ export class ConstructionContractPushService {
         return next;
       });
 
-      for (const output of outputs) {
-        const id = output.entry.artifact.layoutId;
-        if (current.has(id)) continue;
-        void this.push(buildConstructionContract(output));
-      }
     });
   }
 
   statusFor(layoutId: string): ContractPushStatus {
     return this._statusMap().get(layoutId) ?? 'pending';
+  }
+
+  pushOutput(output: ConstructionOutput): Promise<void> {
+    return this.push(buildConstructionContract(output));
   }
 
   private async push(contract: ConstructionContractExport): Promise<void> {

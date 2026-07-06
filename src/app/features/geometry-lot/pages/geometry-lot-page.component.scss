@@ -221,111 +221,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.site-preview {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 420px;
-  border: 1px solid #e8dece;
-  border-radius: 16px;
-  background: #fcfaf5;
-}
-
-.site-preview__bg {
-  fill: #fcfaf5;
-}
-
-.site-preview__lot {
-  fill: rgba(142, 202, 230, 0.14);
-  stroke: #618ea6;
-  stroke-width: 2;
-}
-
-.site-preview__lot--ghost {
-  fill: rgba(142, 202, 230, 0.08);
-  stroke-dasharray: 5 4;
-}
-
-.site-preview__guide {
-  stroke: #7a5f2b;
-  stroke-width: 1.5;
-  stroke-dasharray: 3 3;
-}
-
-.site-preview__buildable {
-  fill: rgba(244, 213, 141, 0.24);
-  stroke: #b68e3f;
-  stroke-width: 2;
-}
-
-.site-preview__point {
-  stroke-width: 1.5;
-}
-
-.site-preview__point--lot {
-  fill: #fffdf9;
-  stroke: #1f556d;
-}
-
-.site-preview__point--buildable {
-  fill: #b68e3f;
-  stroke: #fff8e7;
-}
-
-.site-preview__closure {
-  stroke: #b6402f;
-  stroke-width: 2;
-  stroke-dasharray: 7 5;
-}
-
-.site-preview__label,
-.site-preview__point-label,
-.site-preview__point-bearing,
-.site-preview__scale-text {
-  fill: #4d453d;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.site-preview__point-label {
-  paint-order: stroke;
-  stroke: #fffdf9;
-  stroke-width: 3px;
-  stroke-linejoin: round;
-}
-
-.site-preview__point-bearing {
-  font-size: 9px;
-  font-weight: 600;
-  fill: #6b5f52;
-  paint-order: stroke;
-  stroke: #fffdf9;
-  stroke-width: 3px;
-  stroke-linejoin: round;
-}
-
-.site-preview__edge-callout {
-  stroke: #8b7a5a;
-  stroke-width: 1.2;
-  stroke-dasharray: 2 2;
-}
-
-.site-preview__edge-label {
-  fill: #5b5146;
-  font-size: 10px;
-  font-weight: 700;
-  text-anchor: middle;
-  paint-order: stroke;
-  stroke: #fffdf9;
-  stroke-width: 3px;
-  stroke-linejoin: round;
-}
-
-.site-preview__scale-bar {
-  stroke: #3b332c;
-  stroke-width: 2;
-}
-
 .site-preview__caption {
   color: #5b534a;
   line-height: 1.45;
@@ -822,3 +717,8 @@
     grid-template-columns: 1fr;
   }
 }
+.site-value-stepper { display: grid; grid-template-columns: 28px minmax(62px, 1fr) 28px; align-items: center; overflow: hidden; border: 1px solid #d4c8b8; border-radius: 9px; background: #fffdf8; }
+.site-value-stepper button { height: 32px; border: 0; background: #eee7dc; color: #415149; font-weight: 850; cursor: pointer; }
+.site-value-stepper button:hover { background: var(--status-active-bg); }
+.site-value-stepper strong { padding: 0 7px; color: #39463f; font-size: .76rem; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.site-builder-closure--open { border-color: var(--status-fail-border); background: var(--status-fail-bg); color: var(--status-fail-ink); }

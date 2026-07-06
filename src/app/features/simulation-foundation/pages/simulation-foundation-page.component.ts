@@ -12,6 +12,9 @@ import {
   computeSimulationSatRows,
   summarizeSatRows,
 } from '../../../core/simulation/simulation.exports';
+import { LayoutViewComponent } from '../../../shared/layout-view/layout-view.component';
+import { StatusPillComponent } from '../../../shared/status-pill/status-pill.component';
+import { StatStripComponent } from '../../../shared/stat-strip/stat-strip.component';
 
 interface SimulationMetricRow {
   readonly label: string;
@@ -51,7 +54,7 @@ interface SimulationGalleryRow {
 @Component({
   selector: 'app-simulation-foundation-page',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [NgFor, NgIf, LayoutViewComponent, StatusPillComponent, StatStripComponent],
   templateUrl: './simulation-foundation-page.component.html',
   styleUrl: './simulation-foundation-page.component.scss',
 })

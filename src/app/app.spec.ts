@@ -45,8 +45,7 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
 
     expect(fixture.componentInstance).toBeTruthy();
-    expect(compiled.querySelector('h1')?.textContent).toContain('Residential Layout Studio');
-    expect(compiled.textContent).toContain('Set up the project, generate layout options, review what works, and prepare the strongest result for export.');
+    expect(compiled.querySelector('.app-shell__wordmark')?.textContent?.trim()).toContain('Planforge');
   });
 
   it('keeps the local app-next source artifact valid', () => {
@@ -90,7 +89,7 @@ describe('App', () => {
 
     expect(roomInstances.length).toBeGreaterThan(0);
     expect(candidateLayout.seeds.length).toBe(roomInstances.length);
-    expect(candidateLayout.method).toBe('deterministic-band-seeding');
+    expect(candidateLayout.method).toBe('random-envelope-seeding');
     expect(candidateLayout.seeds.some((seed) => seed.band === 'front')).toBe(true);
   });
 
@@ -342,6 +341,7 @@ function buildVerifiedSingleRoomArtifact(layoutId: string, width: number, height
     accessCheck: passedCheck,
     adjacencyCheck: passedCheck,
     garageFrontageCheck: passedCheck,
+    foyerFrontageCheck: passedCheck,
     sliverCheck: passedCheck,
     overlapCheck: passedCheck,
     cullReasons: [],

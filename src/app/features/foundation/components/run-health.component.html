@@ -1,0 +1,9 @@
+<section class="run-health">
+  <header><div><p>Live status</p><h2>Run & Health</h2><span>Control exploration and inspect the last known workflow state.</span></div><button type="button" (click)="expanded.set(!expanded())">{{ expanded() ? 'Hide details' : 'Expand details' }}</button></header>
+  <app-simulation-control-bar [metrics]="metrics()" [isRunning]="running()" (startRequested)="start()" (stopRequested)="stop()" (clearRequested)="clear()" />
+  <div *ngIf="expanded()" class="run-health__grid">
+    <article><h3>Processor activity</h3><div *ngFor="let row of processors()" class="run-health__row"><strong>{{ row.id }}</strong><span>{{ row.status }} · {{ row.captures }}</span><small>{{ row.result }}</small></div></article>
+    <article><h3>Stage overview</h3><div *ngFor="let row of stages()" class="run-health__row" [class]="'run-health__row run-health__row--' + row.tone"><strong>{{ row.label }}</strong><span>{{ row.status }}</span><small>{{ row.detail }}</small></div></article>
+    <article><h3>Last saved progress</h3><div *ngFor="let row of memory()" class="run-health__memory"><span>{{ row.label }}</span><strong>{{ row.value }}</strong></div></article>
+  </div>
+</section>

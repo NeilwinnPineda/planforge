@@ -3,6 +3,7 @@ import type { DeterministicCandidateLayout, CandidateSeedPoint, ActiveRoomInstan
 import type { ProjectSettings } from '../source/source.exports';
 import type { SimulationBubbleState, SimulationJobState } from './models/simulation-runner.model';
 import { type SpawnHeatmap, sampleSpawnHeatmap } from './spawn-heatmap.factory';
+import { resolveCellLabel } from '../cell-label.factory';
 
 interface SimulationForceSettings {
   damping: number;
@@ -269,9 +270,9 @@ function createBuildableFillers(
     );
 
     return {
-      instanceId: `generated_filler_${index + 1}`,
-      typeId: 'generated_filler',
-      label: `Filler ${index + 1}`,
+      instanceId: `filler_${index + 1}`,
+      typeId: 'filler',
+      label: resolveCellLabel('filler'),
       color: sourceSettings.generated.filler.color,
       radiusMeters: Number(radiusMeters.toFixed(3)),
       targetAreaSquareMeters: Number(areaSquareMeters.toFixed(2)),
@@ -320,7 +321,7 @@ function getBiasedCandidates(
   respawnSeed: number,
   heatmap?: SpawnHeatmap | null,
 ): Array<{ x: number; y: number }> {
-  if (seed.biasProfile.weight <= 0) {
+  if (seed.biasProfile.weight <= 0 && !heatmap) {
     return shuffleDeterministically(candidates, respawnSeed + seed.instanceId.length * 31);
   }
 
@@ -588,7 +589,7 @@ function applyFrontagePull(
       y: midpoint.y + inward.y * bubble.radiusMeters,
     };
     const direction = normalizedDirection(target.x - bubble.x, target.y - bubble.y, index * 41);
-    const modifierScale = bubble.typeId === 'foyer' ? 1.15 : bubble.typeId === 'garage' ? 1.3 : 1;
+    const modifierScale = bubble.typeId === 'foyer' ? 2.0 : bubble.typeId === 'garage' ? 2.5 : 1;
     const pull = direction.dist * settings.baseAttractionForce * settings.frontEdgeAttractionModifier * modifierScale;
     applyBubbleImpulse(bubble, direction.nx * pull, direction.ny * pull, settings);
   });
@@ -888,8 +889,8 @@ function getAdjacencyScore(
     return 4;
   }
 
-  const leftKey = left.pkg ? 'generated_filler' : left.hallway ? 'generated_hallway' : left.typeId;
-  const rightKey = right.pkg ? 'generated_filler' : right.hallway ? 'generated_hallway' : right.typeId;
+  const leftKey = left.pkg ? 'filler' : left.hallway ? 'hallway' : left.typeId;
+  const rightKey = right.pkg ? 'filler' : right.hallway ? 'hallway' : right.typeId;
 
   if (leftKey === rightKey && leftKey.startsWith('generated_')) {
     return sourceSettings.adjacency.generatedTypeDefaults[leftKey]

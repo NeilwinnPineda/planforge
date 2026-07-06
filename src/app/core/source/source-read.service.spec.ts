@@ -8,7 +8,7 @@ describe('SourceReadService', () => {
     const snapshot = service.getActiveSourceSnapshot();
 
     expect(snapshot.origin).toBe('default');
-    expect(snapshot.source.meta.id).toBe('super-hard');
+    expect(snapshot.source.meta.id).toBe('vanilla-3bed');
     expect(snapshot.validation.status).toBe('pass');
   });
 

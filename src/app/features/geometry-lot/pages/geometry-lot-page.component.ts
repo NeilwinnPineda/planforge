@@ -5,6 +5,9 @@ import {
   LotGeometryService,
 } from '../../../core/geometry/geometry.exports';
 import { SourceReadService } from '../../../core/source/source.exports';
+import { LayoutViewComponent, type LayoutViewAnnotation, type LayoutViewLine, type LayoutViewPoint } from '../../../shared/layout-view/layout-view.component';
+import { StatusPillComponent } from '../../../shared/status-pill/status-pill.component';
+import { StatStripComponent } from '../../../shared/stat-strip/stat-strip.component';
 import type {
   GeometryBounds,
   GeometryPoint,
@@ -33,6 +36,10 @@ interface LotSegmentEditorRow {
   readonly startLabel: string;
   readonly endLabel: string;
   readonly bearing: string;
+  readonly northSouth: 'N' | 'S';
+  readonly degrees: number;
+  readonly minutes: number;
+  readonly eastWest: 'E' | 'W';
   readonly distance: number;
 }
 
@@ -98,7 +105,7 @@ type GeometryStageStatus = 'ready' | 'review' | 'fail';
 @Component({
   selector: 'app-geometry-lot-page',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [NgFor, NgIf, LayoutViewComponent, StatusPillComponent, StatStripComponent],
   templateUrl: './geometry-lot-page.component.html',
   styleUrl: './geometry-lot-page.component.scss',
 })
@@ -205,6 +212,7 @@ export class GeometryLotPageComponent {
       startLabel: geometry.lotPoints[index]?.label ?? segment.point,
       endLabel: geometry.lotPoints[(index + 1) % geometry.lotPoints.length]?.label ?? segment.point,
       bearing: segment.bearing,
+      ...this.parseBearing(segment.bearing),
       distance: segment.distance,
     }));
   });
@@ -212,6 +220,35 @@ export class GeometryLotPageComponent {
     this.lotGeometry().closureErrorMeters < 0.01 ? 'Closed' : 'Open'
   ));
   protected readonly projection = computed(() => this.buildGeometryProjection(this.lotGeometry()));
+  protected readonly layoutGuideLines = computed<readonly LayoutViewLine[]>(() => {
+    const projection = this.projection();
+    return [
+      ...projection.guideLines.map((line) => ({ x1: line.x1, y1: line.y1, x2: line.x2, y2: line.y2 })),
+      ...(projection.closureLine ? [{ ...projection.closureLine, major: true }] : []),
+    ];
+  });
+  protected readonly layoutPoints = computed<readonly LayoutViewPoint[]>(() => [
+    ...this.projection().lotPreview.points.map((point) => ({ x: point.x, y: point.y, kind: 'lot' as const })),
+    ...this.projection().buildablePreview.points.map((point) => ({ x: point.x, y: point.y, kind: 'buildable' as const })),
+  ]);
+  protected readonly layoutAnnotations = computed<readonly LayoutViewAnnotation[]>(() => {
+    const projection = this.projection();
+    const geometry = this.lotGeometry();
+    return [
+      ...projection.lotPreview.points.flatMap((point, index): LayoutViewAnnotation[] => [
+        { x: point.x + 7, y: point.y - 8, text: geometry.lotPoints[index]?.label ?? `P${index + 1}`, kind: 'label' },
+        { x: point.x + 7, y: point.y + 6, text: geometry.lotSegments[index]?.bearing ?? '', kind: 'bearing' },
+      ]),
+      ...projection.edgeAnnotations.map((edge) => ({ x: edge.labelX, y: edge.labelY + 4, text: edge.distance, kind: 'distance' as const, anchor: 'middle' as const })),
+      ...projection.guideLines.map((guide) => ({ x: guide.labelX, y: guide.labelY, text: guide.label, kind: 'setback' as const, anchor: 'middle' as const })),
+    ];
+  });
+  protected readonly layoutScaleBar = computed(() => ({
+    x: this.projection().scaleBarX,
+    y: this.projection().scaleBarY,
+    width: this.projection().scaleBarWidthPixels,
+    label: `${this.projection().scaleBarMeters}m scale`,
+  }));
 
   protected onLotSegmentBearingChanged(segmentIndex: number, event: Event): void {
     const input = event.target as HTMLInputElement | null;
@@ -233,6 +270,29 @@ export class GeometryLotPageComponent {
     }
 
     this.sourceReadService.updateLotSegmentDistance(segmentIndex, value);
+  }
+
+  protected adjustLotSegmentDistance(segmentIndex: number, distance: number, delta: number): void {
+    this.sourceReadService.updateLotSegmentDistance(segmentIndex, Math.max(0.001, Number((distance + delta).toFixed(3))));
+  }
+
+  protected adjustLotSegmentSetback(segmentIndex: number, setback: number, delta: number): void {
+    this.sourceReadService.updateLotSegmentSetback(segmentIndex, Math.max(0, Number((setback + delta).toFixed(2))));
+  }
+
+  protected adjustBearingPart(row: LotSegmentEditorRow, part: 'degrees' | 'minutes', delta: number): void {
+    const totalMinutes = Math.max(0, Math.min(5400, row.degrees * 60 + row.minutes + (part === 'degrees' ? delta * 60 : delta)));
+    this.writeBearing(row.segmentIndex, row.northSouth, Math.floor(totalMinutes / 60), totalMinutes % 60, row.eastWest);
+  }
+
+  protected toggleBearingAxis(row: LotSegmentEditorRow, axis: 'northSouth' | 'eastWest'): void {
+    this.writeBearing(
+      row.segmentIndex,
+      axis === 'northSouth' ? (row.northSouth === 'N' ? 'S' : 'N') : row.northSouth,
+      row.degrees,
+      row.minutes,
+      axis === 'eastWest' ? (row.eastWest === 'E' ? 'W' : 'E') : row.eastWest,
+    );
   }
 
   protected onLotSegmentRrowChanged(segmentIndex: number, event: Event): void {
@@ -270,6 +330,20 @@ export class GeometryLotPageComponent {
 
   protected trackByEdge(index: number): number {
     return index;
+  }
+
+  private parseBearing(bearing: string): Pick<LotSegmentEditorRow, 'northSouth' | 'degrees' | 'minutes' | 'eastWest'> {
+    const match = /^([NS])\s+(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)\s+([EW])$/i.exec(bearing.trim());
+    return {
+      northSouth: (match?.[1]?.toUpperCase() === 'S' ? 'S' : 'N'),
+      degrees: Math.max(0, Math.min(90, Math.floor(Number(match?.[2] ?? 0)))),
+      minutes: Math.max(0, Math.min(59, Math.round(Number(match?.[3] ?? 0)))),
+      eastWest: (match?.[4]?.toUpperCase() === 'W' ? 'W' : 'E'),
+    };
+  }
+
+  private writeBearing(segmentIndex: number, northSouth: 'N' | 'S', degrees: number, minutes: number, eastWest: 'E' | 'W'): void {
+    this.sourceReadService.updateLotSegmentBearing(segmentIndex, `${northSouth} ${degrees} ${minutes} ${eastWest}`);
   }
 
   private buildGeometryProjection(lotGeometry: LotGeometryResult): GeometryProjectionModel {

@@ -36,7 +36,7 @@ function buildMockPolygons(): ReportPolygonArtifact[] {
     },
     {
       id: 'hall_spine',
-      label: 'Hall Spine',
+      label: 'Hallway Spine',
       category: 'circulation',
       color: '#d7e6d1',
       vertices: [

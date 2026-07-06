@@ -1,0 +1,18 @@
+:host { display: inline-flex; }
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 3px 10px;
+  border: 1px solid var(--status-idle-border);
+  border-radius: 999px;
+  background: var(--status-idle-bg);
+  color: var(--status-idle-ink);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.status-pill--pass { border-color: var(--status-pass-border); background: var(--status-pass-bg); color: var(--status-pass-ink); }
+.status-pill--review { border-color: var(--status-review-border); background: var(--status-review-bg); color: var(--status-review-ink); }
+.status-pill--fail { border-color: var(--status-fail-border); background: var(--status-fail-bg); color: var(--status-fail-ink); }
+.status-pill--active { border-color: var(--status-active-border); background: var(--status-active-bg); color: var(--status-active-ink); }

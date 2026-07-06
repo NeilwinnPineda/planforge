@@ -4,6 +4,9 @@ import {
   SourceReadService,
   type RoomPrototype,
 } from '../../../core/source/source.exports';
+import { EmptyStateComponent } from '../../../shared/empty-state/empty-state.component';
+import { StatStripComponent } from '../../../shared/stat-strip/stat-strip.component';
+import { StatusPillComponent, type StatusPillRole } from '../../../shared/status-pill/status-pill.component';
 
 interface SourceMetricRow {
   readonly label: string;
@@ -38,7 +41,7 @@ interface SourceValidationSummaryRow {
 @Component({
   selector: 'app-source-intake-page',
   standalone: true,
-  imports: [NgFor, NgClass, NgIf],
+  imports: [NgFor, NgClass, NgIf, EmptyStateComponent, StatStripComponent, StatusPillComponent],
   templateUrl: './source-intake-page.component.html',
   styleUrl: './source-intake-page.component.scss',
 })
@@ -168,6 +171,25 @@ export class SourceIntakePageComponent {
     const input = event.target as HTMLInputElement | null;
     const value = Number(input?.value ?? 0);
     this.sourceReadService.updateProgramRoomCount(roomId, value);
+  }
+
+  protected adjustProgramCount(roomId: string, count: number, delta: number): void {
+    this.sourceReadService.updateProgramRoomCount(roomId, Math.max(0, count + delta));
+  }
+
+  protected adjustAdjacencyScore(leftRoomId: string, rightRoomId: string, score: number, event: MouseEvent): void {
+    if (leftRoomId === rightRoomId) return;
+    const delta = event.shiftKey ? -1 : 1;
+    this.sourceReadService.updateAdjacencyScore(leftRoomId, rightRoomId, Math.max(1, Math.min(5, score + delta)));
+  }
+
+  protected showMatrixCell(rowIndex: number, columnIndex: number): boolean {
+    return columnIndex < rowIndex;
+  }
+
+  protected statusRole(): StatusPillRole {
+    const status = this.sourceSnapshot().validation.status;
+    return status === 'pass' ? 'pass' : status === 'warn' ? 'review' : 'fail';
   }
 
   protected onRoomSelectionChanged(event: Event): void {

@@ -10,20 +10,15 @@
       </div>
 
       <div class="construction-hero__status">
-        <span class="construction-status-pill" [class.construction-status-pill--ready]="stageStatusTone() === 'ready'" [class.construction-status-pill--attention]="stageStatusTone() === 'attention'">
+        <app-status-pill [role]="stageStatusTone() === 'ready' ? 'pass' : 'review'">
           {{ stageStatusLabel() }}
-        </span>
+        </app-status-pill>
         <p class="construction-hero__next-label">Next action</p>
         <p class="construction-hero__next-copy">{{ stageNextAction() }}</p>
       </div>
     </div>
 
-    <div class="construction-highlights">
-      <div *ngFor="let row of highlightRows()" class="construction-highlight">
-        <span>{{ row.label }}</span>
-        <strong>{{ row.value }}</strong>
-      </div>
-    </div>
+    <app-stat-strip [items]="highlightRows()" />
   </article>
 
   <ng-container *ngIf="topLayout() as layout; else empty">
@@ -38,69 +33,12 @@
             </p>
           </div>
 
-          <svg class="construction__svg" viewBox="0 0 760 460" preserveAspectRatio="xMidYMid meet">
-            <rect x="0" y="0" width="760" height="460" class="construction__svg-bg" />
-            <ng-container *ngFor="let cell of previewCells()">
-              <polygon
-                [attr.points]="cell.points"
-                [attr.fill]="cell.color"
-                class="construction__cell"
-                [class.construction__cell--generated]="cell.generated"
-                [class.construction__cell--hallway]="cell.hallway"
-              />
-              <text
-                *ngIf="cell.showLabel"
-                class="construction__cell-label"
-                [attr.x]="cell.cx"
-                [attr.y]="cell.cy"
-              >
-                {{ cell.label }}
-              </text>
-            </ng-container>
-            <ng-container *ngFor="let wall of interiorWalls()">
-              <line
-                class="construction__interior-wall"
-                [attr.x1]="wall.fromX"
-                [attr.y1]="wall.fromY"
-                [attr.x2]="wall.toX"
-                [attr.y2]="wall.toY"
-              />
-            </ng-container>
-            <ng-container *ngFor="let loop of externalWallLoops()">
-              <polyline
-                class="construction__external-wall-loop"
-                [class.construction__external-wall-loop--open]="!loop.closed"
-                [attr.points]="loop.points"
-              />
-            </ng-container>
-            <ng-container *ngFor="let window of windowMarkers()">
-              <circle
-                class="construction__window-marker"
-                [attr.cx]="window.cx"
-                [attr.cy]="window.cy"
-                [attr.r]="window.radiusPixels"
-              >
-                <title>{{ window.placement.ownerLabel }} — {{ window.placement.sizeCode }} {{ window.placement.widthMeters }}m</title>
-              </circle>
-            </ng-container>
-            <ng-container *ngFor="let door of doorMarkers()">
-              <rect
-                [class]="'construction__door-marker construction__door-marker--' + door.placement.kind"
-                [attr.x]="door.cx - door.widthPixels / 2"
-                [attr.y]="door.cy - 3"
-                [attr.width]="door.widthPixels"
-                height="6"
-                [attr.transform]="'rotate(' + door.angleDegrees + ',' + door.cx + ',' + door.cy + ')'"
-              >
-                <title>{{ door.placement.ownerLabel }} — {{ door.placement.kind }} {{ door.placement.widthMeters }}m</title>
-              </rect>
-            </ng-container>
-          </svg>
+          <app-layout-view [width]="760" [height]="460" [cells]="previewCells()" [interiorLines]="layoutInteriorWalls()" [exteriorLines]="layoutExteriorWalls()" [windows]="windowMarkers()" [doors]="layoutDoorMarkers()" ariaLabel="Construction layout with walls, windows, and doors" />
         </div>
 
         <aside class="construction-sidebar">
           <div class="construction-section">
-            <p class="construction-card__eyebrow">Current candidate</p>
+            <p class="construction-card__eyebrow">Current layout</p>
             <div class="construction-candidate">
               <strong>{{ layout.artifact.layoutId }}</strong>
               <span>Quality {{ layout.score | number:'1.3-3' }}</span>
@@ -126,7 +64,7 @@
 
     <article class="construction-card">
       <div class="construction-section-heading">
-        <p class="construction-card__eyebrow">Handoff metrics</p>
+        <p class="construction-card__eyebrow">What this layout includes</p>
         <h3>What this layout is carrying forward</h3>
       </div>
       <div class="construction-metrics">
@@ -135,7 +73,7 @@
           <strong>{{ realRoomCount(layout) }}</strong>
         </article>
         <article>
-          <span>Generated cells</span>
+          <span>Filler spaces</span>
           <strong>{{ generatedCellCount(layout) }}</strong>
         </article>
         <article>
@@ -143,7 +81,7 @@
           <strong>{{ totalArea(layout) | number:'1.1-1' }} m<sup>2</sup></strong>
         </article>
         <article>
-          <span>Verification clean</span>
+          <span>Checks passed (%)</span>
           <strong>{{ layout.scoreBreakdown.verificationCleanliness | percent:'1.0-0' }}</strong>
         </article>
       </div>
@@ -228,7 +166,7 @@
 
     <article class="construction-card">
       <details class="construction-details">
-        <summary>Cell schedule</summary>
+        <summary>Room list</summary>
         <div class="construction-table construction-table--schedule">
           <div class="construction-table__row construction-table__row--head">
             <span>Cell</span>
@@ -237,7 +175,7 @@
           </div>
           <div *ngFor="let cell of layout.artifact.cells" class="construction-table__row">
             <span>{{ cell.label || cell.typeId }}</span>
-            <span>{{ cell.hallway ? 'hallway' : cell.pkg ? 'generated' : 'room' }}</span>
+            <span>{{ cell.hallway ? 'Hallway' : cell.pkg ? 'Filler' : 'Room' }}</span>
             <span>{{ cell.areaSquareMeters | number:'1.1-1' }} m<sup>2</sup></span>
           </div>
         </div>
@@ -255,26 +193,7 @@
         No accepted layout is ready for construction yet, so this page is holding onto the last reviewed verification output instead of going blank.
       </p>
 
-      <svg class="construction__svg" viewBox="0 0 760 460" preserveAspectRatio="xMidYMid meet">
-        <rect x="0" y="0" width="760" height="460" class="construction__svg-bg" />
-        <ng-container *ngFor="let cell of fallbackPreviewCells()">
-          <polygon
-            [attr.points]="cell.points"
-            [attr.fill]="cell.color"
-            class="construction__cell"
-            [class.construction__cell--generated]="cell.generated"
-            [class.construction__cell--hallway]="cell.hallway"
-          />
-          <text
-            *ngIf="cell.showLabel"
-            class="construction__cell-label"
-            [attr.x]="cell.cx"
-            [attr.y]="cell.cy"
-          >
-            {{ cell.label }}
-          </text>
-        </ng-container>
-      </svg>
+      <app-layout-view [width]="760" [height]="460" [cells]="fallbackPreviewCells()" ariaLabel="Last reviewed construction layout" />
 
       <div class="construction-checklist">
         <article class="construction-check construction-check--blocked">
@@ -294,7 +213,7 @@
         <article class="construction-check construction-check--gated" *ngIf="fallbackFailure() as failure">
           <span>error</span>
           <div>
-            <strong>Pipeline orchestration note</strong>
+            <strong>System note</strong>
             <p>{{ failure.message }}</p>
           </div>
         </article>

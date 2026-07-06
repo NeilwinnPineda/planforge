@@ -9,12 +9,9 @@
       </p>
     </div>
     <div class="generation-hero__status">
-      <span
-        class="generation-status-chip"
-        [class.generation-status-chip--ready]="stageStatusLabel() === 'Ready for review'"
-      >
+      <app-status-pill [role]="stageStatusLabel() === 'Ready for review' ? 'pass' : 'review'">
         {{ stageStatusLabel() }}
-      </span>
+      </app-status-pill>
       <span *ngFor="let chip of summaryChips.slice(1)">{{ chip }}</span>
     </div>
   </article>
@@ -33,7 +30,7 @@
       </article>
 
       <article class="generation-card">
-        <p class="generation-card__eyebrow">Key signals</p>
+        <p class="generation-card__eyebrow">Key numbers</p>
         <div class="generation-metric-grid">
           <div *ngFor="let row of metricRows" class="generation-metric">
             <span>{{ row.label }}</span>
@@ -47,8 +44,8 @@
       <article class="generation-card">
         <div class="generation-section-heading">
           <div>
-            <p class="generation-card__eyebrow">Primary visualization</p>
-            <h2>Candidate seed preview</h2>
+            <p class="generation-card__eyebrow">Layout preview</p>
+            <h2>Starting positions preview</h2>
             <p class="generation-card__detail">
               This preview spreads the seed circles evenly across the available buildable area so you can
               review band placement and room ordering before motion and collisions begin.
@@ -56,39 +53,13 @@
           </div>
         </div>
 
-        <svg
-          class="generation-preview"
-          [attr.viewBox]="previewViewport.viewBox"
-          [attr.width]="previewViewport.width"
-          [attr.height]="previewViewport.height"
-          preserveAspectRatio="xMidYMid meet"
-        >
-          <rect x="0" y="0" [attr.width]="previewViewport.width" [attr.height]="previewViewport.height" class="generation-preview__bg" />
-          <polygon [attr.points]="previewLotPolygon" class="generation-preview__lot" />
-          <polygon [attr.points]="previewBuildablePolygon" class="generation-preview__buildable" />
-          <g *ngFor="let seed of previewSeedCircles">
-            <circle
-              [attr.cx]="seed.cx"
-              [attr.cy]="seed.cy"
-              [attr.r]="seed.radiusPixels"
-              [attr.fill]="seed.color"
-              class="generation-preview__seed"
-            />
-            <text
-              [attr.x]="seed.cx"
-              [attr.y]="seed.cy"
-              class="generation-preview__label"
-            >
-              {{ seed.label }}
-            </text>
-          </g>
-        </svg>
+        <app-layout-view [width]="previewViewport.width" [height]="previewViewport.height" [lotPolygon]="previewLotPolygon" [buildablePolygon]="previewBuildablePolygon" [cells]="previewSeedCircles" ariaLabel="Starting room positions" />
       </article>
 
       <article class="generation-card">
         <div class="generation-section-heading">
           <div>
-            <p class="generation-card__eyebrow">Band logic</p>
+            <p class="generation-card__eyebrow">Zones</p>
             <h2>How the first spread is organized</h2>
             <p class="generation-card__detail">
               The bands below describe the initial layout intent only. They are starting zones, not
@@ -108,9 +79,9 @@
         <div class="generation-section-heading">
           <div>
             <p class="generation-card__eyebrow">Generated seed rows</p>
-            <h2>Seed schedule</h2>
+            <h2>Starting position list</h2>
             <p class="generation-card__detail">
-              These rows show the canonical seed data that will be handed into the next stage.
+              These rows show the starting data that will be handed into the next stage.
             </p>
           </div>
         </div>

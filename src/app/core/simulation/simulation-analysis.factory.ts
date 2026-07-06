@@ -51,8 +51,8 @@ export function buildSimulationLotMetrics(
 export function buildSimulationForceMetrics(sourceSettings: ProjectSettings): SimulationMetricRow[] {
   const forces = sourceSettings.simulation.forces;
   const fillerHallwayMatrix =
-    sourceSettings.adjacency.exceptions['generated_filler']?.['generated_hallway']
-    ?? sourceSettings.adjacency.generatedTypeDefaults['generated_hallway']
+    sourceSettings.adjacency.exceptions['filler']?.['hallway']
+    ?? sourceSettings.adjacency.generatedTypeDefaults['hallway']
     ?? sourceSettings.adjacency.defaultScore;
 
   return [

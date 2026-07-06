@@ -10,20 +10,15 @@
       </div>
 
       <div class="processing-hero__status">
-        <span class="processing-status-pill" [class.processing-status-pill--ready]="stageStatusTone() === 'ready'" [class.processing-status-pill--progress]="stageStatusTone() === 'progress'" [class.processing-status-pill--attention]="stageStatusTone() === 'attention'">
+        <app-status-pill [role]="stageStatusTone() === 'ready' ? 'pass' : stageStatusTone() === 'progress' ? 'active' : 'review'">
           {{ stageStatusLabel() }}
-        </span>
+        </app-status-pill>
         <p class="processing-hero__next-label">Next action</p>
         <p class="processing-hero__next-copy">{{ stageNextAction() }}</p>
       </div>
     </div>
 
-    <div class="processing-highlights">
-      <div *ngFor="let row of highlightRows()" class="processing-highlight">
-        <span>{{ row.label }}</span>
-        <strong>{{ row.value }}</strong>
-      </div>
-    </div>
+    <app-stat-strip [items]="highlightRows()" />
   </article>
 
   <ng-container *ngIf="activeCaptureArtifact(); else noProcessingInput">
@@ -31,40 +26,12 @@
       <div class="processing-workspace">
         <div class="processing-layout-viewer">
           <div class="processing-section-heading">
-            <p class="processing-card__eyebrow">Main processed layout</p>
+            <p class="processing-card__eyebrow">Final tidied layout</p>
             <h3>Final cleaned layout before verification</h3>
           </div>
 
           <div class="processing-process-panel__preview" *ngIf="finalPanel.preview as preview">
-            <svg class="processing-preview" viewBox="0 0 560 380" preserveAspectRatio="xMidYMid meet">
-              <rect x="0" y="0" width="560" height="380" class="processing-preview__bg" />
-              <polygon [attr.points]="preview.buildablePolygon" class="processing-preview__buildable" />
-              <g *ngFor="let cell of preview.cells">
-                <polygon
-                  [attr.points]="cell.polygon"
-                  [attr.fill]="cell.color"
-                  class="processing-preview__cell"
-                  [class.processing-preview__cell--generated]="cell.generated"
-                  [class.processing-preview__cell--transferred]="cell.transferred"
-                  [class.processing-preview__cell--hallway]="cell.hallway"
-                />
-                <text
-                  [attr.x]="cell.cx"
-                  [attr.y]="cell.cy"
-                  class="processing-preview__label"
-                  [class.processing-preview__label--generated]="cell.generated"
-                >{{ cell.displayLabel }}</text>
-              </g>
-              <g *ngIf="preview.lines?.length">
-                <line
-                  *ngFor="let line of preview.lines"
-                  [attr.x1]="line.x1" [attr.y1]="line.y1"
-                  [attr.x2]="line.x2" [attr.y2]="line.y2"
-                  [class.processing-preview__grid-line--major]="line.major"
-                  class="processing-preview__grid-line"
-                />
-              </g>
-            </svg>
+            <app-layout-view [width]="560" [height]="380" [buildablePolygon]="preview.buildablePolygon" [cells]="preview.cells" [guideLines]="preview.lines ?? []" ariaLabel="Final tidied layout" />
           </div>
         </div>
 
@@ -90,22 +57,22 @@
                 <strong>{{ diag.coveragePct.toFixed(1) }}%</strong>
               </div>
               <div class="processing-metric-row">
-                <span>Dead space</span>
+                <span>Wasted space</span>
                 <strong [class.processing-diagnostic__bad]="diag.deadSpaceSqm > 0.5">{{ diag.deadSpaceSqm.toFixed(3) }} sq m</strong>
               </div>
               <div class="processing-metric-row">
-                <span>Gap tiles</span>
+                <span>Gaps</span>
                 <strong [class.processing-diagnostic__bad]="diag.gapTiles > 0">{{ diag.gapTiles }}</strong>
               </div>
               <div class="processing-metric-row">
-                <span>Overlap tiles</span>
+                <span>Overlaps</span>
                 <strong [class.processing-diagnostic__bad]="diag.overlapTiles > 0">{{ diag.overlapTiles }}</strong>
               </div>
             </div>
           </div>
 
           <div class="processing-section">
-            <p class="processing-card__eyebrow">Current output cells</p>
+            <p class="processing-card__eyebrow">Rooms in this layout</p>
             <div class="processing-table-list">
               <div *ngFor="let cell of finalStagingResult()?.artifact?.cells ?? []" class="processing-table-row">
                 <strong>{{ cell.id }}</strong>
@@ -121,7 +88,7 @@
 
     <article class="processing-card" *ngIf="transformationPanels() as panels">
       <div class="processing-section-heading">
-        <p class="processing-card__eyebrow">Transformation journey</p>
+        <p class="processing-card__eyebrow">How the layout changed</p>
         <h3>How the layout changed from capture to final geometry</h3>
       </div>
 
@@ -146,8 +113,20 @@
       </div>
     </article>
 
-    <article *ngFor="let panel of processPanels()" class="processing-card processing-process-panel">
-      <details class="processing-step" [open]="panel.stepId === 'layout-exploration.capture' || panel.stepId === 'processing.final_staging'">
+    <nav class="processing-rail" aria-label="Processing steps">
+      <button *ngFor="let step of processPanels(); let index = index" type="button" class="processing-rail__step" [class.processing-rail__step--active]="selectedProcessIndex() === index" [class.processing-rail__step--pending]="step.status === 'pending'" (click)="selectProcessStep(index)">
+        <span>{{ step.stepNumber }}</span><strong>{{ step.title }}</strong>
+      </button>
+    </nav>
+
+    <div class="processing-step-nav">
+      <button type="button" [disabled]="selectedProcessIndex() === 0" (click)="moveProcessStep(-1)">Previous step</button>
+      <span>Step {{ selectedProcessIndex() + 1 }} of {{ processPanels().length }}</span>
+      <button type="button" [disabled]="selectedProcessIndex() >= processPanels().length - 1" (click)="moveProcessStep(1)">Next step</button>
+    </div>
+
+    <article *ngIf="selectedProcessPanel() as panel" class="processing-card processing-process-panel">
+      <details class="processing-step" open>
         <summary class="processing-step__summary">
           <div class="processing-process-panel__header">
             <div>
@@ -155,7 +134,7 @@
               <h3 class="processing-process-panel__title">{{ panel.title }}</h3>
             </div>
             <span class="processing-status-chip" [class.processing-status-chip--pending]="panel.status === 'pending'">
-              {{ panel.status === 'implemented' ? 'Implemented' : 'Pending migration' }}
+              {{ panel.status === 'implemented' ? 'Working' : 'Not built yet' }}
             </span>
           </div>
           <p class="processing-process-panel__summary">{{ panel.summary }}</p>
@@ -163,35 +142,7 @@
 
         <div class="processing-process-panel__body">
           <div class="processing-process-panel__preview" *ngIf="panel.preview as preview; else noPanelPreview">
-            <svg class="processing-preview" viewBox="0 0 560 380" preserveAspectRatio="xMidYMid meet">
-              <rect x="0" y="0" width="560" height="380" class="processing-preview__bg" />
-              <polygon [attr.points]="preview.buildablePolygon" class="processing-preview__buildable" />
-              <g *ngFor="let cell of preview.cells">
-                <polygon
-                  [attr.points]="cell.polygon"
-                  [attr.fill]="cell.color"
-                  class="processing-preview__cell"
-                  [class.processing-preview__cell--generated]="cell.generated"
-                  [class.processing-preview__cell--transferred]="cell.transferred"
-                  [class.processing-preview__cell--hallway]="cell.hallway"
-                />
-                <text
-                  [attr.x]="cell.cx"
-                  [attr.y]="cell.cy"
-                  class="processing-preview__label"
-                  [class.processing-preview__label--generated]="cell.generated"
-                >{{ cell.displayLabel }}</text>
-              </g>
-              <g *ngIf="preview.lines?.length">
-                <line
-                  *ngFor="let line of preview.lines"
-                  [attr.x1]="line.x1" [attr.y1]="line.y1"
-                  [attr.x2]="line.x2" [attr.y2]="line.y2"
-                  [class.processing-preview__grid-line--major]="line.major"
-                  class="processing-preview__grid-line"
-                />
-              </g>
-            </svg>
+            <app-layout-view [width]="560" [height]="380" [buildablePolygon]="preview.buildablePolygon" [cells]="preview.cells" [guideLines]="preview.lines ?? []" [showControls]="false" ariaLabel="Selected processing step layout" />
           </div>
 
           <ng-template #noPanelPreview>
@@ -222,7 +173,7 @@
             </div>
 
             <div class="processing-section" *ngIf="panel.traces.length">
-              <p class="processing-card__eyebrow">Step traces</p>
+              <p class="processing-card__eyebrow">Step log</p>
               <div class="processing-trace-list">
                 <div *ngFor="let trace of panel.traces" class="processing-trace-row">
                   <strong>{{ trace.stepId }}</strong>
@@ -238,8 +189,8 @@
   </ng-container>
 
   <article class="processing-card processing-card--wide processing-future-features">
-    <p class="processing-card__eyebrow">Deferred steps</p>
-    <h3>Pipeline work still waiting for migration</h3>
+    <p class="processing-card__eyebrow">Steps we haven't built yet</p>
+    <h3>Planned processing improvements</h3>
     <ul class="processing-future-list">
       <li *ngFor="let feature of futureFeatures" class="processing-future-item">
         <strong>{{ feature.title }}</strong>

@@ -21,7 +21,7 @@ This checklist should be treated as the current design contract until replaced b
 
 ## Progress Snapshot
 
-Current cleanup status on 2026-07-02:
+Current cleanup status on 2026-07-03:
 
 - `Done`: workflow shell redesign from generic tabs to route-driven stepper
 - `Done`: novice-first and layout-first checklist definition
@@ -32,8 +32,11 @@ Current cleanup status on 2026-07-02:
 - `Done`: Verification route layout-first redesign
 - `Done`: Construction Output route redesign
 - `Done`: Candidate Gallery route cleanup
-- `Next`: visual panel standardization pass across remaining routes
-- `Queued`: Reporting route cleanup
+- `Done`: Overview Run & Health extraction and route cleanup
+- `Done`: Generation preview standardization
+- `Done`: Reporting diagnostic-lane cleanup
+- `Done`: shared layout-view, status, statistics, and empty-state primitives
+- `Done`: duplicate output routes and route-local layout renderers removed
 
 Status legend:
 
@@ -231,7 +234,7 @@ This is especially important on Simulation, Processing, Verification, Constructi
 
 Progress status:
 
-- `Queued`
+- `Done`
 
 Role:
 
@@ -414,7 +417,7 @@ Implemented in current pass:
 
 Progress status:
 
-- `Queued`
+- `Done`
 
 Role:
 
@@ -795,7 +798,7 @@ Implemented in current pass:
 
 Progress status:
 
-- `Queued`
+- `Done`
 
 Role:
 
@@ -904,11 +907,11 @@ They exist to keep route pages aligned with their visual role without re-owning 
 Recommended implementation order:
 
 1. `Done` lock this checklist as the route design contract
-2. `In progress` refactor each route top section so purpose/status/next action are consistent
+2. `Done` refactor each route top section so purpose/status/next action are consistent
 3. `Done` redesign the Simulation route around one clearly dominant live surface
 4. `Done` redesign Processing into a more readable step-focused inspector
 5. `Done` redesign Verification into a stronger pass/fail diagnostic review
 6. `Done` redesign Construction Output as a clearer handoff board
 7. `Done` redesign Program Setup and Site And Lot for cleaner editor-first layouts
 8. `Done` clean up Gallery comparison behavior
-9. `Next` standardize remaining route visuals and then clean up Reporting
+9. `Done` standardize remaining route visuals and clean up Reporting

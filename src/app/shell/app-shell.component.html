@@ -1,186 +1,42 @@
-<main class="app-shell">
-  <header class="app-shell__header">
-    <p class="app-shell__eyebrow">Planforge / Residential Layout Generator</p>
-    <h1>Residential Layout Studio</h1>
-    <p class="app-shell__summary">
-      Set up the project, generate layout options, review what works, and prepare the strongest result for export.
-    </p>
-    <section class="app-shell__source-actions">
-      <div class="app-shell__source-copy">
-        <p class="app-shell__status-label">Project source</p>
-        <p class="app-shell__source-detail">
-          {{ sourceSnapshot().source.meta.title }} · {{ sourceSnapshot().origin === 'default' ? 'default source' : 'imported source' }}
-        </p>
-      </div>
-      <div class="app-shell__source-buttons">
-        <button type="button" class="app-shell__action-btn" (click)="openSourceImport()">Import JSON</button>
-        <button type="button" class="app-shell__action-btn" (click)="exportSourceJson()">Export JSON</button>
-        <button
-          type="button"
-          class="app-shell__action-btn"
-          [disabled]="sourceSnapshot().origin === 'default'"
-          (click)="resetSourceToDefault()"
-        >
-          Use Default
-        </button>
-      </div>
-      <input
-        #sourceFileInput
-        type="file"
-        accept="application/json,.json"
-        class="app-shell__file-input"
-        (change)="onSourceFileSelected($event)"
-      />
-    </section>
-    <section class="app-shell__workflow">
-      <div class="app-shell__workflow-head">
-        <div class="app-shell__workflow-copy">
-          <p class="app-shell__status-label">Workflow</p>
-          <p class="app-shell__workflow-summary">
-            Move left to right through the pipeline. Each stage owns a specific decision seam, not just a screen.
-          </p>
-        </div>
-        <div class="app-shell__workflow-active">
-          <span class="app-shell__workflow-active-stage">{{ activeWorkflowItem().stage }}</span>
-          <div class="app-shell__workflow-active-copy">
-            <p class="app-shell__workflow-active-title">{{ activeWorkflowItem().title }}</p>
-            <p class="app-shell__workflow-active-summary">{{ activeWorkflowItem().summary }}</p>
-          </div>
-        </div>
-      </div>
-      <nav class="app-shell__nav" aria-label="Planforge workflow">
-        <a
-          *ngFor="let item of workflowNav; let index = index"
-          [routerLink]="item.path"
-          [attr.aria-label]="item.title"
-          routerLinkActive="app-shell__nav-link--active"
-          [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
-          class="app-shell__nav-link"
-        >
-          <span class="app-shell__nav-node">
-            <span class="app-shell__nav-stage">{{ item.stage }}</span>
-            <span class="app-shell__nav-connector" *ngIf="index < workflowNav.length - 1"></span>
-          </span>
-          <span class="app-shell__nav-title">{{ item.title }}</span>
-        </a>
-      </nav>
-      <div class="app-shell__workflow-actions">
-        <a
-          *ngIf="previousWorkflowItem() as previous"
-          [routerLink]="previous.path"
-          aria-label="Previous stage"
-          class="app-shell__workflow-jump"
-        >
-          <span class="app-shell__workflow-jump-label">Previous</span>
-          <span class="app-shell__workflow-jump-title">{{ previous.title }}</span>
-        </a>
-        <div class="app-shell__workflow-current">
-          <span class="app-shell__workflow-current-label">Current stage</span>
-          <span class="app-shell__workflow-current-title">{{ activeWorkflowItem().title }}</span>
-        </div>
-        <a
-          *ngIf="nextWorkflowItem() as next"
-          [routerLink]="next.path"
-          aria-label="Next stage"
-          class="app-shell__workflow-jump app-shell__workflow-jump--next"
-        >
-          <span class="app-shell__workflow-jump-label">Next</span>
-          <span class="app-shell__workflow-jump-title">{{ next.title }}</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="app-shell__diagnostics">
-      <div class="app-shell__diagnostics-head">
-        <div>
-          <span class="app-shell__panel-kicker">Control Room</span>
-          <p class="app-shell__status-label">Diagnostic And Control Panel</p>
-          <p class="app-shell__diagnostics-summary">Live control, current stage health, and last known pipeline memory.</p>
-        </div>
-      </div>
-
-      <article class="app-shell__diagnostic-panel app-shell__diagnostic-panel--controls">
-        <div class="app-shell__diagnostic-panel-head">
-          <p class="app-shell__status-label">Runtime Controls</p>
-          <span class="app-shell__panel-chip">Live</span>
-        </div>
-        <app-simulation-control-bar
-          [metrics]="shellMetrics()"
-          [isRunning]="systemRunning()"
-          (startRequested)="startSimulation()"
-          (stopRequested)="stopSimulation()"
-          (clearRequested)="clearSimulation()"
-        />
-      </article>
-
-      <div class="app-shell__diagnostics-subhead">
-        <p class="app-shell__status-label">Deeper Diagnostics</p>
-        <button
-          type="button"
-          class="app-shell__diagnostics-toggle"
-          [attr.aria-expanded]="!diagnosticsCollapsed()"
-          (click)="toggleDiagnostics()"
-        >
-          {{ diagnosticsCollapsed() ? 'Expand details' : 'Hide details' }}
-        </button>
-      </div>
-
-      <div *ngIf="!diagnosticsCollapsed()" class="app-shell__diagnostics-grid">
-        <article class="app-shell__diagnostic-panel">
-          <div class="app-shell__diagnostic-panel-head">
-            <p class="app-shell__status-label">Parallel Run Status</p>
-            <span class="app-shell__panel-chip app-shell__panel-chip--muted">Per Core</span>
-          </div>
-          <div class="app-shell__core-list">
-            <div *ngFor="let row of coreRows()" class="app-shell__core-row">
-              <div class="app-shell__core-top">
-                <strong>{{ row.coreId }}</strong>
-                <span class="app-shell__diagnostic-badge">{{ row.status }}</span>
-              </div>
-              <span>{{ row.evaluation }}</span>
-              <span>{{ row.captures }}</span>
-              <strong>{{ row.latestResult }}</strong>
-            </div>
-          </div>
-        </article>
-
-        <article class="app-shell__diagnostic-panel">
-          <div class="app-shell__diagnostic-panel-head">
-            <p class="app-shell__status-label">Stage Overview</p>
-            <span class="app-shell__panel-chip app-shell__panel-chip--muted">Monitor</span>
-          </div>
-          <div class="app-shell__diagnostic-list">
-            <div
-              *ngFor="let row of diagnosticRows()"
-              class="app-shell__diagnostic-card"
-              [ngClass]="diagnosticToneClass(row.tone)"
-            >
-              <div class="app-shell__diagnostic-top">
-                <strong>{{ row.label }}</strong>
-                <span class="app-shell__diagnostic-badge">{{ row.status }}</span>
-              </div>
-              <p class="app-shell__diagnostic-detail">{{ row.detail }}</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="app-shell__diagnostic-panel">
-          <div class="app-shell__diagnostic-panel-head">
-            <p class="app-shell__status-label">Last Known Pipeline Memory</p>
-            <span class="app-shell__panel-chip app-shell__panel-chip--muted">Snapshot</span>
-          </div>
-          <div class="app-shell__snapshot-list">
-            <div *ngFor="let row of orchestrationSnapshotRows()" class="app-shell__snapshot-row">
-              <span>{{ row.label }}</span>
-              <strong>{{ row.value }}</strong>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
+<div class="app-shell">
+  <header class="app-shell__topbar">
+    <a routerLink="/" class="app-shell__wordmark">Planforge</a>
+    <div class="app-shell__source">
+      <span class="app-shell__source-name">{{ sourceSnapshot().source.meta.title }} · {{ sourceSnapshot().origin === 'default' ? 'default' : 'imported' }}</span>
+      <button type="button" class="app-shell__topbar-btn" (click)="openSourceImport()">Import</button>
+      <button type="button" class="app-shell__topbar-btn" (click)="exportSourceJson()">Export</button>
+      <button type="button" class="app-shell__topbar-btn" [disabled]="sourceSnapshot().origin === 'default'" (click)="resetSourceToDefault()">Default</button>
+      <input #sourceFileInput type="file" accept="application/json,.json" class="app-shell__file-input" (change)="onSourceFileSelected($event)" />
+    </div>
+    <div class="app-shell__run">
+      <span class="app-shell__run-dot" [class.app-shell__run-dot--active]="systemRunning()"></span>
+      <span>{{ systemRunning() ? 'Running' : 'Paused' }}</span>
+      <button type="button" class="app-shell__topbar-btn app-shell__topbar-btn--run" (click)="systemRunning() ? stopSimulation() : startSimulation()">{{ systemRunning() ? 'Pause' : 'Run' }}</button>
+    </div>
   </header>
 
-  <section class="app-shell__body">
-    <ng-content />
-  </section>
-</main>
+  <div class="app-shell__body">
+    <nav class="app-shell__sidebar" aria-label="Planforge workflow">
+      <section *ngFor="let phase of workflowPhases(); let phaseIndex = index" class="app-shell__phase" [class.app-shell__phase--active]="phaseIsActive(phase)">
+        <button type="button" class="app-shell__phase-toggle" [attr.aria-expanded]="expandedPhase() === phaseIndex || phaseIsActive(phase)" (click)="togglePhase(phaseIndex)">
+          <span class="app-shell__phase-number">0{{ phaseIndex + 1 }}</span>
+          <span class="app-shell__phase-label"><strong>{{ phase.title }}</strong><small>{{ phase.summary }}</small></span>
+        </button>
+        <div *ngIf="expandedPhase() === phaseIndex || phaseIsActive(phase)" class="app-shell__phase-links">
+          <a *ngFor="let item of phase.items" [routerLink]="item.path" routerLinkActive="app-shell__phase-link--active" [routerLinkActiveOptions]="{ exact: item.exact ?? false }" class="app-shell__phase-link">
+            <span class="app-shell__phase-dot"></span><span>{{ item.title }}</span>
+          </a>
+        </div>
+      </section>
+
+      <div class="app-shell__sidebar-jump">
+        <a *ngIf="previousWorkflowItem() as prev" [routerLink]="prev.path" class="app-shell__jump-link">← {{ prev.title }}</a>
+        <a *ngIf="nextWorkflowItem() as next" [routerLink]="next.path" class="app-shell__jump-link app-shell__jump-link--next">{{ next.title }} →</a>
+      </div>
+    </nav>
+
+    <main class="app-shell__content">
+      <ng-content />
+    </main>
+  </div>
+</div>

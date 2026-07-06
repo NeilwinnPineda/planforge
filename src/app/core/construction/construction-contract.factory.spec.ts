@@ -14,6 +14,7 @@ function buildArtifact(): VerifiedLayoutArtifact {
     accessCheck: { passed: true, failures: [] },
     adjacencyCheck: { passed: true, failures: [] },
     garageFrontageCheck: { passed: true, failures: [] },
+    foyerFrontageCheck: { passed: true, failures: [] },
     sliverCheck: { passed: true, failures: [] },
     overlapCheck: { passed: true, failures: [] },
     cells: [
@@ -38,7 +39,7 @@ function buildArtifact(): VerifiedLayoutArtifact {
       },
       {
         id: 'hall-1',
-        typeId: 'generated_hallway',
+        typeId: 'hallway',
         label: 'Hallway',
         color: '#cccccc',
         tags: [],
@@ -57,7 +58,7 @@ function buildArtifact(): VerifiedLayoutArtifact {
       },
       {
         id: 'fill-1',
-        typeId: 'generated_filler',
+        typeId: 'filler',
         label: 'Filler',
         color: '#eeeeee',
         tags: [],

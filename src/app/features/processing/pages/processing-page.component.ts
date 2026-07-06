@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import type { GeometryPoint } from '../../../core/geometry/geometry.exports';
 import { LotGeometryService } from '../../../core/geometry/geometry.exports';
@@ -16,6 +16,9 @@ import {
 } from '../../../core/processing/processing.exports';
 import { WorkflowVisualStateService } from '../../../core/processing/workflow-visual-state.service';
 import { SimulationStageService } from '../../../core/simulation/simulation.exports';
+import { LayoutViewComponent } from '../../../shared/layout-view/layout-view.component';
+import { StatusPillComponent } from '../../../shared/status-pill/status-pill.component';
+import { StatStripComponent } from '../../../shared/stat-strip/stat-strip.component';
 
 interface ProcessingMetricRow {
   readonly label: string;
@@ -89,11 +92,12 @@ interface ProcessingHighlightRow {
 @Component({
   selector: 'app-processing-page',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [NgFor, NgIf, LayoutViewComponent, StatusPillComponent, StatStripComponent],
   templateUrl: './processing-page.component.html',
   styleUrl: './processing-page.component.scss',
 })
 export class ProcessingPageComponent {
+  protected readonly selectedProcessIndex = signal(0);
   private readonly simulationStageService = inject(SimulationStageService);
   private readonly lotGeometryService = inject(LotGeometryService);
   private readonly processingPipelineService = inject(ProcessingPipelineService);
@@ -113,6 +117,20 @@ export class ProcessingPageComponent {
   protected readonly pipelineSnapshot = computed(() =>
     this.livePipelineSnapshot() ?? this.workflowVisualStateService.latestRenderableSnapshot(),
   );
+  protected readonly selectedProcessPanel = computed(() => {
+    const panels = this.processPanels();
+    const index = Math.min(this.selectedProcessIndex(), Math.max(0, panels.length - 1));
+    return panels[index] ?? null;
+  });
+
+  protected selectProcessStep(index: number): void {
+    this.selectedProcessIndex.set(index);
+  }
+
+  protected moveProcessStep(delta: number): void {
+    const lastIndex = Math.max(0, this.processPanels().length - 1);
+    this.selectedProcessIndex.update((index) => Math.max(0, Math.min(lastIndex, index + delta)));
+  }
   protected readonly activeCaptureArtifact = computed(() =>
     this.liveCaptureArtifact() ?? this.pipelineSnapshot()?.capture ?? null,
   );

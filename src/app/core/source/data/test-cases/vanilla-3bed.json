@@ -1,0 +1,351 @@
+{
+  "meta": {
+    "id": "vanilla-3bed",
+    "version": "1.0.0",
+    "title": "Vanilla — Standard 3-Bedroom Family Home",
+    "summary": "Baseline visual test case. Generous 14m × 22m suburban lot (308 sqm) with a straightforward 11-room brief. Program fits comfortably inside the buildable envelope. Intended to settle quickly and produce multiple accepted candidates.",
+    "authoringMode": "ai_editable_source"
+  },
+  "intent": {
+    "projectKind": "Detached single-storey residential house",
+    "primaryGoal": "Baseline visual test. Produce stable, verified layouts with a standard family program on a comfortable suburban lot.",
+    "narrative": "Three-bedroom family home on a 308 sqm suburban lot. Front setback 3m, side setbacks 1.5m, rear setback 2m. Room areas follow typical residential standards: living 22 sqm, master bed 18 sqm, secondary beds ~12 sqm each, kitchen and dining ~12 sqm each, garage 24 sqm. Total active program ~137 sqm against a 187 sqm buildable envelope — a comfortable 73% fit leaving room for hallways and fillers without pressure.",
+    "priorities": [
+      "Living and dining read as a connected public zone at the front.",
+      "Master bedroom and ensuite are adjacent — private zone away from the street.",
+      "Garage and foyer claim the street edge.",
+      "Kitchen is adjacent to dining; laundry pairs with kitchen as a service cluster.",
+      "Bedrooms 2 and 3 share the main bathroom."
+    ],
+    "downstreamTargets": [
+      "buildable lot envelope",
+      "room instance schedule",
+      "adjacency matrix",
+      "bubble simulation candidates",
+      "orthogonal schematic layout",
+      "future Revit room and wall creation"
+    ]
+  },
+  "aiComments": [
+    {
+      "scope": "source.intent",
+      "comment": "Treat this object as the project brief. The app should read design facts from here, while code only interprets and visualizes them."
+    },
+    {
+      "scope": "lot.segments",
+      "comment": "Segments are the survey boundary. Mark exactly one road/frontage segment with isRrow. The front edge is the street here."
+    },
+    {
+      "scope": "rooms.catalog",
+      "comment": "Catalog lists all available room types. Only rooms in settings.rooms.program are active for this run."
+    },
+    {
+      "scope": "adjacency.exceptions",
+      "comment": "Scores: 5=must-touch, 4=preferred, 3=neutral, 2=separation, 1=avoid. Pairs not listed use defaultScore (3)."
+    },
+    {
+      "scope": "rules.special",
+      "comment": "Special rules describe intent beyond the adjacency matrix. Behavior is enforced through scores and tags."
+    },
+    {
+      "scope": "simulation.forces",
+      "comment": "Force values tune search behavior only - not design intent."
+    }
+  ],
+  "roomCatalog": [
+    { "id": "foyer", "label": "Foyer", "shortLabel": "Foyer", "color": "#ede3c8", "radius": 1.3, "tags": ["open_access", "front_facing"] },
+    { "id": "living", "label": "Living Room", "shortLabel": "Living", "color": "#8ecae6", "radius": 2.7, "tags": ["open_access"] },
+    { "id": "family_room", "label": "Family Room", "shortLabel": "Family", "color": "#a8d4e8", "radius": 2.4, "tags": ["open_access"] },
+    { "id": "dining", "label": "Dining Room", "shortLabel": "Dining", "color": "#f4d58d", "radius": 2.0, "tags": ["open_access"] },
+    { "id": "kitchen", "label": "Kitchen", "shortLabel": "Kitch", "color": "#f2a65a", "radius": 1.9, "tags": ["open_access", "plumbing"] },
+    { "id": "dirty_kitchen", "label": "Dirty Kitchen", "shortLabel": "D.Kit", "color": "#e89050", "radius": 1.4, "tags": ["plumbing"] },
+    { "id": "pantry", "label": "Pantry", "shortLabel": "Pantry", "color": "#d4c4a0", "radius": 1.0, "tags": [] },
+    { "id": "breakfast_nook", "label": "Breakfast Nook", "shortLabel": "B.Nook", "color": "#f8e0a0", "radius": 1.4, "tags": ["open_access"] },
+    { "id": "powder_room", "label": "Powder Room", "shortLabel": "Powder", "color": "#b0d8b0", "radius": 1.0, "tags": ["plumbing"] },
+    { "id": "hallway", "label": "Hallway", "shortLabel": "Hall", "color": "#d4d0c0", "radius": 1.6, "tags": ["open_access"] },
+    { "id": "stairs", "label": "Stairs", "shortLabel": "Stairs", "color": "#c8c4b4", "radius": 1.2, "tags": ["open_access"] },
+    { "id": "master_bed", "label": "Master Bed", "shortLabel": "M.Bed", "color": "#b8a1e3", "radius": 2.4, "tags": ["sleeping"] },
+    { "id": "master_closet", "label": "Master Closet", "shortLabel": "M.Clos", "color": "#c8b8e8", "radius": 1.2, "tags": [] },
+    { "id": "master_bath", "label": "Master Bath", "shortLabel": "M.Bath", "color": "#7fc8a9", "radius": 1.35, "tags": ["plumbing"] },
+    { "id": "kids_bed", "label": "Kids Bed", "shortLabel": "K.Bed", "color": "#e9a3c9", "radius": 2.0, "tags": ["sleeping"] },
+    { "id": "guest_bed", "label": "Guest Bed", "shortLabel": "G.Bed", "color": "#d4b0d0", "radius": 2.0, "tags": ["sleeping"] },
+    { "id": "shared_bath", "label": "Shared Bath", "shortLabel": "S.Bath", "color": "#6db8a0", "radius": 1.35, "tags": ["plumbing"] },
+    { "id": "laundry", "label": "Laundry", "shortLabel": "Laund", "color": "#b7b7c9", "radius": 1.35, "tags": ["plumbing"] },
+    { "id": "utility", "label": "Utility", "shortLabel": "Util", "color": "#c0bcc8", "radius": 1.2, "tags": ["plumbing"] },
+    { "id": "storage", "label": "Storage", "shortLabel": "Stor", "color": "#c8c4b8", "radius": 1.4, "tags": [] },
+    { "id": "mudroom", "label": "Mudroom", "shortLabel": "Mud", "color": "#b8b4a0", "radius": 1.2, "tags": [] },
+    { "id": "garage", "label": "Garage", "shortLabel": "Garage", "color": "#c8d8e8", "radius": 2.8, "tags": ["front_facing"] },
+    { "id": "office", "label": "Office", "shortLabel": "Office", "color": "#d4c8e8", "radius": 1.8, "tags": [] },
+    { "id": "study", "label": "Study", "shortLabel": "Study", "color": "#c8d0e0", "radius": 1.4, "tags": [] },
+    { "id": "playroom", "label": "Playroom", "shortLabel": "Play", "color": "#f0c8a0", "radius": 2.0, "tags": ["open_access"] },
+    { "id": "media_room", "label": "Media Room", "shortLabel": "Media", "color": "#d0c8e0", "radius": 2.0, "tags": [] },
+    { "id": "gym", "label": "Gym", "shortLabel": "Gym", "color": "#c8e0c8", "radius": 2.0, "tags": [] },
+    { "id": "patio", "label": "Patio", "shortLabel": "Patio", "color": "#c8e8c0", "radius": 2.4, "tags": ["open_access", "vista"] },
+    { "id": "balcony", "label": "Balcony", "shortLabel": "Balc", "color": "#c0e0c8", "radius": 1.4, "tags": ["vista"] }
+  ],
+  "settings": {
+    "lot": {
+      "segments": [
+        { "point": "P1", "bearing": "N 89 59 E", "distance": 14, "setback": 3, "isRrow": true },
+        { "point": "P2", "bearing": "N 0 01 W", "distance": 22, "setback": 1.5 },
+        { "point": "P3", "bearing": "S 89 59 W", "distance": 14, "setback": 2 },
+        { "point": "P4", "bearing": "S 0 01 E", "distance": 22, "setback": 1.5 }
+      ]
+    },
+    "rooms": {
+      "program": {
+        "foyer": 1,
+        "living": 1,
+        "dining": 1,
+        "kitchen": 1,
+        "master_bed": 1,
+        "master_bath": 1,
+        "guest_bed": 1,
+        "kids_bed": 1,
+        "shared_bath": 1,
+        "laundry": 1,
+        "garage": 1
+      }
+    },
+    "generated": {
+      "filler": { "color": "#f3efe7", "strength": 0.12 },
+      "hallway": { "color": "#d7e6d1", "strength": 0.08 }
+    },
+    "adjacency": {
+      "defaultScore": 3,
+      "sameTypeDefault": 2,
+      "generatedTypeDefaults": {
+        "hallway": 3,
+        "filler": 1
+      },
+      "exceptions": {
+        "filler": {
+          "hallway": 1
+        },
+        "hallway": {
+          "master_bed": 5,
+          "master_bath": 5,
+          "guest_bed": 5,
+          "kids_bed": 5,
+          "shared_bath": 5
+        },
+        "foyer": {
+          "living": 5,
+          "garage": 4,
+          "dining": 3,
+          "hallway": 3
+        },
+        "living": {
+          "dining": 5,
+          "kitchen": 3,
+          "master_bed": 2,
+          "laundry": 1,
+          "garage": 1
+        },
+        "dining": {
+          "kitchen": 5,
+          "laundry": 1,
+          "garage": 1,
+          "master_bed": 1
+        },
+        "kitchen": {
+          "laundry": 4,
+          "garage": 3,
+          "master_bed": 1
+        },
+        "master_bed": {
+          "master_bath": 5,
+          "shared_bath": 2,
+          "garage": 1
+        },
+        "master_bath": {
+          "shared_bath": 2,
+          "kitchen": 1,
+          "dining": 1
+        },
+        "shared_bath": {
+          "dining": 1,
+          "kitchen": 1,
+          "guest_bed": 4,
+          "kids_bed": 4
+        },
+        "laundry": {
+          "garage": 3
+        }
+      }
+    },
+    "rules": {
+      "special": [
+        {
+          "label": "Street Address",
+          "rooms": ["foyer", "garage"],
+          "note": "Foyer and garage both face the road / main street frontage."
+        },
+        {
+          "label": "Open Access Spine",
+          "rooms": ["foyer", "living", "dining", "kitchen"],
+          "note": "Public zone. Every other room must touch one of these for access."
+        },
+        {
+          "label": "En-suite",
+          "rooms": ["master_bed", "master_bath"],
+          "note": "Private master cluster — must be physically adjacent."
+        },
+        {
+          "label": "Service Core",
+          "rooms": ["kitchen", "laundry"],
+          "note": "Back-of-house service pair."
+        },
+        {
+          "label": "Secondary Sleeping Zone",
+          "rooms": ["guest_bed", "kids_bed", "shared_bath"],
+          "note": "Secondary bedrooms and shared bathroom cluster away from the master suite."
+        }
+      ],
+      "blockers": [
+        {
+          "label": "All rooms touch an open-access space",
+          "rooms": ["foyer", "living", "dining", "kitchen"],
+          "note": "Every active room must be adjacent to at least one open-access space to pass review-access."
+        }
+      ]
+    },
+    "features": {
+      "simulation": {
+        "autoShake": true,
+        "hardResetLoop": true,
+        "scoreReset": true
+      },
+      "schematic": {
+        "constrainedVoronoi": true,
+        "massBalance": true,
+        "edgeStep": true,
+        "gapAbsorption": true,
+        "fringeExchange": true,
+        "simplification": true
+      }
+    },
+    "simulation": {
+      "captureThresholds": {
+        "start": 0.55,
+        "min": 0.2,
+        "step": 0.05
+      },
+      "resetConditions": [
+        {
+          "id": "low_score",
+          "label": "Score too low",
+          "enabled": true,
+          "type": "score_below",
+          "threshold": 0.62
+        },
+        {
+          "id": "hard_reset",
+          "label": "Hard reset",
+          "enabled": true,
+          "type": "hard_interval_ms",
+          "threshold": 4000
+        }
+      ],
+      "forces": {
+        "simSubsteps": 12,
+        "damping": 0.65,
+        "maxSpeed": 0.55,
+        "resetRandomVelocity": 0,
+        "shakeRoomMagnitude": 0.09,
+        "shakePkgMagnitude": 0.09,
+        "shakeMagnitudeRandom": 0.2,
+        "shakeEveryFifthSideKick": 0.06,
+        "shakeLoopDurationMs": 1000,
+        "shakeLoopIntervalMs": 80,
+        "autoShakeIntervalMs": 200,
+        "satResetThreshold": 0.7,
+        "satResetCooldownMs": 2500,
+        "roomInertiaReferenceArea": 4,
+        "roomInertiaMinArea": 0.25,
+        "roomInertiaMinScale": 0.22,
+        "roomInertiaMaxScale": 1.15,
+        "globalCollisionClearance": 0.16,
+        "globalCollisionPush": 0.42,
+        "baseAttractionForce": 0.16,
+        "baseRepulsionForce": 0.16,
+        "frontEdgeAttractionModifier": 3.0,
+        "fillerEdgeAttractionForce": 0.8,
+        "vistaEdgeAttractionForce": 0.18,
+        "fillerEdgeCollisionRatioCap": 0.95,
+        "attractionCollisionRatioCap": 0.35,
+        "pullLinkGap": 0,
+        "repelLinkComfort": 0,
+        "hallwayAreaShare": 0.3333333333333333,
+        "fillerAreaShare": 0.6666666666666666,
+        "fillerSquarePromoteEvery": 4,
+        "hallwaySquarePromoteEvery": 4,
+        "maxSquareFillerSide": 5,
+        "initialRoomClearance": 0,
+        "boundaryFallbackStep": 0.18,
+        "boundaryAxisBounceDamping": 0.35,
+        "boundaryBounceDamping": 0.45,
+        "frontEdgeTouchTolerance": 0.25
+      }
+    },
+    "schematic": {
+      "massBalance": {
+        "maxIterations": 18,
+        "stableDeviation": 0.08,
+        "stableRuns": 2
+      },
+      "edgeStep": {
+        "epsilon": 0.000001,
+        "boundaryMatchEpsilon": 0.04,
+        "maxStepsPerExteriorEdge": 1,
+        "postStepRenegotiation": {
+          "enabled": true,
+          "maxIterations": 8,
+          "stableDeviation": 0.08,
+          "stableRuns": 2
+        }
+      },
+      "gapAbsorption": {
+        "deficiencyWeight": 1,
+        "adjacencyWeight": 1,
+        "sharedEdgeWeight": 0.55,
+        "neckPenaltyWeight": 0.45,
+        "distancePenaltyWeight": 0.12,
+        "minSharedEdgeMeters": 0.12
+      },
+      "fringeExchange": {
+        "fringeDepthMeters": 0.6,
+        "roomTileMeters": 1.8,
+        "maxPieceAreaSquareMeters": 2.4,
+        "maxPieceAreaRatio": 0.16,
+        "minSharedEdgeMeters": 0.35,
+        "maxTransfers": 10,
+        "compactnessWeight": 1,
+        "areaBalanceWeight": 0.8,
+        "sharedEdgeWeight": 0.08,
+        "minScoreImprovement": 0.02,
+        "maxFaces": 450,
+        "maxRenderedPieces": 360
+      },
+      "simplification": {
+        "maxMoves": 8,
+        "maxFaces": 360,
+        "maxCandidates": 90,
+        "maxRenderedPieces": 320,
+        "minWallGainMeters": 0.12,
+        "wallGainWeight": 1,
+        "compactnessWeight": 0.03,
+        "areaBalanceWeight": 0.8,
+        "minScoreImprovement": 0.04
+      }
+    },
+    "legacyPanelLayout": {
+      "lotWidthMeters": 14,
+      "lotDepthMeters": 22,
+      "frontSetbackMeters": 3,
+      "sideSetbackMeters": 1.5,
+      "rearSetbackMeters": 2,
+      "panel4GridMeters": 0.5
+    }
+  }
+}

@@ -11,20 +11,15 @@
         </div>
 
         <div class="verification-hero__status">
-          <span class="verification-status-pill" [class.verification-status-pill--ready]="stageStatusTone() === 'ready'" [class.verification-status-pill--attention]="stageStatusTone() === 'attention'">
+          <app-status-pill [role]="stageStatusTone() === 'ready' ? 'pass' : 'fail'">
             {{ stageStatusLabel() }}
-          </span>
+          </app-status-pill>
           <p class="verification-hero__next-label">Next action</p>
           <p class="verification-hero__next-copy">{{ stageNextAction() }}</p>
         </div>
       </div>
 
-      <div class="verification-highlights">
-        <div *ngFor="let row of highlightRows()" class="verification-highlight">
-          <span>{{ row.label }}</span>
-          <strong>{{ row.value }}</strong>
-        </div>
-      </div>
+      <app-stat-strip [items]="highlightRows()" />
     </article>
 
     <article class="verification-card verification-card--workspace">
@@ -35,49 +30,21 @@
             <h3>Layout with problem rooms highlighted</h3>
           </div>
 
-          <svg class="verification-layout-svg" [attr.viewBox]="'0 0 ' + previewWidth + ' ' + previewHeight" preserveAspectRatio="xMidYMid meet">
-            <rect x="0" y="0" [attr.width]="previewWidth" [attr.height]="previewHeight" class="verification-layout-svg__bg" />
-            <polygon [attr.points]="buildablePolygon()" class="verification-layout-svg__buildable" />
-            <g *ngFor="let cell of inspectorCells()">
-              <polygon
-                [attr.points]="cell.polygon"
-                [attr.fill]="cell.color"
-                class="verification-layout-svg__cell"
-                [class.verification-layout-svg__cell--dim]="!!cell.failureStroke === false && failedCellCount() > 0"
-              />
-              <polygon
-                *ngIf="cell.failureStroke"
-                [attr.points]="cell.polygon"
-                [attr.fill]="cell.failureStroke"
-                fill-opacity="0.2"
-                [attr.stroke]="cell.failureStroke"
-                stroke-width="2.4"
-                class="verification-layout-svg__cell-overlay"
-              />
-              <text
-                [attr.x]="cell.cx"
-                [attr.y]="cell.cy"
-                class="verification-layout-svg__label"
-                [class.verification-layout-svg__label--failing]="!!cell.failureStroke"
-              >
-                {{ cell.label }}
-              </text>
-            </g>
-          </svg>
+          <app-layout-view [width]="previewWidth" [height]="previewHeight" [buildablePolygon]="buildablePolygon()" [cells]="inspectorCells()" [problemIds]="failedCellIds()" ariaLabel="Layout with problem rooms highlighted" />
         </div>
 
         <aside class="verification-sidebar">
           <div class="verification-section">
-            <p class="verification-card__eyebrow">Overall verdict</p>
+            <p class="verification-card__eyebrow">Result</p>
             <div class="verification-verdict" [class.verification-verdict--accepted]="vr.artifact.accepted" [class.verification-verdict--culled]="!vr.artifact.accepted">
               <strong>{{ vr.artifact.accepted ? 'Accepted' : 'Blocked' }}</strong>
               <span>{{ vr.artifact.layoutId }}</span>
-              <span>{{ vr.artifact.cells.length }} cells reviewed</span>
+              <span>{{ vr.artifact.cells.length }} rooms checked</span>
             </div>
           </div>
 
           <div class="verification-section">
-            <p class="verification-card__eyebrow">Failure groups</p>
+            <p class="verification-card__eyebrow">What's failing</p>
             <div *ngIf="failingCheckSummaries().length; else allPassed" class="verification-failure-groups">
               <div *ngFor="let summary of failingCheckSummaries()" class="verification-failure-group">
                 <strong>{{ summary.label }}</strong>
@@ -96,84 +63,27 @@
       </div>
     </article>
 
-    <article class="verification-card" *ngIf="failingCheckSummaries().length">
-      <div class="verification-section-heading">
-        <p class="verification-card__eyebrow">What is failing</p>
-        <h3>Problem categories to fix first</h3>
-      </div>
-      <div class="verification-failure-details">
-        <div *ngFor="let summary of failingCheckSummaries()" class="verification-detail-card">
-          <div class="verification-detail-card__header">
-            <strong>{{ summary.label }}</strong>
-            <span class="verification-detail-card__badge">FAIL</span>
-          </div>
-          <ul class="verification-detail-card__list">
-            <li *ngFor="let failure of summary.failures">
-              <strong>{{ failure.label }}</strong>
-              <span>{{ failure.detail }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </article>
-
     <article class="verification-card">
       <details class="verification-details">
-        <summary>Detailed verification panels</summary>
-        <div class="verification-check-panels">
-          <div
-            *ngFor="let panel of checkInspectorPanels()"
-            class="verification-check-panel"
-            [class.verification-check-panel--fail]="!panel.passed"
-          >
-            <div class="verification-check-panel__header">
-              <strong class="verification-check-label">{{ panel.label }}</strong>
-              <span class="verification-check-badge"
-                [class.verification-check-badge--pass]="panel.passed"
-                [class.verification-check-badge--fail]="!panel.passed">
-                {{ panel.passed ? 'PASS' : 'FAIL' }}
-              </span>
-            </div>
-
-            <svg class="verification-check-panel__svg" [attr.viewBox]="'0 0 ' + previewWidth + ' ' + previewHeight" preserveAspectRatio="xMidYMid meet">
-              <rect x="0" y="0" [attr.width]="previewWidth" [attr.height]="previewHeight" class="verification-layout-svg__bg" />
-              <polygon [attr.points]="buildablePolygon()" class="verification-layout-svg__buildable" />
-              <g *ngFor="let cell of panel.cells">
-                <polygon
-                  [attr.points]="cell.polygon"
-                  [attr.fill]="cell.color"
-                  class="verification-layout-svg__cell"
-                  [class.verification-layout-svg__cell--dim]="!cell.failing && !panel.passed"
-                />
-                <polygon
-                  *ngIf="cell.failing"
-                  [attr.points]="cell.polygon"
-                  [attr.fill]="panel.strokeColor"
-                  fill-opacity="0.22"
-                  [attr.stroke]="panel.strokeColor"
-                  stroke-width="2.5"
-                  class="verification-layout-svg__cell-overlay"
-                />
-                <text [attr.x]="cell.cx" [attr.y]="cell.cy" class="verification-layout-svg__label"
-                  [class.verification-layout-svg__label--failing]="cell.failing">{{ cell.label }}</text>
-              </g>
-            </svg>
-
-            <ul class="verification-check-panel__failures" *ngIf="panel.failures.length">
-              <li *ngFor="let f of panel.failures" class="verification-check-panel__failure-item">
-                <strong>{{ f.label }}</strong>
-                <span>{{ f.detail }}</span>
-              </li>
-            </ul>
-            <p class="verification-check-panel__ok" *ngIf="panel.passed">All cells passed.</p>
-          </div>
+        <summary>Detailed checks</summary>
+        <div class="verification-filmstrip">
+          <button *ngFor="let panel of checkInspectorPanels(); let index = index" type="button" class="verification-filmstrip__item" [class.verification-filmstrip__item--active]="selectedCheckIndex() === index" [class.verification-filmstrip__item--fail]="!panel.passed" (click)="selectCheck(index)">
+            <app-layout-view [width]="previewWidth" [height]="previewHeight" [buildablePolygon]="buildablePolygon()" [cells]="panel.cells" [showControls]="false" [compact]="true" ariaLabel="Check preview" />
+            <span>{{ panel.label }}</span><strong>{{ panel.passed ? 'Pass' : panel.failures.length + ' issue(s)' }}</strong>
+          </button>
         </div>
+        <article *ngIf="selectedCheckPanel() as panel" class="verification-check-focus" [class.verification-check-focus--fail]="!panel.passed">
+          <div class="verification-check-panel__header"><strong>{{ panel.label }}</strong><span class="verification-check-badge" [class.verification-check-badge--pass]="panel.passed" [class.verification-check-badge--fail]="!panel.passed">{{ panel.passed ? 'PASS' : 'FAIL' }}</span></div>
+          <app-layout-view [width]="previewWidth" [height]="previewHeight" [buildablePolygon]="buildablePolygon()" [cells]="panel.cells" [showControls]="false" ariaLabel="Selected check detail" />
+          <ul class="verification-check-panel__failures" *ngIf="panel.failures.length"><li *ngFor="let failure of panel.failures" class="verification-check-panel__failure-item"><strong>{{ failure.label }}</strong><span>{{ failure.detail }}</span></li></ul>
+          <p class="verification-check-panel__ok" *ngIf="panel.passed">All rooms passed this check.</p>
+        </article>
       </details>
     </article>
 
     <article class="verification-card">
       <details class="verification-details">
-        <summary>Cell details table</summary>
+        <summary>Room details</summary>
         <div class="verification-table-wrap">
           <table class="verification-table">
             <thead>
@@ -181,8 +91,8 @@
                 <th>Room</th>
                 <th>Area</th>
                 <th>Target</th>
-                <th>Delta</th>
-                <th>Aspect</th>
+                <th>Diff.</th>
+                <th>Shape</th>
                 <th>Checks</th>
               </tr>
             </thead>
@@ -203,12 +113,12 @@
                 <td [class.verification-table__delta--bad]="cell.aspectFail">{{ cell.aspectRatio | number:'1.1-1' }}:1</td>
                 <td>
                   <span *ngIf="!cell.failureTags" class="verification-chip verification-chip--ok">✓</span>
-                  <span *ngIf="cell.deficiencyFail" class="verification-chip verification-chip--def">DEF</span>
-                  <span *ngIf="cell.aspectFail" class="verification-chip verification-chip--asp">ASP</span>
-                  <span *ngIf="cell.accessFail" class="verification-chip verification-chip--acc">ACC</span>
-                  <span *ngIf="cell.garageFrontageFail" class="verification-chip verification-chip--gar">GAR</span>
-                  <span *ngIf="cell.sliverFail" class="verification-chip verification-chip--slv">SLV</span>
-                  <span *ngIf="cell.overlapFail" class="verification-chip verification-chip--ovl">OVL</span>
+                  <span *ngIf="cell.deficiencyFail" class="verification-chip verification-chip--def">Too small</span>
+                  <span *ngIf="cell.aspectFail" class="verification-chip verification-chip--asp">Bad shape</span>
+                  <span *ngIf="cell.accessFail" class="verification-chip verification-chip--acc">No access</span>
+                  <span *ngIf="cell.garageFrontageFail" class="verification-chip verification-chip--gar">Garage placement</span>
+                  <span *ngIf="cell.sliverFail" class="verification-chip verification-chip--slv">Too thin</span>
+                  <span *ngIf="cell.overlapFail" class="verification-chip verification-chip--ovl">Overlap</span>
                 </td>
               </tr>
             </tbody>
@@ -223,8 +133,6 @@
   </ng-container>
 
   <ng-template #noInput>
-    <div class="verification-empty">
-      <p>No processed layout ready yet. Finish Simulation and Processing first.</p>
-    </div>
+    <app-empty-state title="No layout ready to check" detail="Finish Simulation and Processing first, then this page will show the layout checks." mark="CK" />
   </ng-template>
 </section>

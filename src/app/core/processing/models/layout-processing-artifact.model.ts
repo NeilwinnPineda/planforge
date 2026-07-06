@@ -169,6 +169,7 @@ export interface VerifiedLayoutArtifact {
   readonly accessCheck: VerificationCheckResult;
   readonly adjacencyCheck: VerificationCheckResult;
   readonly garageFrontageCheck: VerificationCheckResult;
+  readonly foyerFrontageCheck: VerificationCheckResult;
   readonly sliverCheck: VerificationCheckResult;
   readonly overlapCheck: VerificationCheckResult;
   readonly cullReasons: readonly string[];

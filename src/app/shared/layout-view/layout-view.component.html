@@ -1,0 +1,54 @@
+<section class="layout-view" [class.layout-view--compact]="compact()">
+  <div *ngIf="showControls()" class="layout-view__toolbar">
+    <div class="layout-view__toggles">
+      <button type="button" class="layout-view__toggle" [class.layout-view__toggle--active]="labelsVisible()" (click)="labelsVisible.set(!labelsVisible())">Labels</button>
+      <button type="button" class="layout-view__toggle" [class.layout-view__toggle--active]="openingsVisible()" (click)="openingsVisible.set(!openingsVisible())">Openings</button>
+      <button type="button" class="layout-view__toggle" [class.layout-view__toggle--active]="problemsVisible()" (click)="problemsVisible.set(!problemsVisible())">Problems</button>
+    </div>
+    <div class="layout-view__readout" *ngIf="hoveredCell() as cell; else hoverHint">
+      <i [style.background]="cell.color"></i><strong>{{ cellLabel(cell) }}</strong>
+      <span *ngIf="cell.areaSquareMeters !== undefined">{{ cell.areaSquareMeters.toFixed(1) }} m²</span>
+    </div>
+    <ng-template #hoverHint><div class="layout-view__readout layout-view__readout--idle"><i></i><span>Hover a room</span></div></ng-template>
+  </div>
+
+  <div class="layout-view__canvas">
+    <svg [attr.viewBox]="'0 0 ' + width() + ' ' + height()" preserveAspectRatio="xMidYMid meet" role="img" [attr.aria-label]="ariaLabel()" (mouseleave)="hoveredIndex.set(null)">
+      <rect x="0" y="0" [attr.width]="width()" [attr.height]="height()" class="layout-view__background" />
+      <polygon *ngIf="lotPolygon()" [attr.points]="lotPolygon()" class="layout-view__lot" />
+      <polygon *ngIf="buildablePolygon()" [attr.points]="buildablePolygon()" class="layout-view__buildable" />
+      <circle *ngFor="let point of points()" [attr.cx]="point.x" [attr.cy]="point.y" [attr.r]="point.radius ?? (point.kind === 'buildable' ? 3 : 4.5)" class="layout-view__survey-point" [class.layout-view__survey-point--buildable]="point.kind === 'buildable'" />
+
+      <g *ngFor="let cell of cells(); let index = index" (mouseenter)="hoveredIndex.set(index)" class="layout-view__room">
+        <polygon *ngIf="cellPoints(cell); else circleCell" [attr.points]="cellPoints(cell)" [attr.fill]="cell.color" [class.layout-view__room-shape--generated]="cell.generated" [class.layout-view__room-shape--hallway]="cell.hallway" [class.layout-view__room-shape--dim]="hoveredIndex() !== null && hoveredIndex() !== index" class="layout-view__room-shape" />
+        <ng-template #circleCell><circle [attr.cx]="cell.cx" [attr.cy]="cell.cy" [attr.r]="cell.radiusPixels ?? 8" [attr.fill]="cell.color" class="layout-view__room-shape" [class.layout-view__room-shape--dim]="hoveredIndex() !== null && hoveredIndex() !== index" /></ng-template>
+        <polygon *ngIf="cellPoints(cell) && problemsVisible() && isProblem(cell)" [attr.points]="cellPoints(cell)" class="layout-view__problem" />
+        <text *ngIf="labelsVisible() && cell.cx !== undefined && cell.cy !== undefined" [attr.x]="cell.cx" [attr.y]="cell.cy" class="layout-view__label">{{ cellLabel(cell) }}</text>
+      </g>
+
+      <line *ngFor="let line of guideLines()" [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2" class="layout-view__guide" [class.layout-view__guide--major]="line.major" />
+      <line *ngFor="let line of interiorLines()" [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2" class="layout-view__wall-int" />
+      <line *ngFor="let line of exteriorLines()" [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2" class="layout-view__wall-ext" />
+
+      <g *ngIf="openingsVisible()">
+        <ng-container *ngFor="let marker of windows()">
+          <line *ngIf="marker.x1 !== undefined" [attr.x1]="marker.x1" [attr.y1]="marker.y1" [attr.x2]="marker.x2" [attr.y2]="marker.y2" class="layout-view__window-line" />
+          <circle *ngIf="marker.x1 === undefined" [attr.cx]="markerX(marker)" [attr.cy]="markerY(marker)" [attr.r]="marker.radius ?? marker.radiusPixels ?? 5" class="layout-view__window"><title *ngIf="marker.title">{{ marker.title }}</title></circle>
+        </ng-container>
+        <ng-container *ngFor="let marker of doors()">
+          <line *ngIf="marker.x1 !== undefined" [attr.x1]="marker.x1" [attr.y1]="marker.y1" [attr.x2]="marker.x2" [attr.y2]="marker.y2" class="layout-view__door-line" />
+          <rect *ngIf="marker.x1 === undefined" [attr.x]="markerX(marker) - (marker.width ?? 14) / 2" [attr.y]="markerY(marker) - (marker.height ?? 4) / 2" [attr.width]="marker.width ?? 14" [attr.height]="marker.height ?? 4" rx="1" class="layout-view__door" [attr.transform]="'rotate(' + (marker.angle ?? 0) + ' ' + markerX(marker) + ' ' + markerY(marker) + ')'" ><title *ngIf="marker.title">{{ marker.title }}</title></rect>
+        </ng-container>
+      </g>
+      <g *ngIf="labelsVisible()" class="layout-view__annotations">
+        <text *ngFor="let annotation of annotations()" [attr.x]="annotation.x" [attr.y]="annotation.y" [attr.text-anchor]="annotation.anchor ?? 'start'" [class]="'layout-view__annotation layout-view__annotation--' + (annotation.kind ?? 'label')">{{ annotation.text }}</text>
+      </g>
+      <g *ngIf="scaleBar() as scale" class="layout-view__scale">
+        <line [attr.x1]="scale.x" [attr.y1]="scale.y" [attr.x2]="scale.x + scale.width" [attr.y2]="scale.y" />
+        <line [attr.x1]="scale.x" [attr.y1]="scale.y - 5" [attr.x2]="scale.x" [attr.y2]="scale.y + 5" />
+        <line [attr.x1]="scale.x + scale.width" [attr.y1]="scale.y - 5" [attr.x2]="scale.x + scale.width" [attr.y2]="scale.y + 5" />
+        <text [attr.x]="scale.x" [attr.y]="scale.y - 9">{{ scale.label }}</text>
+      </g>
+    </svg>
+  </div>
+</section>

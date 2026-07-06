@@ -7,6 +7,8 @@ import {
 } from '../../../core/geometry/geometry.exports';
 import type { CandidateSeedPoint } from '../../../core/generation/generation.exports';
 import type { GeometryPoint } from '../../../core/geometry/geometry.exports';
+import { LayoutViewComponent } from '../../../shared/layout-view/layout-view.component';
+import { StatusPillComponent } from '../../../shared/status-pill/status-pill.component';
 
 interface SeedMetricRow {
   readonly label: string;
@@ -31,7 +33,7 @@ interface PreviewSeedCircle {
 @Component({
   selector: 'app-generation-seeds-page',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, LayoutViewComponent, StatusPillComponent],
   templateUrl: './generation-seeds-page.component.html',
   styleUrl: './generation-seeds-page.component.scss',
 })

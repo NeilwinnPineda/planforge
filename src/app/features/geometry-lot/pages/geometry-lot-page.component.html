@@ -10,25 +10,15 @@
       </div>
 
       <div class="site-hero__status-card">
-        <span
-          class="site-status-chip"
-          [class.site-status-chip--ready]="stageStatus() === 'ready'"
-          [class.site-status-chip--review]="stageStatus() === 'review'"
-          [class.site-status-chip--fail]="stageStatus() === 'fail'"
-        >
+        <app-status-pill [role]="stageStatus() === 'ready' ? 'pass' : stageStatus() === 'review' ? 'review' : 'fail'">
           {{ stageStatusLabel() }}
-        </span>
+        </app-status-pill>
         <p class="site-hero__next-label">Next action</p>
         <p class="site-hero__next-copy">{{ stageNextAction() }}</p>
       </div>
     </div>
 
-    <div class="site-highlights">
-      <div *ngFor="let row of highlightRows()" class="site-highlight">
-        <span>{{ row.label }}</span>
-        <strong>{{ row.value }}</strong>
-      </div>
-    </div>
+    <app-stat-strip [items]="highlightRows()" />
 
     <div class="site-hero__status">
       <span>{{ lotGeometry().lotPoints.length }} lot points</span>
@@ -48,7 +38,7 @@
       <article class="site-card">
         <div class="site-section-heading">
           <div>
-            <p class="site-card__eyebrow">Primary visualization</p>
+            <p class="site-card__eyebrow">Lot preview</p>
             <h2>Lot polygon preview</h2>
             <p class="site-card__detail">
               This is the lot chain you are building. The outer outline is the polygon itself. The inner outline
@@ -57,116 +47,7 @@
           </div>
         </div>
 
-        <svg
-          class="site-preview"
-          [attr.viewBox]="projection().viewBox"
-          [attr.width]="projection().width"
-          [attr.height]="projection().height"
-          preserveAspectRatio="xMidYMid meet"
-        >
-          <rect x="0" y="0" [attr.width]="projection().width" [attr.height]="projection().height" class="site-preview__bg" />
-          <polygon [attr.points]="projection().lotPreview.polygon" class="site-preview__lot site-preview__lot--ghost" />
-          <g *ngFor="let point of projection().lotPreview.points; let pointIndex = index">
-            <circle
-              [attr.cx]="point.x"
-              [attr.cy]="point.y"
-              r="4.5"
-              class="site-preview__point site-preview__point--lot"
-            />
-            <text
-              [attr.x]="point.x + 7"
-              [attr.y]="point.y - 8"
-              class="site-preview__point-label"
-            >
-              {{ lotGeometry().lotPoints[pointIndex].label }}
-            </text>
-            <text
-              [attr.x]="point.x + 7"
-              [attr.y]="point.y + 6"
-              class="site-preview__point-bearing"
-            >
-              {{ lotGeometry().lotSegments[pointIndex].bearing }}
-            </text>
-          </g>
-          <g *ngFor="let edge of projection().edgeAnnotations">
-            <line
-              [attr.x1]="edge.lineX1"
-              [attr.y1]="edge.lineY1"
-              [attr.x2]="edge.lineX2"
-              [attr.y2]="edge.lineY2"
-              class="site-preview__edge-callout"
-            />
-            <text
-              [attr.x]="edge.labelX"
-              [attr.y]="edge.labelY + 4"
-              class="site-preview__edge-label"
-            >
-              {{ edge.distance }}
-            </text>
-          </g>
-          <polygon
-            *ngIf="projection().hasBuildablePreview"
-            [attr.points]="projection().buildablePreview.polygon"
-            class="site-preview__buildable"
-          />
-          <g *ngIf="projection().hasBuildablePreview">
-            <circle
-              *ngFor="let point of projection().buildablePreview.points"
-              [attr.cx]="point.x"
-              [attr.cy]="point.y"
-              r="3"
-              class="site-preview__point site-preview__point--buildable"
-            />
-          </g>
-          <line
-            *ngIf="projection().closureLine"
-            [attr.x1]="projection().closureLine!.x1"
-            [attr.y1]="projection().closureLine!.y1"
-            [attr.x2]="projection().closureLine!.x2"
-            [attr.y2]="projection().closureLine!.y2"
-            class="site-preview__closure"
-          />
-          <g *ngFor="let guide of projection().guideLines; trackBy: trackByEdge">
-            <line
-              [attr.x1]="guide.x1"
-              [attr.y1]="guide.y1"
-              [attr.x2]="guide.x2"
-              [attr.y2]="guide.y2"
-              class="site-preview__guide"
-            />
-            <text
-              [attr.x]="guide.labelX"
-              [attr.y]="guide.labelY"
-              class="site-preview__label"
-            >
-              {{ guide.label }}
-            </text>
-          </g>
-          <line
-            [attr.x1]="projection().scaleBarX"
-            [attr.y1]="projection().scaleBarY"
-            [attr.x2]="projection().scaleBarX + projection().scaleBarWidthPixels"
-            [attr.y2]="projection().scaleBarY"
-            class="site-preview__scale-bar"
-          />
-          <line
-            [attr.x1]="projection().scaleBarX"
-            [attr.y1]="projection().scaleBarY - 5"
-            [attr.x2]="projection().scaleBarX"
-            [attr.y2]="projection().scaleBarY + 5"
-            class="site-preview__scale-bar"
-          />
-          <line
-            [attr.x1]="projection().scaleBarX + projection().scaleBarWidthPixels"
-            [attr.y1]="projection().scaleBarY - 5"
-            [attr.x2]="projection().scaleBarX + projection().scaleBarWidthPixels"
-            [attr.y2]="projection().scaleBarY + 5"
-            class="site-preview__scale-bar"
-          />
-          <text [attr.x]="projection().scaleBarX" [attr.y]="projection().scaleTextY" class="site-preview__scale-text">
-            {{ projection().scaleBarMeters }}m scale
-          </text>
-        </svg>
+        <app-layout-view [width]="projection().width" [height]="projection().height" [lotPolygon]="projection().lotPreview.polygon" [buildablePolygon]="projection().hasBuildablePreview ? projection().buildablePreview.polygon : ''" [guideLines]="layoutGuideLines()" [points]="layoutPoints()" [annotations]="layoutAnnotations()" [scaleBar]="layoutScaleBar()" [showControls]="false" ariaLabel="Annotated lot and buildable boundary preview" />
         <p class="site-preview__caption">
           Build the outer lot first. The buildable inset is secondary and only helps you spot obvious downstream issues.
           <span *ngIf="projection().closureLine"> The dashed warning line shows the missing last leg when the survey chain does not close.</span>
@@ -182,7 +63,7 @@
       <article class="site-card">
         <div class="site-section-heading">
           <div>
-            <p class="site-card__eyebrow">Geometry verdict</p>
+            <p class="site-card__eyebrow">Is the lot ready?</p>
             <h2>Should this lot move forward?</h2>
           </div>
         </div>
@@ -198,7 +79,7 @@
         <div class="site-section-heading">
           <div>
             <p class="site-card__eyebrow">Lot polygon builder</p>
-            <h2>Survey segment editor</h2>
+            <h2>Build the lot edge by edge</h2>
             <p class="site-card__detail">
               Build the lot one segment at a time. Start at `P1`, then each row creates the next corner from the
               previous one using bearing and distance.
@@ -221,8 +102,9 @@
           </div>
         </div>
 
-        <div class="site-builder-closure">
-          <strong>Polygon status: {{ closureStatusLabel() }}</strong>
+        <div class="site-builder-closure" [class.site-builder-closure--open]="closureStatusLabel() === 'Open'">
+          <strong>Loop {{ closureStatusLabel() === 'Closed' ? 'closed' : 'not closed' }}</strong>
+          <span>{{ lotGeometry().closureErrorMeters.toFixed(3) }} m closure error</span>
           <span>
             {{ closureStatusLabel() === 'Closed'
               ? 'The final segment is landing back on P1 within tolerance.'
@@ -244,25 +126,19 @@
                 <strong>{{ row.startLabel }} to {{ row.endLabel }}</strong>
                 <span>Create {{ row.endLabel }} from {{ row.startLabel }}</span>
               </div>
-              <label class="site-segment-editor__field">
+              <div class="site-bearing-editor">
                 <span class="site-segment-editor__sr-only">{{ row.startLabel }} to {{ row.endLabel }} bearing</span>
-                <input
-                  type="text"
-                  [value]="row.bearing"
-                  (change)="onLotSegmentBearingChanged(row.segmentIndex, $event)"
-                />
-              </label>
-              <label class="site-measure-field">
+                <button type="button" class="site-bearing-editor__axis" (click)="toggleBearingAxis(row, 'northSouth')" [attr.aria-label]="'Switch north/south quadrant; currently ' + row.northSouth">{{ row.northSouth }}</button>
+                <div class="site-bearing-editor__part"><button type="button" (click)="adjustBearingPart(row, 'degrees', -1)" aria-label="Decrease bearing degrees">−</button><strong>{{ row.degrees }}°</strong><button type="button" (click)="adjustBearingPart(row, 'degrees', 1)" aria-label="Increase bearing degrees">+</button></div>
+                <div class="site-bearing-editor__part"><button type="button" (click)="adjustBearingPart(row, 'minutes', -1)" aria-label="Decrease bearing minutes">−</button><strong>{{ row.minutes }}′</strong><button type="button" (click)="adjustBearingPart(row, 'minutes', 1)" aria-label="Increase bearing minutes">+</button></div>
+                <button type="button" class="site-bearing-editor__axis" (click)="toggleBearingAxis(row, 'eastWest')" [attr.aria-label]="'Switch east/west quadrant; currently ' + row.eastWest">{{ row.eastWest }}</button>
+              </div>
+              <div class="site-value-stepper">
                 <span class="site-segment-editor__sr-only">{{ row.startLabel }} to {{ row.endLabel }} distance</span>
-                <input
-                  type="number"
-                  step="0.001"
-                  min="0.001"
-                  [value]="row.distance.toFixed(3)"
-                  (change)="onLotSegmentDistanceChanged(row.segmentIndex, $event)"
-                />
-                <small>m</small>
-              </label>
+                <button type="button" (click)="adjustLotSegmentDistance(row.segmentIndex, row.distance, -0.1)" aria-label="Decrease distance">−</button>
+                <strong>{{ row.distance.toFixed(2) }} m</strong>
+                <button type="button" (click)="adjustLotSegmentDistance(row.segmentIndex, row.distance, 0.1)" aria-label="Increase distance">+</button>
+              </div>
               <span>End corner {{ row.endLabel }}</span>
               <div class="site-segment-editor__actions">
                 <button
@@ -298,9 +174,9 @@
         <div class="site-section-heading">
           <div>
             <p class="site-card__eyebrow">Boundary setup</p>
-            <h2>Setbacks and RROW setup</h2>
+            <h2>Setbacks and street frontage (RROW)</h2>
             <p class="site-card__detail">
-              Use this schedule to define what each lot edge means downstream. `RROW` is an edge modifier here,
+              Use this schedule to define what each lot edge means downstream. RROW means road right-of-way and marks the street-facing edge,
               not part of the point-building flow above.
             </p>
           </div>
@@ -317,17 +193,12 @@
             <div *ngFor="let row of setbackRows()" class="site-boundary-schedule__row">
               <strong>{{ row.edge }}</strong>
               <span>{{ row.frontage }}</span>
-              <label class="site-measure-field">
+              <div class="site-value-stepper">
                 <span class="site-segment-editor__sr-only">{{ row.edge }} setback distance</span>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  [value]="row.setback.toFixed(2)"
-                  (change)="onLotSegmentSetbackChanged(row.segmentIndex, $event)"
-                />
-                <small>m</small>
-              </label>
+                <button type="button" (click)="adjustLotSegmentSetback(row.segmentIndex, row.setback, -0.1)" aria-label="Decrease setback">−</button>
+                <strong>{{ row.setback.toFixed(2) }} m</strong>
+                <button type="button" (click)="adjustLotSegmentSetback(row.segmentIndex, row.setback, 0.1)" aria-label="Increase setback">+</button>
+              </div>
               <label class="site-boundary-schedule__toggle">
                 <input
                   type="checkbox"
@@ -338,7 +209,7 @@
                   <span class="site-boundary-schedule__toggle-knob"></span>
                 </span>
                 <span class="site-boundary-schedule__toggle-copy">
-                  <strong>{{ row.isRrow ? 'RROW edge' : 'No RROW' }}</strong>
+                  <strong>{{ row.isRrow ? 'Yes' : 'No' }}</strong>
                   <small>{{ row.isRrow ? 'Acts as a frontage boundary.' : 'Standard side or rear boundary.' }}</small>
                 </span>
               </label>
@@ -355,13 +226,13 @@
       </article>
 
       <details class="site-disclosure" open>
-        <summary>Show world-space point viewer</summary>
+        <summary>Show corner coordinates</summary>
         <div class="site-disclosure__content">
           <article class="site-card site-card--nested">
             <div class="site-section-heading">
               <div>
-                <p class="site-card__eyebrow">Computed output</p>
-                <h2>World-space point viewer</h2>
+                <p class="site-card__eyebrow">Calculated corner points</p>
+                <h2>Corner coordinates</h2>
                 <p class="site-card__detail">
                   These coordinates are derived from the segment chain above. Inspect them here, but author the lot in the segment editor.
                 </p>
@@ -390,7 +261,7 @@
 
     <aside class="site-sidebar">
       <article class="site-card">
-        <p class="site-card__eyebrow">Key signals</p>
+        <p class="site-card__eyebrow">Key numbers</p>
         <div class="site-metric-grid">
           <div *ngFor="let row of metricRows()" class="site-metric">
             <span>{{ row.label }}</span>
@@ -400,7 +271,7 @@
       </article>
 
       <article *ngIf="lotGeometry().issues.length" class="site-card site-card--alert">
-        <p class="site-card__eyebrow">Fail catch</p>
+        <p class="site-card__eyebrow">Problems found</p>
         <h2>Geometry issues</h2>
         <ul class="site-list site-list--tight">
           <li *ngFor="let issue of lotGeometry().issues">{{ issue }}</li>

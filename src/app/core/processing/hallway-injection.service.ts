@@ -3,6 +3,7 @@ import type { GeometryPoint } from '../geometry/geometry.exports';
 import type { RoomTag } from '../source/source.exports';
 import type { HallwayInjectedLayoutArtifact, ProvisionalCellLayoutArtifact, ProvisionalLayoutCell } from './models/layout-processing-artifact.model';
 import type { LayoutProcessingStepRequest, LayoutProcessingStepResult } from './models/layout-processing-step.model';
+import { resolveCellLabel } from '../cell-label.factory';
 
 export interface HallwayInjectionArguments {
   readonly buildablePoints: readonly GeometryPoint[];
@@ -253,9 +254,9 @@ export class HallwayInjectionService {
 
           if (!tooClose(x, y)) {
             hallwaySites.push({
-              id: `generated_hallway_${index + 1}`,
-              typeId: 'generated_hallway',
-              label: 'Hall',
+              id: `hallway_${index + 1}`,
+              typeId: 'hallway',
+              label: resolveCellLabel('hallway'),
               color: '#d4d0c0',
               tags: ['open_access'],
               pkg: false,
@@ -281,7 +282,7 @@ export class HallwayInjectionService {
   private buildCell(site: ProcessingSite, cell: readonly GeometryPoint[], areaSquareMeters: number): ProvisionalLayoutCell {
     return {
       id: site.id,
-      typeId: site.hallway ? 'generated_hallway' : site.typeId,
+      typeId: site.hallway ? 'hallway' : site.typeId,
       label: site.label,
       color: site.color,
       tags: [...site.tags],

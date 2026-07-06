@@ -1,10 +1,14 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe, NgFor, NgIf } from '@angular/common';
 import type { GeometryPoint } from '../../../core/geometry/geometry.exports';
 import { LotGeometryService } from '../../../core/geometry/geometry.exports';
 import { ProcessingPipelineService } from '../../../core/processing/processing.exports';
 import { WorkflowVisualStateService } from '../../../core/processing/workflow-visual-state.service';
 import { SimulationStageService } from '../../../core/simulation/simulation.exports';
+import { EmptyStateComponent } from '../../../shared/empty-state/empty-state.component';
+import { LayoutViewComponent } from '../../../shared/layout-view/layout-view.component';
+import { StatusPillComponent } from '../../../shared/status-pill/status-pill.component';
+import { StatStripComponent } from '../../../shared/stat-strip/stat-strip.component';
 
 interface InspectorCell {
   readonly id: string;
@@ -60,11 +64,12 @@ interface VerificationHighlightRow {
 @Component({
   selector: 'app-verification-page',
   standalone: true,
-  imports: [NgFor, NgIf, DecimalPipe],
+  imports: [NgFor, NgIf, DecimalPipe, EmptyStateComponent, LayoutViewComponent, StatusPillComponent, StatStripComponent],
   templateUrl: './verification-page.component.html',
   styleUrl: './verification-page.component.scss',
 })
 export class VerificationPageComponent {
+  protected readonly selectedCheckIndex = signal(0);
   private readonly simulationStageService = inject(SimulationStageService);
   private readonly lotGeometryService = inject(LotGeometryService);
   private readonly processingPipelineService = inject(ProcessingPipelineService);
@@ -147,6 +152,7 @@ export class VerificationPageComponent {
       { label: 'Access', passed: vr.artifact.accessCheck.passed, failures: vr.artifact.accessCheck.failures.map((f) => ({ label: f.label || f.typeId, detail: f.detail })), strokeColor: '#8e44ad' },
       { label: 'Critical Touch', passed: vr.artifact.adjacencyCheck.passed, failures: vr.artifact.adjacencyCheck.failures.map((f) => ({ label: f.label, detail: f.detail })), strokeColor: '#2980b9' },
       { label: 'Garage Frontage', passed: vr.artifact.garageFrontageCheck.passed, failures: vr.artifact.garageFrontageCheck.failures.map((f) => ({ label: f.label, detail: f.detail })), strokeColor: '#16a085' },
+      { label: 'Foyer Frontage', passed: vr.artifact.foyerFrontageCheck.passed, failures: vr.artifact.foyerFrontageCheck.failures.map((f) => ({ label: f.label, detail: f.detail })), strokeColor: '#1abc9c' },
       { label: 'Slivers', passed: vr.artifact.sliverCheck.passed, failures: vr.artifact.sliverCheck.failures.map((f) => ({ label: f.label || f.typeId, detail: f.detail })), strokeColor: '#f39c12' },
       { label: 'Overlaps', passed: vr.artifact.overlapCheck.passed, failures: vr.artifact.overlapCheck.failures.map((f) => ({ label: f.label, detail: f.detail })), strokeColor: '#922b21' },
     ];
@@ -194,6 +200,9 @@ export class VerificationPageComponent {
       make('Garage Frontage', '#16a085', vr.artifact.garageFrontageCheck.passed,
         new Set(vr.artifact.garageFrontageCheck.failures.map((f) => f.cellId)),
         vr.artifact.garageFrontageCheck.failures.map((f) => ({ label: f.label, detail: f.detail }))),
+      make('Foyer Frontage', '#1abc9c', vr.artifact.foyerFrontageCheck.passed,
+        new Set(vr.artifact.foyerFrontageCheck.failures.map((f) => f.cellId)),
+        vr.artifact.foyerFrontageCheck.failures.map((f) => ({ label: f.label, detail: f.detail }))),
       make('Slivers', '#f39c12', vr.artifact.sliverCheck.passed,
         new Set(vr.artifact.sliverCheck.failures.map((f) => f.cellId)),
         vr.artifact.sliverCheck.failures.map((f) => ({ label: f.label || f.typeId, detail: f.detail }))),
@@ -202,6 +211,14 @@ export class VerificationPageComponent {
         vr.artifact.overlapCheck.failures.map((f) => ({ label: f.label, detail: f.detail }))),
     ];
   });
+
+  protected readonly selectedCheckPanel = computed(() =>
+    this.checkInspectorPanels()[this.selectedCheckIndex()] ?? this.checkInspectorPanels()[0] ?? null,
+  );
+
+  protected selectCheck(index: number): void {
+    this.selectedCheckIndex.set(index);
+  }
 
   protected readonly inspectorCells = computed<readonly InspectorCell[]>(() => {
     const vr = this.verificationResult();
@@ -279,6 +296,9 @@ export class VerificationPageComponent {
       };
     });
   });
+  protected readonly failedCellIds = computed(() =>
+    new Set(this.inspectorCells().filter((cell) => !!cell.failureStroke).map((cell) => cell.id)),
+  );
 
   protected readonly buildablePolygon = computed(() => {
     const pts = this.lotGeometry.buildablePoints;

@@ -24,7 +24,48 @@
   --accent-danger-soft: #f5dfd8;
   --accent-success: #567a44;
   --accent-success-soft: #dce9d2;
+  --status-pass-bg: #dce9d2;
+  --status-pass-ink: #3f5a30;
+  --status-pass-border: #bcd3a8;
+  --status-review-bg: #efe0bf;
+  --status-review-ink: #7a5a1f;
+  --status-review-border: #e0cb95;
+  --status-fail-bg: #f5dfd8;
+  --status-fail-ink: #8a3a2f;
+  --status-fail-border: #e6bdb2;
+  --status-active-bg: #d9e7ee;
+  --status-active-ink: #2f5566;
+  --status-active-border: #bcd3df;
+  --status-idle-bg: #efe9df;
+  --status-idle-ink: #6f665d;
+  --status-idle-border: #ddd2c1;
+  --canvas: #faf7f1;
+  --lot-line: #9c8f79;
+  --buildable-fill: #f1ece1;
+  --buildable-border: #b8ab97;
+  --wall-ext: #151f1b;
+  --wall-int: #27312d;
+  --room-divider: #faf7f1;
+  --window-marker: #1f4b5a;
+  --door-marker: #9a4a19;
+  --fail-overlay: #9b4f45;
 }
+
+/* Compact numeric editors are shared by the brief and survey authoring surfaces. */
+.source-stepper { display: inline-grid; grid-template-columns: 34px 42px 34px; align-items: center; overflow: hidden; border: 1px solid #cfc4b4; border-radius: 10px; background: #fffdf8; }
+.source-stepper button { height: 34px; border: 0; background: #eee7db; color: #33423c; font-size: 1rem; cursor: pointer; }
+.source-stepper button:hover:not(:disabled) { background: #dce9d2; }
+.source-stepper button:disabled { opacity: .4; cursor: default; }
+.source-stepper strong { text-align: center; font-variant-numeric: tabular-nums; }
+.source-table--heatmap td { min-width: 44px; height: 44px; padding: 3px; text-align: center; }
+.source-matrix-empty { background: repeating-linear-gradient(135deg, rgba(128,117,101,.04) 0 4px, transparent 4px 8px); }
+.source-heat-cell { width: 36px; height: 36px; border: 1px solid rgba(58,67,61,.14); border-radius: 9px; color: #26352f; font-weight: 850; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
+.source-heat-cell:hover { transform: translateY(-1px) scale(1.04); box-shadow: 0 5px 12px rgba(46,55,50,.13); }
+.site-bearing-editor { display: grid; grid-template-columns: 30px minmax(76px, 1fr) minmax(76px, 1fr) 30px; gap: 5px; align-items: center; }
+.site-bearing-editor__axis, .site-bearing-editor__part button { min-height: 30px; border: 1px solid #d8ccba; border-radius: 7px; background: #fffaf1; color: #4d453d; font-weight: 800; cursor: pointer; }
+.site-bearing-editor__part { display: grid; grid-template-columns: 24px 1fr 24px; align-items: center; overflow: hidden; border: 1px solid #d8ccba; border-radius: 7px; background: #fffdf9; text-align: center; }
+.site-bearing-editor__part button { min-height: 28px; border: 0; border-radius: 0; }
+.site-bearing-editor__part strong { font-size: .78rem; font-variant-numeric: tabular-nums; }
 
 * {
   box-sizing: border-box;

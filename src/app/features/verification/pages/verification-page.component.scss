@@ -82,13 +82,13 @@
 }
 
 .verification-status-pill--ready {
-  background: #ddeee2;
-  color: #255239;
+  background: var(--status-pass-bg);
+  color: var(--status-pass-ink);
 }
 
 .verification-status-pill--attention {
-  background: #f8d7da;
-  color: #721c24;
+  background: var(--status-fail-bg);
+  color: var(--status-fail-ink);
 }
 
 .verification-hero__next-label {
@@ -164,16 +164,16 @@
   width: 100%;
   border-radius: 0.75rem;
   overflow: hidden;
-  background: #f0f4f8;
+  background: var(--canvas);
 }
 
 .verification-layout-svg__bg {
-  fill: #f0f4f8;
+  fill: var(--canvas);
 }
 
 .verification-layout-svg__buildable {
-  fill: #e8f0f5;
-  stroke: #a0b8c8;
+  fill: var(--buildable-fill);
+  stroke: var(--buildable-border);
   stroke-width: 1.5;
 }
 
@@ -233,13 +233,13 @@
 }
 
 .verification-verdict--accepted {
-  background: #d4edda;
-  border-color: #b2dfcc;
+  background: var(--status-pass-bg);
+  border-color: var(--status-pass-border);
 }
 
 .verification-verdict--culled {
-  background: #f8d7da;
-  border-color: #f1b0b7;
+  background: var(--status-fail-bg);
+  border-color: var(--status-fail-border);
 }
 
 .verification-failure-groups {
@@ -277,8 +277,8 @@
   min-height: 30px;
   padding: 0 10px;
   border-radius: 999px;
-  background: #d4edda;
-  color: #155724;
+  background: var(--status-pass-bg);
+  color: var(--status-pass-ink);
   font-size: 0.76rem;
   font-weight: 700;
 }
@@ -311,8 +311,8 @@
   min-height: 28px;
   padding: 0 10px;
   border-radius: 999px;
-  background: #f8d7da;
-  color: #721c24;
+  background: var(--status-fail-bg);
+  color: var(--status-fail-ink);
   font-size: 0.74rem;
   font-weight: 700;
 }
@@ -392,13 +392,13 @@
 }
 
 .verification-check-badge--pass {
-  background: #d4edda;
-  color: #155724;
+  background: var(--status-pass-bg);
+  color: var(--status-pass-ink);
 }
 
 .verification-check-badge--fail {
-  background: #f8d7da;
-  color: #721c24;
+  background: var(--status-fail-bg);
+  color: var(--status-fail-ink);
 }
 
 .verification-check-panel__failures {
@@ -487,8 +487,8 @@
 }
 
 .verification-chip--ok {
-  background: #d4edda;
-  color: #155724;
+  background: var(--status-pass-bg);
+  color: var(--status-pass-ink);
 }
 
 .verification-chip--def {
@@ -556,3 +556,12 @@
     padding: 0.85rem;
   }
 }
+.verification-filmstrip { display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 8px; margin: 14px 0; }
+.verification-filmstrip__item { display: grid; gap: 5px; padding: 8px; border: 1px solid #d9d0c3; border-radius: 12px; background: #fffdf8; color: #35443e; text-align: left; cursor: pointer; }
+.verification-filmstrip__item svg { width: 100%; aspect-ratio: 16 / 10; border-radius: 7px; background: var(--canvas); }
+.verification-filmstrip__item span { font-size: .72rem; font-weight: 800; }
+.verification-filmstrip__item strong { color: #756b60; font-size: .67rem; }
+.verification-filmstrip__item--fail { border-color: var(--status-fail-border); }
+.verification-filmstrip__item--active { outline: 2px solid var(--status-active-ink); outline-offset: 1px; }
+.verification-check-focus { display: grid; gap: 12px; padding: 15px; border: 1px solid var(--status-pass-border); border-radius: 16px; background: #fffdf8; }
+.verification-check-focus--fail { border-color: var(--status-fail-border); }

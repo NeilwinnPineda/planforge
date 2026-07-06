@@ -2,20 +2,20 @@
   "meta": {
     "id": "super-hard",
     "version": "0.2.0",
-    "title": "Super Hard - Irregular Overcapacity Stress Case",
-    "summary": "Deliberately brutal single-storey source with an irregular narrow-front lot and overloaded mixed-use family brief intended to pressure geometry, circulation, and failure handling.",
+    "title": "Super Hard - Narrow Lot Moderate Overload",
+    "summary": "Hard single-storey source with a narrow deep lot and a moderately overloaded family brief intended to pressure geometry and circulation without becoming a throwaway impossible case.",
     "authoringMode": "ai_editable_source"
   },
   "intent": {
     "projectKind": "Lot-aware detached residential house layout",
     "primaryGoal": "Generate buildable room layouts from source data, then promote the best candidates toward Revit-ready schematic geometry.",
-    "narrative": "Deliberately brutal single-storey residential brief. This source combines a skewed six-edge lot, narrow frontage pressure, long depth, and an overloaded room count so the app is forced to reveal how it behaves under severe geometric and program stress.",
+    "narrative": "Hard single-storey residential brief. This source keeps the lot narrow and circulation-sensitive, while raising program demand into a meaningful overload band that should still produce useful behavior and diagnostics.",
     "priorities": [
       "Master bed and master bath must be physically adjacent (touch mode).",
-      "Kitchen, dirty kitchen, pantry, and laundry should read as a service cluster.",
-      "Foyer and garage should still claim the road edge despite the constrained frontage.",
+      "Kitchen, pantry, and laundry should read as a compact service cluster.",
+      "Foyer and garage should still claim the road edge despite the constrained narrow frontage.",
       "Sleeping rooms should remain reachable through understandable circulation instead of random fragmentation.",
-      "The pipeline should fail clearly if the brief is too overloaded to resolve cleanly."
+      "The pipeline should feel pressured, but not so overloaded that the scenario becomes meaningless."
     ],
     "downstreamTargets": [
       "buildable lot envelope",
@@ -86,12 +86,10 @@
   "settings": {
     "lot": {
       "segments": [
-        { "point": "P1", "bearing": "N 68 00 E", "distance": 8.6, "setback": 3.2, "isRrow": true },
-        { "point": "P2", "bearing": "N 15 00 W", "distance": 7.2, "setback": 2.1 },
-        { "point": "P3", "bearing": "N 58 00 W", "distance": 4.8, "setback": 2.3 },
-        { "point": "P4", "bearing": "N 8 00 W", "distance": 8.4, "setback": 2.4 },
-        { "point": "P5", "bearing": "S 78 00 W", "distance": 8.1, "setback": 2.2 },
-        { "point": "P6", "bearing": "S 6 00 E", "distance": 19.8, "setback": 2.1 }
+        { "point": "P1", "bearing": "N 89 59 E", "distance": 8.2, "setback": 3, "isRrow": true },
+        { "point": "P2", "bearing": "N 1 30 W", "distance": 30, "setback": 1.5 },
+        { "point": "P3", "bearing": "S 89 59 W", "distance": 8.1, "setback": 1.8 },
+        { "point": "P4", "bearing": "S 1 30 E", "distance": 30, "setback": 1.8 }
       ]
     },
     "rooms": {
@@ -101,25 +99,15 @@
         "family_room": 1,
         "dining": 1,
         "kitchen": 1,
-        "dirty_kitchen": 1,
         "pantry": 1,
         "breakfast_nook": 1,
         "master_bed": 1,
-        "master_closet": 1,
         "master_bath": 1,
         "kids_bed": 2,
-        "guest_bed": 1,
-        "shared_bath": 2,
+        "shared_bath": 1,
         "laundry": 1,
-        "utility": 1,
-        "storage": 1,
-        "mudroom": 1,
         "garage": 1,
         "office": 1,
-        "study": 1,
-        "playroom": 1,
-        "media_room": 1,
-        "gym": 1,
         "powder_room": 1
       }
     },
@@ -131,14 +119,14 @@
       "defaultScore": 3,
       "sameTypeDefault": 2,
       "generatedTypeDefaults": {
-        "generated_hallway": 3,
-        "generated_filler": 1
+        "hallway": 3,
+        "filler": 1
       },
       "exceptions": {
-        "generated_filler": {
-          "generated_hallway": 1
+        "filler": {
+          "hallway": 1
         },
-        "generated_hallway": {
+        "hallway": {
           "master_bed": 5,
           "master_bath": 5,
           "shared_bath": 5
@@ -146,7 +134,7 @@
         "foyer": {
           "living": 5,
           "garage": 4,
-          "generated_hallway": 3
+          "hallway": 3
         },
         "living": {
           "dining": 4,
@@ -204,8 +192,8 @@
         },
         {
           "label": "Service Core",
-          "rooms": ["kitchen", "dirty_kitchen", "pantry", "laundry", "utility"],
-          "note": "Back-of-house service zone under heavy adjacency pressure."
+          "rooms": ["kitchen", "pantry", "laundry"],
+          "note": "Back-of-house service zone under moderate adjacency pressure."
         },
         {
           "label": "Arrival Sequence",
@@ -351,11 +339,11 @@
       }
     },
     "legacyPanelLayout": {
-      "lotWidthMeters": 9,
-      "lotDepthMeters": 20,
-      "frontSetbackMeters": 3.2,
-      "sideSetbackMeters": 2.1,
-      "rearSetbackMeters": 2.2,
+      "lotWidthMeters": 8.2,
+      "lotDepthMeters": 30,
+      "frontSetbackMeters": 3,
+      "sideSetbackMeters": 1.5,
+      "rearSetbackMeters": 1.8,
       "panel4GridMeters": 0.5
     }
   }

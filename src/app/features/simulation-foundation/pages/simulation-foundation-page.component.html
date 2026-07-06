@@ -10,20 +10,15 @@
       </div>
 
       <div class="simulation-hero__status">
-        <span class="simulation-status-pill" [class.simulation-status-pill--ready]="stageStatusTone() === 'ready'" [class.simulation-status-pill--progress]="stageStatusTone() === 'progress'" [class.simulation-status-pill--attention]="stageStatusTone() === 'attention'">
+        <app-status-pill [role]="stageStatusTone() === 'ready' ? 'pass' : stageStatusTone() === 'progress' ? 'active' : 'review'">
           {{ stageStatusLabel() }}
-        </span>
+        </app-status-pill>
         <p class="simulation-hero__next-label">Next action</p>
         <p class="simulation-hero__next-copy">{{ stageNextAction() }}</p>
       </div>
     </div>
 
-    <div class="simulation-highlights">
-      <div *ngFor="let row of highlightRows()" class="simulation-highlight">
-        <span>{{ row.label }}</span>
-        <strong>{{ row.value }}</strong>
-      </div>
-    </div>
+    <app-stat-strip [items]="highlightRows()" />
   </article>
 
   <article class="simulation-card simulation-card--workspace">
@@ -34,30 +29,7 @@
           <h3>Current room arrangement inside the lot</h3>
         </div>
 
-        <svg
-          class="simulation-preview"
-          [attr.viewBox]="preview().viewBox"
-          [attr.width]="preview().width"
-          [attr.height]="preview().height"
-          preserveAspectRatio="xMidYMid meet"
-        >
-          <rect x="0" y="0" [attr.width]="preview().width" [attr.height]="preview().height" class="simulation-preview__bg" />
-          <polygon [attr.points]="preview().lotPolygon" class="simulation-preview__lot" />
-          <polygon [attr.points]="preview().buildablePolygon" class="simulation-preview__buildable" />
-          <g *ngFor="let bubble of preview().bubbles">
-            <circle
-              [attr.cx]="bubble.cx"
-              [attr.cy]="bubble.cy"
-              [attr.r]="bubble.radiusPixels"
-              [attr.fill]="bubble.color"
-              class="simulation-preview__bubble"
-              [class.simulation-preview__bubble--generated]="bubble.isGenerated"
-            />
-            <text [attr.x]="bubble.cx" [attr.y]="bubble.cy" class="simulation-preview__label">
-              {{ bubble.label }}
-            </text>
-          </g>
-        </svg>
+        <app-layout-view [width]="preview().width" [height]="preview().height" [lotPolygon]="preview().lotPolygon" [buildablePolygon]="preview().buildablePolygon" [cells]="preview().bubbles" ariaLabel="Live room arrangement" />
       </div>
 
       <aside class="simulation-sidebar">
@@ -97,13 +69,13 @@
         </div>
 
         <div class="simulation-section-block">
-          <p class="simulation-card__eyebrow">Parallel simulation summary</p>
+          <p class="simulation-card__eyebrow">What's running in parallel</p>
           <div class="simulation-instance-list">
             <div class="simulation-instance" *ngIf="coreRows()[0] as leadCore">
               <strong>{{ instanceIds().length }} parallel simulations active</strong>
-              <span>Lead core {{ leadCore.coreId }} is {{ leadCore.status }}</span>
-              <span>auto evaluation {{ leadCore.loop }}</span>
-              <span>best visible score {{ leadCore.lastScore }}</span>
+              <span>Main processor {{ leadCore.coreId }} is {{ leadCore.status }}</span>
+              <span>auto-checks {{ leadCore.loop }}</span>
+              <span>best score so far {{ leadCore.lastScore }}</span>
               <span>{{ leadCore.captures }} captures / {{ leadCore.fails }} fails on lead core</span>
             </div>
             <div *ngFor="let core of coreRows().slice(1)" class="simulation-bubble-row simulation-bubble-row--compact">
@@ -171,7 +143,7 @@
         </div>
 
         <div class="simulation-section-block">
-          <p class="simulation-section-title">Force configuration</p>
+          <p class="simulation-section-title">Simulation settings</p>
           <div class="simulation-metric-grid">
             <div *ngFor="let row of forceMetrics()" class="simulation-metric">
               <span>{{ row.label }}</span>
@@ -181,7 +153,7 @@
         </div>
 
         <div class="simulation-section-block">
-          <p class="simulation-section-title">Repel SAT</p>
+          <p class="simulation-section-title">Spacing between rooms that should stay apart</p>
           <p class="simulation-card__copy">
             Average {{ formatScore(repelSatSummary().average) }} across {{ repelSatSummary().sampleCount }} pairs.
           </p>
@@ -195,7 +167,7 @@
         </div>
 
         <div class="simulation-section-block">
-          <p class="simulation-section-title">Attraction SAT</p>
+          <p class="simulation-section-title">Closeness of rooms that should be near each other</p>
           <p class="simulation-card__copy">
             Average {{ formatScore(attractionSatSummary().average) }} across {{ attractionSatSummary().sampleCount }} pairs.
           </p>
@@ -209,14 +181,14 @@
         </div>
 
         <div class="simulation-section-block">
-          <p class="simulation-section-title">Visible bubble data</p>
+          <p class="simulation-section-title">Room positions (raw)</p>
           <div class="simulation-bubble-list simulation-bubble-list--compact">
             <div *ngFor="let bubble of activeJobBubbles().slice(0, 16)" class="simulation-bubble-row">
               <strong>{{ bubble.label }}</strong>
               <span>{{ bubble.band }}</span>
               <span>{{ formatDistance(bubble.x) }}, {{ formatDistance(bubble.y) }}</span>
               <span>{{ formatDistance(bubble.radiusMeters) }} radius</span>
-              <span>{{ formatVector(bubble.vx) }}, {{ formatVector(bubble.vy) }} velocity</span>
+              <span>{{ formatVector(bubble.vx) }}, {{ formatVector(bubble.vy) }} movement speed</span>
             </div>
           </div>
         </div>

@@ -1,0 +1,37 @@
+:host { display: block; min-width: 0; }
+.layout-view { display: grid; gap: 10px; }
+.layout-view__toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+.layout-view__toggles { display: inline-flex; flex-wrap: wrap; gap: 5px; }
+.layout-view__toggle { min-height: 32px; padding: 0 13px; border: 1px solid var(--status-idle-border); border-radius: 9px; background: var(--status-idle-bg); color: var(--status-idle-ink); font-size: .75rem; font-weight: 750; cursor: pointer; }
+.layout-view__toggle--active { border-color: var(--status-active-border) !important; background: var(--status-active-bg) !important; color: var(--status-active-ink) !important; }
+.layout-view__readout { display: flex; align-items: center; gap: 8px; min-height: 32px; margin-left: auto; padding: 4px 11px; border: 1px solid #e2d8ca; border-radius: 9px; background: #f8f2e8; color: #3c4943; font-size: .75rem; }
+.layout-view__readout i { width: 12px; height: 12px; border-radius: 3px; background: #ddd3c5; }
+.layout-view__readout span { color: #786f65; font-variant-numeric: tabular-nums; }
+.layout-view__canvas { overflow: hidden; border: 1px solid #dfd5c6; border-radius: 12px; background: var(--canvas); }
+.layout-view svg { display: block; width: 100%; height: auto; max-height: min(66vh, 620px); }
+.layout-view__background { fill: var(--canvas); }
+.layout-view__lot { fill: none; stroke: var(--lot-line); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.layout-view__buildable { fill: var(--buildable-fill); stroke: var(--buildable-border); stroke-width: 1.5; }
+.layout-view__room-shape { stroke: var(--room-divider); stroke-width: 1.5; transition: opacity .12s ease; }
+.layout-view__room-shape--generated { opacity: .72; stroke-dasharray: 4 3; }
+.layout-view__room-shape--hallway { opacity: .84; }
+.layout-view__room-shape--dim { opacity: .35; }
+.layout-view__problem { fill: var(--fail-overlay); fill-opacity: .2; stroke: var(--fail-overlay); stroke-width: 2.4; pointer-events: none; }
+.layout-view__label { fill: #22332c; stroke: var(--canvas); stroke-width: 3px; paint-order: stroke; font-size: 12px; font-weight: 800; text-anchor: middle; pointer-events: none; }
+.layout-view__wall-ext { stroke: var(--wall-ext); stroke-width: 3.4; pointer-events: none; }
+.layout-view__wall-int { stroke: var(--wall-int); stroke-width: 2.25; pointer-events: none; }
+.layout-view__guide { stroke: rgba(58,92,108,.25); stroke-width: 1; stroke-dasharray: 4 4; }
+.layout-view__guide--major { stroke-width: 1.8; stroke-dasharray: none; }
+.layout-view__window { fill: var(--canvas); stroke: var(--window-marker); stroke-width: 2.4; }
+.layout-view__window-line { stroke: var(--window-marker); stroke-width: 4; }
+.layout-view__door, .layout-view__door-line { fill: var(--door-marker); stroke: var(--door-marker); stroke-width: 4; }
+.layout-view--compact { gap: 0; }
+.layout-view--compact .layout-view__canvas { border: 0; border-radius: 0; }
+.layout-view--compact svg { max-height: none; }
+.layout-view__survey-point { fill: #2f6f67; stroke: #fffdf8; stroke-width: 2; }
+.layout-view__survey-point--buildable { fill: #c9822f; }
+.layout-view__annotation { fill: #35413d; font-size: 10px; font-weight: 800; paint-order: stroke; stroke: #fffdf8; stroke-width: 3px; stroke-linejoin: round; }
+.layout-view__annotation--bearing { fill: #6e756f; font-size: 8px; font-weight: 650; }
+.layout-view__annotation--distance, .layout-view__annotation--setback { fill: #6a4a22; font-size: 9px; }
+.layout-view__scale line { stroke: #4c5954; stroke-width: 1.5; }
+.layout-view__scale text { fill: #4c5954; font-size: 9px; font-weight: 750; }

@@ -20,30 +20,34 @@ describe('ConstructionContractPushService', () => {
     });
   });
 
-  it('marks new outputs as pushed when the endpoint accepts the contract', async () => {
+  it('keeps new outputs pending until an explicit push is requested', async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true });
     vi.stubGlobal('fetch', fetchMock);
 
     const service = TestBed.inject(ConstructionContractPushService);
-    outputsSignal.set([buildOutput('layout-push-ok')]);
+    const output = buildOutput('layout-push-ok');
+    outputsSignal.set([output]);
 
-    await vi.waitFor(() => {
-      expect(service.statusFor('layout-push-ok')).toBe('pushed');
-    });
+    await vi.waitFor(() => expect(service.statusFor('layout-push-ok')).toBe('pending'));
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    await service.pushOutput(output);
+
+    expect(service.statusFor('layout-push-ok')).toBe('pushed');
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
-  it('marks outputs as failed when the endpoint call throws', async () => {
+  it('marks an explicitly pushed output as failed when the endpoint call throws', async () => {
     const fetchMock = vi.fn().mockRejectedValue(new Error('bridge offline'));
     vi.stubGlobal('fetch', fetchMock);
 
     const service = TestBed.inject(ConstructionContractPushService);
-    outputsSignal.set([buildOutput('layout-push-fail')]);
+    const output = buildOutput('layout-push-fail');
+    outputsSignal.set([output]);
 
-    await vi.waitFor(() => {
-      expect(service.statusFor('layout-push-fail')).toBe('failed');
-    });
+    await service.pushOutput(output);
+    expect(service.statusFor('layout-push-fail')).toBe('failed');
   });
 
   afterEach(() => {
@@ -65,6 +69,7 @@ function buildOutput(layoutId: string): ConstructionOutput {
         accessCheck: { passed: true, failures: [] },
         adjacencyCheck: { passed: true, failures: [] },
         garageFrontageCheck: { passed: true, failures: [] },
+        foyerFrontageCheck: { passed: true, failures: [] },
         sliverCheck: { passed: true, failures: [] },
         overlapCheck: { passed: true, failures: [] },
         cells: [

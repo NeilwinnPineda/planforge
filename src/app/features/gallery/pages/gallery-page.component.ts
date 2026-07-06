@@ -1,9 +1,14 @@
-import { DecimalPipe, NgClass, NgFor, NgIf, PercentPipe } from '@angular/common';
+import { DecimalPipe, NgFor, NgIf, PercentPipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ConstructionOutputService, type ConstructionOutput } from '../../../core/construction/construction-output.service';
 import { ConstructionContractPushService } from '../../../core/construction/construction-contract-push.service';
+import { buildConstructionContract } from '../../../core/construction/construction-contract.factory';
 import type { VerifiedLayoutArtifact } from '../../../core/processing/processing.exports';
 import { WorkflowVisualStateService } from '../../../core/processing/workflow-visual-state.service';
+import { LayoutViewComponent } from '../../../shared/layout-view/layout-view.component';
+import { EmptyStateComponent } from '../../../shared/empty-state/empty-state.component';
+import { StatusPillComponent } from '../../../shared/status-pill/status-pill.component';
+import { StatStripComponent } from '../../../shared/stat-strip/stat-strip.component';
 
 interface GalleryCard {
   readonly rank: number;
@@ -58,7 +63,7 @@ const DETAIL_PAD = 20;
 @Component({
   selector: 'app-gallery-page',
   standalone: true,
-  imports: [DecimalPipe, NgClass, NgFor, NgIf, PercentPipe],
+  imports: [DecimalPipe, NgFor, NgIf, PercentPipe, LayoutViewComponent, EmptyStateComponent, StatusPillComponent, StatStripComponent],
   templateUrl: './gallery-page.component.html',
   styleUrl: './gallery-page.component.scss',
 })
@@ -68,6 +73,7 @@ export class GalleryPageComponent {
   private readonly workflowVisualStateService = inject(WorkflowVisualStateService);
 
   protected readonly selectedId = signal<string | null>(null);
+  protected readonly viewMode = signal<'cards' | 'table'>('cards');
 
   protected readonly miniW = MINI_W;
   protected readonly miniH = MINI_H;
@@ -75,13 +81,13 @@ export class GalleryPageComponent {
   protected readonly detailH = DETAIL_H;
 
   protected readonly checkLabels = [
-    { key: 'deficiencyCheck',     label: 'DEF'  },
-    { key: 'aspectRatioCheck',    label: 'ASP'  },
-    { key: 'accessCheck',         label: 'ACC'  },
-    { key: 'adjacencyCheck',      label: 'CRIT' },
-    { key: 'garageFrontageCheck', label: 'GAR'  },
-    { key: 'sliverCheck',         label: 'SLV'  },
-    { key: 'overlapCheck',        label: 'OVL'  },
+    { key: 'deficiencyCheck',     label: 'Too small'  },
+    { key: 'aspectRatioCheck',    label: 'Bad shape'  },
+    { key: 'accessCheck',         label: 'No access'  },
+    { key: 'adjacencyCheck',      label: 'Critical adjacency' },
+    { key: 'garageFrontageCheck', label: 'Garage placement'  },
+    { key: 'sliverCheck',         label: 'Too thin'  },
+    { key: 'overlapCheck',        label: 'Overlap'  },
   ] as const;
 
   protected readonly cards = computed((): readonly GalleryCard[] =>
@@ -170,6 +176,21 @@ export class GalleryPageComponent {
 
   protected select(id: string): void {
     this.selectedId.set(id);
+  }
+
+  protected exportContract(output: ConstructionOutput): void {
+    const contract = buildConstructionContract(output);
+    const blob = new Blob([JSON.stringify(contract, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${contract.layoutId}-construction-contract.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  protected sendToRevit(output: ConstructionOutput): void {
+    void this.pushService.pushOutput(output);
   }
 
   protected isSelected(card: GalleryCard): boolean {

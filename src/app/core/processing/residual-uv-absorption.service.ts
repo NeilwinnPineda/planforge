@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import type { GeometryPoint } from '../geometry/geometry.exports';
 import type { ProvisionalLayoutCell, ResidualAbsorbedLayoutArtifact, UvNegotiatedLayoutArtifact } from './models/layout-processing-artifact.model';
 import type { LayoutProcessingStepRequest, LayoutProcessingStepResult } from './models/layout-processing-step.model';
+import { resolveCellLabel } from '../cell-label.factory';
 
 export interface ResidualUvAbsorptionArguments {
   readonly fillerColor: string;
@@ -143,7 +144,7 @@ export class ResidualUvAbsorptionService {
       outputCells.push({
         id: residualCell.id,
         typeId: residualCell.typeId,
-        label: '',
+        label: resolveCellLabel(residualCell.typeId),
         color: residualCell.color,
         tags: [],
         pkg: residualCell.pkg,
@@ -310,8 +311,8 @@ export class ResidualUvAbsorptionService {
       const treatAsFiller = touchesBoundary;
       residuals.push({
         cell: {
-          id: `${treatAsFiller ? 'generated_filler' : 'generated_hallway'}_residual_${rect.uMin.toFixed(4)}_${rect.vMin.toFixed(4)}`,
-          typeId: treatAsFiller ? 'generated_filler' : 'generated_hallway',
+          id: `${treatAsFiller ? 'filler' : 'hallway'}_residual_${rect.uMin.toFixed(4)}_${rect.vMin.toFixed(4)}`,
+          typeId: treatAsFiller ? 'filler' : 'hallway',
           color: treatAsFiller ? fillerColor : hallwayColor,
           pkg: treatAsFiller,
           hallway: !treatAsFiller,
