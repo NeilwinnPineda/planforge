@@ -1,6 +1,28 @@
+# Dependencies
 /node_modules
+
+# Build output
 /dist
-/.angular
 /out-tsc
 /coverage
-/.codex-logs
+
+# Angular cache
+/.angular
+
+# Logs — all serve/run/codex log files
+*.log
+*.err.log
+*.out.log
+.codex-logs/
+.codex-serve*
+
+# Generated runtime exports (not source)
+/generated-exports
+
+# Playwright test artifacts
+/test-results
+/playwright-report
+
+# Personal / workspace files
+App advice request/
+App advice request.zip
