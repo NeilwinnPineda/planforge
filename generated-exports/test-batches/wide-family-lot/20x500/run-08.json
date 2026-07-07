@@ -1,0 +1,2191 @@
+{
+  "schemaVersion": "1.0",
+  "layoutId": "LMR9ZXIST08GBXQN3SO",
+  "exportedAtIso": "2026-07-07T01:54:39.378Z",
+  "score": 0.8401,
+  "cells": [
+    {
+      "id": "breakfast_nook",
+      "typeId": "breakfast_nook",
+      "label": "Breakfast Nook",
+      "color": "#f8e0a0",
+      "worldPoints": [
+        {
+          "x": 14.353,
+          "y": 19.258
+        },
+        {
+          "x": 16.988,
+          "y": 19.258
+        },
+        {
+          "x": 16.867,
+          "y": 21.572
+        },
+        {
+          "x": 14.229000000000001,
+          "y": 21.572
+        }
+      ],
+      "areaSquareMeters": 6.1009,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "filler_4",
+      "typeId": "filler",
+      "label": "Filler",
+      "color": "#f3efe7",
+      "worldPoints": [
+        {
+          "x": 1.965,
+          "y": 7.2250000000000005
+        },
+        {
+          "x": 4.856,
+          "y": 7.226
+        },
+        {
+          "x": 4.867,
+          "y": 7.226
+        },
+        {
+          "x": 4.727,
+          "y": 9.602
+        },
+        {
+          "x": 4.6370000000000005,
+          "y": 11.111
+        },
+        {
+          "x": 1.729,
+          "y": 11.11
+        }
+      ],
+      "areaSquareMeters": 11.2874,
+      "hallway": false,
+      "pkg": true
+    },
+    {
+      "id": "kitchen",
+      "typeId": "kitchen",
+      "label": "Kitchen",
+      "color": "#f2a65a",
+      "worldPoints": [
+        {
+          "x": 13.949,
+          "y": 13.256
+        },
+        {
+          "x": 14.676,
+          "y": 13.256
+        },
+        {
+          "x": 17.303,
+          "y": 13.257
+        },
+        {
+          "x": 17.126,
+          "y": 16.624
+        },
+        {
+          "x": 14.495000000000001,
+          "y": 16.624
+        },
+        {
+          "x": 13.766,
+          "y": 16.623
+        },
+        {
+          "x": 13.77,
+          "y": 16.561
+        }
+      ],
+      "areaSquareMeters": 11.3038,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "master_bath",
+      "typeId": "master_bath",
+      "label": "Master Bath",
+      "color": "#7fc8a9",
+      "worldPoints": [
+        {
+          "x": 2.79,
+          "y": 19.254
+        },
+        {
+          "x": 6.424,
+          "y": 19.255
+        },
+        {
+          "x": 6.29,
+          "y": 21.569
+        },
+        {
+          "x": 2.6510000000000002,
+          "y": 21.568
+        }
+      ],
+      "areaSquareMeters": 8.415,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "garage",
+      "typeId": "garage",
+      "label": "Garage",
+      "color": "#c8d8e8",
+      "worldPoints": [
+        {
+          "x": 5.058,
+          "y": 4.001
+        },
+        {
+          "x": 10.158,
+          "y": 4.003
+        },
+        {
+          "x": 9.976,
+          "y": 7.228
+        },
+        {
+          "x": 9.872,
+          "y": 9.069
+        },
+        {
+          "x": 9.842,
+          "y": 9.604000000000001
+        },
+        {
+          "x": 8.626,
+          "y": 9.603
+        },
+        {
+          "x": 6.984,
+          "y": 9.603
+        },
+        {
+          "x": 5.864,
+          "y": 9.603
+        },
+        {
+          "x": 4.727,
+          "y": 9.602
+        },
+        {
+          "x": 4.867,
+          "y": 7.226
+        }
+      ],
+      "areaSquareMeters": 28.6086,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "living",
+      "typeId": "living",
+      "label": "Living Room",
+      "color": "#8ecae6",
+      "worldPoints": [
+        {
+          "x": 11.411,
+          "y": 7.228
+        },
+        {
+          "x": 14.524000000000001,
+          "y": 7.229
+        },
+        {
+          "x": 14.664,
+          "y": 7.229
+        },
+        {
+          "x": 17.619,
+          "y": 7.23
+        },
+        {
+          "x": 17.393,
+          "y": 11.527000000000001
+        },
+        {
+          "x": 14.769,
+          "y": 11.526
+        },
+        {
+          "x": 14.042,
+          "y": 11.526
+        },
+        {
+          "x": 11.172,
+          "y": 11.525
+        },
+        {
+          "x": 11.196,
+          "y": 11.083
+        },
+        {
+          "x": 11.308,
+          "y": 9.069
+        }
+      ],
+      "areaSquareMeters": 26.706,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "family_room",
+      "typeId": "family_room",
+      "label": "Family Room",
+      "color": "#a8d4e8",
+      "worldPoints": [
+        {
+          "x": 10.888,
+          "y": 16.622
+        },
+        {
+          "x": 13.766,
+          "y": 16.623
+        },
+        {
+          "x": 14.495000000000001,
+          "y": 16.624
+        },
+        {
+          "x": 14.353,
+          "y": 19.258
+        },
+        {
+          "x": 14.229000000000001,
+          "y": 21.572
+        },
+        {
+          "x": 10.612,
+          "y": 21.571
+        },
+        {
+          "x": 10.741,
+          "y": 19.257
+        }
+      ],
+      "areaSquareMeters": 17.8746,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "master_bed",
+      "typeId": "master_bed",
+      "label": "Master Bed",
+      "color": "#b8a1e3",
+      "worldPoints": [
+        {
+          "x": 1.479,
+          "y": 15.225
+        },
+        {
+          "x": 5.42,
+          "y": 15.226
+        },
+        {
+          "x": 6.658,
+          "y": 15.226
+        },
+        {
+          "x": 6.424,
+          "y": 19.255
+        },
+        {
+          "x": 2.79,
+          "y": 19.254
+        },
+        {
+          "x": 1.235,
+          "y": 19.254
+        }
+      ],
+      "areaSquareMeters": 20.8852,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "kids_bed",
+      "typeId": "kids_bed",
+      "label": "Kids Bed",
+      "color": "#e9a3c9",
+      "worldPoints": [
+        {
+          "x": 6.751,
+          "y": 13.616
+        },
+        {
+          "x": 8.396,
+          "y": 13.616
+        },
+        {
+          "x": 11.055,
+          "y": 13.617
+        },
+        {
+          "x": 10.891,
+          "y": 16.56
+        },
+        {
+          "x": 10.888,
+          "y": 16.622
+        },
+        {
+          "x": 10.741,
+          "y": 19.257
+        },
+        {
+          "x": 6.424,
+          "y": 19.255
+        },
+        {
+          "x": 6.658,
+          "y": 15.226
+        }
+      ],
+      "areaSquareMeters": 24.3095,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "dining",
+      "typeId": "dining",
+      "label": "Dining Room",
+      "color": "#f4d58d",
+      "worldPoints": [
+        {
+          "x": 11.172,
+          "y": 11.525
+        },
+        {
+          "x": 14.042,
+          "y": 11.526
+        },
+        {
+          "x": 13.949,
+          "y": 13.256
+        },
+        {
+          "x": 13.77,
+          "y": 16.561
+        },
+        {
+          "x": 10.891,
+          "y": 16.56
+        },
+        {
+          "x": 11.055,
+          "y": 13.617
+        }
+      ],
+      "areaSquareMeters": 14.4752,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "kids_bed_2",
+      "typeId": "kids_bed",
+      "label": "Kids Bed 2",
+      "color": "#e9a3c9",
+      "worldPoints": [
+        {
+          "x": 1.729,
+          "y": 11.11
+        },
+        {
+          "x": 4.6370000000000005,
+          "y": 11.111
+        },
+        {
+          "x": 5.6610000000000005,
+          "y": 11.111
+        },
+        {
+          "x": 5.514,
+          "y": 13.615
+        },
+        {
+          "x": 5.42,
+          "y": 15.226
+        },
+        {
+          "x": 1.479,
+          "y": 15.225
+        }
+      ],
+      "areaSquareMeters": 16.1977,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "office",
+      "typeId": "office",
+      "label": "Office",
+      "color": "#d4c8e8",
+      "worldPoints": [
+        {
+          "x": 6.424,
+          "y": 19.255
+        },
+        {
+          "x": 10.741,
+          "y": 19.257
+        },
+        {
+          "x": 10.612,
+          "y": 21.571
+        },
+        {
+          "x": 6.29,
+          "y": 21.569
+        }
+      ],
+      "areaSquareMeters": 9.9956,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "shared_bath",
+      "typeId": "shared_bath",
+      "label": "Shared Bath",
+      "color": "#6db8a0",
+      "worldPoints": [
+        {
+          "x": 5.76,
+          "y": 11.382
+        },
+        {
+          "x": 6.881,
+          "y": 11.383000000000001
+        },
+        {
+          "x": 8.524000000000001,
+          "y": 11.383000000000001
+        },
+        {
+          "x": 8.516,
+          "y": 11.524000000000001
+        },
+        {
+          "x": 8.396,
+          "y": 13.616
+        },
+        {
+          "x": 6.751,
+          "y": 13.616
+        },
+        {
+          "x": 5.6290000000000004,
+          "y": 13.615
+        }
+      ],
+      "areaSquareMeters": 6.1756,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "laundry",
+      "typeId": "laundry",
+      "label": "Laundry",
+      "color": "#b7b7c9",
+      "worldPoints": [
+        {
+          "x": 14.495000000000001,
+          "y": 16.624
+        },
+        {
+          "x": 17.126,
+          "y": 16.624
+        },
+        {
+          "x": 16.988,
+          "y": 19.258
+        },
+        {
+          "x": 14.353,
+          "y": 19.258
+        }
+      ],
+      "areaSquareMeters": 6.9353,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "foyer",
+      "typeId": "foyer",
+      "label": "Foyer",
+      "color": "#ede3c8",
+      "worldPoints": [
+        {
+          "x": 11.591000000000001,
+          "y": 4.003
+        },
+        {
+          "x": 14.838000000000001,
+          "y": 4.0040000000000004
+        },
+        {
+          "x": 14.691,
+          "y": 6.714
+        },
+        {
+          "x": 14.552,
+          "y": 6.714
+        },
+        {
+          "x": 11.44,
+          "y": 6.713
+        }
+      ],
+      "areaSquareMeters": 8.805,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "powder_room",
+      "typeId": "powder_room",
+      "label": "Powder Room",
+      "color": "#b0d8b0",
+      "worldPoints": [
+        {
+          "x": 14.838000000000001,
+          "y": 4.0040000000000004
+        },
+        {
+          "x": 17.788,
+          "y": 4.005
+        },
+        {
+          "x": 17.619,
+          "y": 7.23
+        },
+        {
+          "x": 14.664,
+          "y": 7.229
+        },
+        {
+          "x": 14.691,
+          "y": 6.714
+        }
+      ],
+      "areaSquareMeters": 9.5233,
+      "hallway": false,
+      "pkg": false
+    },
+    {
+      "id": "filler_1",
+      "typeId": "filler",
+      "label": "Filler",
+      "color": "#f3efe7",
+      "worldPoints": [
+        {
+          "x": 1.235,
+          "y": 19.254
+        },
+        {
+          "x": 2.79,
+          "y": 19.254
+        },
+        {
+          "x": 2.6510000000000002,
+          "y": 21.568
+        },
+        {
+          "x": 1.094,
+          "y": 21.568
+        }
+      ],
+      "areaSquareMeters": 3.6006,
+      "hallway": false,
+      "pkg": true
+    },
+    {
+      "id": "filler_2",
+      "typeId": "filler",
+      "label": "Filler",
+      "color": "#f3efe7",
+      "worldPoints": [
+        {
+          "x": 14.769,
+          "y": 11.526
+        },
+        {
+          "x": 17.393,
+          "y": 11.527000000000001
+        },
+        {
+          "x": 17.303,
+          "y": 13.257
+        },
+        {
+          "x": 14.676,
+          "y": 13.256
+        }
+      ],
+      "areaSquareMeters": 4.5422,
+      "hallway": false,
+      "pkg": true
+    },
+    {
+      "id": "filler_3",
+      "typeId": "filler",
+      "label": "Filler",
+      "color": "#f3efe7",
+      "worldPoints": [
+        {
+          "x": 2.161,
+          "y": 4.001
+        },
+        {
+          "x": 5.047,
+          "y": 4.001
+        },
+        {
+          "x": 4.856,
+          "y": 7.226
+        },
+        {
+          "x": 1.965,
+          "y": 7.2250000000000005
+        }
+      ],
+      "areaSquareMeters": 9.3141,
+      "hallway": false,
+      "pkg": true
+    },
+    {
+      "id": "filler_residual_0.1847_0.0000",
+      "typeId": "filler",
+      "label": "Filler",
+      "color": "#e8dfc8",
+      "worldPoints": [
+        {
+          "x": 5.047,
+          "y": 4.001
+        },
+        {
+          "x": 5.058,
+          "y": 4.001
+        },
+        {
+          "x": 4.867,
+          "y": 7.226
+        },
+        {
+          "x": 4.856,
+          "y": 7.226
+        }
+      ],
+      "areaSquareMeters": 0.0355,
+      "hallway": false,
+      "pkg": true
+    },
+    {
+      "id": "filler_residual_0.5118_0.0000",
+      "typeId": "filler",
+      "label": "Filler",
+      "color": "#e8dfc8",
+      "worldPoints": [
+        {
+          "x": 10.158,
+          "y": 4.003
+        },
+        {
+          "x": 11.591000000000001,
+          "y": 4.003
+        },
+        {
+          "x": 11.44,
+          "y": 6.713
+        },
+        {
+          "x": 11.411,
+          "y": 7.228
+        },
+        {
+          "x": 9.976,
+          "y": 7.228
+        }
+      ],
+      "areaSquareMeters": 4.6251,
+      "hallway": false,
+      "pkg": true
+    },
+    {
+      "id": "hallway_5",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 5.514,
+          "y": 13.615
+        },
+        {
+          "x": 5.6290000000000004,
+          "y": 13.615
+        },
+        {
+          "x": 6.751,
+          "y": 13.616
+        },
+        {
+          "x": 6.658,
+          "y": 15.226
+        },
+        {
+          "x": 5.42,
+          "y": 15.226
+        }
+      ],
+      "areaSquareMeters": 1.9931,
+      "hallway": true,
+      "pkg": false
+    },
+    {
+      "id": "hallway_1__hallway_merged",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 11.44,
+          "y": 6.713
+        },
+        {
+          "x": 14.552,
+          "y": 6.714
+        },
+        {
+          "x": 14.691,
+          "y": 6.714
+        },
+        {
+          "x": 14.664,
+          "y": 7.229
+        },
+        {
+          "x": 14.524000000000001,
+          "y": 7.229
+        },
+        {
+          "x": 11.411,
+          "y": 7.228
+        }
+      ],
+      "areaSquareMeters": 1.6748,
+      "hallway": true,
+      "pkg": false
+    },
+    {
+      "id": "hallway_2",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 9.976,
+          "y": 7.228
+        },
+        {
+          "x": 11.411,
+          "y": 7.228
+        },
+        {
+          "x": 11.308,
+          "y": 9.069
+        },
+        {
+          "x": 10.313,
+          "y": 9.069
+        },
+        {
+          "x": 9.872,
+          "y": 9.069
+        }
+      ],
+      "areaSquareMeters": 2.6428,
+      "hallway": true,
+      "pkg": false
+    },
+    {
+      "id": "hallway_3__hallway_merged",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 10.313,
+          "y": 9.069
+        },
+        {
+          "x": 11.308,
+          "y": 9.069
+        },
+        {
+          "x": 11.196,
+          "y": 11.083
+        },
+        {
+          "x": 11.172,
+          "y": 11.525
+        },
+        {
+          "x": 10.175,
+          "y": 11.524000000000001
+        },
+        {
+          "x": 10.200000000000001,
+          "y": 11.082
+        },
+        {
+          "x": 10.283,
+          "y": 9.604000000000001
+        }
+      ],
+      "areaSquareMeters": 2.4449,
+      "hallway": true,
+      "pkg": false
+    },
+    {
+      "id": "hallway_4__hallway_merged",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 8.626,
+          "y": 9.603
+        },
+        {
+          "x": 9.842,
+          "y": 9.604000000000001
+        },
+        {
+          "x": 9.974,
+          "y": 9.604000000000001
+        },
+        {
+          "x": 10.283,
+          "y": 9.604000000000001
+        },
+        {
+          "x": 10.200000000000001,
+          "y": 11.082
+        },
+        {
+          "x": 10.175,
+          "y": 11.524000000000001
+        },
+        {
+          "x": 9.866,
+          "y": 11.524000000000001
+        },
+        {
+          "x": 8.516,
+          "y": 11.524000000000001
+        },
+        {
+          "x": 8.524000000000001,
+          "y": 11.383000000000001
+        }
+      ],
+      "areaSquareMeters": 3.1842,
+      "hallway": true,
+      "pkg": false
+    },
+    {
+      "id": "hallway_6",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 8.516,
+          "y": 11.524000000000001
+        },
+        {
+          "x": 9.866,
+          "y": 11.524000000000001
+        },
+        {
+          "x": 10.175,
+          "y": 11.524000000000001
+        },
+        {
+          "x": 11.172,
+          "y": 11.525
+        },
+        {
+          "x": 11.055,
+          "y": 13.617
+        },
+        {
+          "x": 8.396,
+          "y": 13.616
+        }
+      ],
+      "areaSquareMeters": 5.5604,
+      "hallway": true,
+      "pkg": false
+    },
+    {
+      "id": "hallway_7__hallway_merged",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 5.864,
+          "y": 9.603
+        },
+        {
+          "x": 6.984,
+          "y": 9.603
+        },
+        {
+          "x": 8.626,
+          "y": 9.603
+        },
+        {
+          "x": 8.524000000000001,
+          "y": 11.383000000000001
+        },
+        {
+          "x": 6.881,
+          "y": 11.383000000000001
+        },
+        {
+          "x": 5.76,
+          "y": 11.382
+        },
+        {
+          "x": 5.775,
+          "y": 11.111
+        }
+      ],
+      "areaSquareMeters": 4.9184,
+      "hallway": true,
+      "pkg": false
+    },
+    {
+      "id": "hallway_residual_0.5118_0.2884",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 9.872,
+          "y": 9.069
+        },
+        {
+          "x": 10.313,
+          "y": 9.069
+        },
+        {
+          "x": 10.283,
+          "y": 9.604000000000001
+        },
+        {
+          "x": 9.974,
+          "y": 9.604000000000001
+        },
+        {
+          "x": 9.842,
+          "y": 9.604000000000001
+        }
+      ],
+      "areaSquareMeters": 0.2359,
+      "hallway": true,
+      "pkg": false
+    },
+    {
+      "id": "hallway_residual_0.1854_0.3188",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 4.727,
+          "y": 9.602
+        },
+        {
+          "x": 5.864,
+          "y": 9.603
+        },
+        {
+          "x": 5.775,
+          "y": 11.111
+        },
+        {
+          "x": 5.6610000000000005,
+          "y": 11.111
+        },
+        {
+          "x": 4.6370000000000005,
+          "y": 11.111
+        }
+      ],
+      "areaSquareMeters": 1.716,
+      "hallway": true,
+      "pkg": false
+    },
+    {
+      "id": "hallway_residual_0.2507_0.4047",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 5.6610000000000005,
+          "y": 11.111
+        },
+        {
+          "x": 5.775,
+          "y": 11.111
+        },
+        {
+          "x": 5.76,
+          "y": 11.382
+        },
+        {
+          "x": 5.6290000000000004,
+          "y": 13.615
+        },
+        {
+          "x": 5.514,
+          "y": 13.615
+        }
+      ],
+      "areaSquareMeters": 0.2877,
+      "hallway": true,
+      "pkg": false
+    },
+    {
+      "id": "hallway_residual_0.7864_0.4281",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 14.042,
+          "y": 11.526
+        },
+        {
+          "x": 14.769,
+          "y": 11.526
+        },
+        {
+          "x": 14.676,
+          "y": 13.256
+        },
+        {
+          "x": 13.949,
+          "y": 13.256
+        }
+      ],
+      "areaSquareMeters": 1.2577,
+      "hallway": true,
+      "pkg": false
+    },
+    {
+      "id": "hallway_residual_0.6034_0.7148",
+      "typeId": "hallway",
+      "label": "Hallway",
+      "color": "#d4d0c0",
+      "worldPoints": [
+        {
+          "x": 10.891,
+          "y": 16.56
+        },
+        {
+          "x": 13.77,
+          "y": 16.561
+        },
+        {
+          "x": 13.766,
+          "y": 16.623
+        },
+        {
+          "x": 10.888,
+          "y": 16.622
+        }
+      ],
+      "areaSquareMeters": 0.1785,
+      "hallway": true,
+      "pkg": false
+    }
+  ],
+  "doors": [
+    {
+      "id": "DOOR-001-ENTRY",
+      "kind": "entry",
+      "ownerTypeId": "foyer",
+      "ownerLabel": "Foyer",
+      "widthMeters": 1,
+      "positionWorld": {
+        "x": 13.2145,
+        "y": 4.0035
+      },
+      "wallFromWorld": {
+        "x": 11.591000000000001,
+        "y": 4.003
+      },
+      "wallToWorld": {
+        "x": 14.838000000000001,
+        "y": 4.0040000000000004
+      },
+      "adjacentTypeId": null,
+      "adjacentLabel": null
+    },
+    {
+      "id": "DOOR-002-GARAGE",
+      "kind": "garage",
+      "ownerTypeId": "garage",
+      "ownerLabel": "Garage",
+      "widthMeters": 2.4,
+      "positionWorld": {
+        "x": 7.608,
+        "y": 4.002
+      },
+      "wallFromWorld": {
+        "x": 5.058,
+        "y": 4.001
+      },
+      "wallToWorld": {
+        "x": 10.158,
+        "y": 4.003
+      },
+      "adjacentTypeId": null,
+      "adjacentLabel": null
+    },
+    {
+      "id": "DOOR-003-SERVICE",
+      "kind": "service",
+      "ownerTypeId": "laundry",
+      "ownerLabel": "Laundry",
+      "widthMeters": 0.9,
+      "positionWorld": {
+        "x": 17.057,
+        "y": 17.941
+      },
+      "wallFromWorld": {
+        "x": 17.126,
+        "y": 16.624
+      },
+      "wallToWorld": {
+        "x": 16.988,
+        "y": 19.258
+      },
+      "adjacentTypeId": null,
+      "adjacentLabel": null
+    },
+    {
+      "id": "DOOR-004-INT",
+      "kind": "interior",
+      "ownerTypeId": "master_bath",
+      "ownerLabel": "Master Bath",
+      "widthMeters": 0.9,
+      "positionWorld": {
+        "x": 4.607,
+        "y": 19.2545
+      },
+      "wallFromWorld": {
+        "x": 2.79,
+        "y": 19.254
+      },
+      "wallToWorld": {
+        "x": 6.424,
+        "y": 19.255
+      },
+      "adjacentTypeId": "master_bed",
+      "adjacentLabel": "Master Bed"
+    },
+    {
+      "id": "DOOR-005-INT",
+      "kind": "interior",
+      "ownerTypeId": "garage",
+      "ownerLabel": "Garage",
+      "widthMeters": 0.9,
+      "positionWorld": {
+        "x": 9.924,
+        "y": 8.1485
+      },
+      "wallFromWorld": {
+        "x": 9.976,
+        "y": 7.228
+      },
+      "wallToWorld": {
+        "x": 9.872,
+        "y": 9.069
+      },
+      "adjacentTypeId": "hallway",
+      "adjacentLabel": "Hallway"
+    },
+    {
+      "id": "DOOR-006-INT",
+      "kind": "interior",
+      "ownerTypeId": "master_bed",
+      "ownerLabel": "Master Bed",
+      "widthMeters": 0.9,
+      "positionWorld": {
+        "x": 6.039,
+        "y": 15.226
+      },
+      "wallFromWorld": {
+        "x": 5.42,
+        "y": 15.226
+      },
+      "wallToWorld": {
+        "x": 6.658,
+        "y": 15.226
+      },
+      "adjacentTypeId": "hallway",
+      "adjacentLabel": "Hallway"
+    },
+    {
+      "id": "DOOR-007-INT",
+      "kind": "interior",
+      "ownerTypeId": "kids_bed",
+      "ownerLabel": "Kids Bed",
+      "widthMeters": 0.9,
+      "positionWorld": {
+        "x": 9.7255,
+        "y": 13.6165
+      },
+      "wallFromWorld": {
+        "x": 8.396,
+        "y": 13.616
+      },
+      "wallToWorld": {
+        "x": 11.055,
+        "y": 13.617
+      },
+      "adjacentTypeId": "hallway",
+      "adjacentLabel": "Hallway"
+    },
+    {
+      "id": "DOOR-008-INT",
+      "kind": "interior",
+      "ownerTypeId": "kids_bed",
+      "ownerLabel": "Kids Bed 2",
+      "widthMeters": 0.9,
+      "positionWorld": {
+        "x": 5.5875,
+        "y": 12.363
+      },
+      "wallFromWorld": {
+        "x": 5.6610000000000005,
+        "y": 11.111
+      },
+      "wallToWorld": {
+        "x": 5.514,
+        "y": 13.615
+      },
+      "adjacentTypeId": "hallway",
+      "adjacentLabel": "Hallway"
+    },
+    {
+      "id": "DOOR-009-INT",
+      "kind": "interior",
+      "ownerTypeId": "office",
+      "ownerLabel": "Office",
+      "widthMeters": 0.9,
+      "positionWorld": {
+        "x": 10.6765,
+        "y": 20.414
+      },
+      "wallFromWorld": {
+        "x": 10.741,
+        "y": 19.257
+      },
+      "wallToWorld": {
+        "x": 10.612,
+        "y": 21.571
+      },
+      "adjacentTypeId": "family_room",
+      "adjacentLabel": "Family Room"
+    },
+    {
+      "id": "DOOR-010-INT",
+      "kind": "interior",
+      "ownerTypeId": "shared_bath",
+      "ownerLabel": "Shared Bath",
+      "widthMeters": 0.9,
+      "positionWorld": {
+        "x": 5.6945,
+        "y": 12.4985
+      },
+      "wallFromWorld": {
+        "x": 5.6290000000000004,
+        "y": 13.615
+      },
+      "wallToWorld": {
+        "x": 5.76,
+        "y": 11.382
+      },
+      "adjacentTypeId": "hallway",
+      "adjacentLabel": "Hallway"
+    },
+    {
+      "id": "DOOR-011-INT",
+      "kind": "interior",
+      "ownerTypeId": "laundry",
+      "ownerLabel": "Laundry",
+      "widthMeters": 0.9,
+      "positionWorld": {
+        "x": 14.424,
+        "y": 17.941
+      },
+      "wallFromWorld": {
+        "x": 14.353,
+        "y": 19.258
+      },
+      "wallToWorld": {
+        "x": 14.495000000000001,
+        "y": 16.624
+      },
+      "adjacentTypeId": "family_room",
+      "adjacentLabel": "Family Room"
+    }
+  ],
+  "windows": [
+    {
+      "id": "WIN-EW-019-10612,21571_6290,21569-1",
+      "wallId": "EW-019-10612,21571_6290,21569",
+      "ownerTypeId": "office",
+      "ownerLabel": "Office",
+      "sizeCode": "M",
+      "widthMeters": 0.9,
+      "tMeters": 1.441,
+      "positionWorld": {
+        "x": 9.1713,
+        "y": 21.5703
+      },
+      "wallFromWorld": {
+        "x": 10.612,
+        "y": 21.571
+      },
+      "wallToWorld": {
+        "x": 6.29,
+        "y": 21.569
+      },
+      "wallLengthMeters": 4.322
+    },
+    {
+      "id": "WIN-EW-019-10612,21571_6290,21569-2",
+      "wallId": "EW-019-10612,21571_6290,21569",
+      "ownerTypeId": "office",
+      "ownerLabel": "Office",
+      "sizeCode": "M",
+      "widthMeters": 0.9,
+      "tMeters": 2.881,
+      "positionWorld": {
+        "x": 7.7307,
+        "y": 21.5697
+      },
+      "wallFromWorld": {
+        "x": 10.612,
+        "y": 21.571
+      },
+      "wallToWorld": {
+        "x": 6.29,
+        "y": 21.569
+      },
+      "wallLengthMeters": 4.322
+    },
+    {
+      "id": "WIN-EW-013-17393,11527_17619,7230-1",
+      "wallId": "EW-013-17393,11527_17619,7230",
+      "ownerTypeId": "living",
+      "ownerLabel": "Living Room",
+      "sizeCode": "L",
+      "widthMeters": 1.2,
+      "tMeters": 2.151,
+      "positionWorld": {
+        "x": 17.506,
+        "y": 9.3785
+      },
+      "wallFromWorld": {
+        "x": 17.619,
+        "y": 7.23
+      },
+      "wallToWorld": {
+        "x": 17.393,
+        "y": 11.527000000000001
+      },
+      "wallLengthMeters": 4.303
+    },
+    {
+      "id": "WIN-EW-018-1479,15225_1729,11110-1",
+      "wallId": "EW-018-1479,15225_1729,11110",
+      "ownerTypeId": "kids_bed",
+      "ownerLabel": "Kids Bed 2",
+      "sizeCode": "M",
+      "widthMeters": 0.9,
+      "tMeters": 1.374,
+      "positionWorld": {
+        "x": 1.5623,
+        "y": 13.8533
+      },
+      "wallFromWorld": {
+        "x": 1.479,
+        "y": 15.225
+      },
+      "wallToWorld": {
+        "x": 1.729,
+        "y": 11.11
+      },
+      "wallLengthMeters": 4.123
+    },
+    {
+      "id": "WIN-EW-018-1479,15225_1729,11110-2",
+      "wallId": "EW-018-1479,15225_1729,11110",
+      "ownerTypeId": "kids_bed",
+      "ownerLabel": "Kids Bed 2",
+      "sizeCode": "M",
+      "widthMeters": 0.9,
+      "tMeters": 2.749,
+      "positionWorld": {
+        "x": 1.6457,
+        "y": 12.4817
+      },
+      "wallFromWorld": {
+        "x": 1.479,
+        "y": 15.225
+      },
+      "wallToWorld": {
+        "x": 1.729,
+        "y": 11.11
+      },
+      "wallLengthMeters": 4.123
+    },
+    {
+      "id": "WIN-EW-017-1235,19254_1479,15225-1",
+      "wallId": "EW-017-1235,19254_1479,15225",
+      "ownerTypeId": "master_bed",
+      "ownerLabel": "Master Bed",
+      "sizeCode": "M",
+      "widthMeters": 0.9,
+      "tMeters": 1.345,
+      "positionWorld": {
+        "x": 1.3163,
+        "y": 17.911
+      },
+      "wallFromWorld": {
+        "x": 1.235,
+        "y": 19.254
+      },
+      "wallToWorld": {
+        "x": 1.479,
+        "y": 15.225
+      },
+      "wallLengthMeters": 4.036
+    },
+    {
+      "id": "WIN-EW-017-1235,19254_1479,15225-2",
+      "wallId": "EW-017-1235,19254_1479,15225",
+      "ownerTypeId": "master_bed",
+      "ownerLabel": "Master Bed",
+      "sizeCode": "M",
+      "widthMeters": 0.9,
+      "tMeters": 2.691,
+      "positionWorld": {
+        "x": 1.3977,
+        "y": 16.568
+      },
+      "wallFromWorld": {
+        "x": 1.235,
+        "y": 19.254
+      },
+      "wallToWorld": {
+        "x": 1.479,
+        "y": 15.225
+      },
+      "wallLengthMeters": 4.036
+    },
+    {
+      "id": "WIN-EW-008-2651,21568_6290,21569-1",
+      "wallId": "EW-008-2651,21568_6290,21569",
+      "ownerTypeId": "master_bath",
+      "ownerLabel": "Master Bath",
+      "sizeCode": "XS",
+      "widthMeters": 0.45,
+      "tMeters": 1.819,
+      "positionWorld": {
+        "x": 4.4705,
+        "y": 21.5685
+      },
+      "wallFromWorld": {
+        "x": 6.29,
+        "y": 21.569
+      },
+      "wallToWorld": {
+        "x": 2.6510000000000002,
+        "y": 21.568
+      },
+      "wallLengthMeters": 3.639
+    },
+    {
+      "id": "WIN-EW-015-10612,21571_14229,21572-1",
+      "wallId": "EW-015-10612,21571_14229,21572",
+      "ownerTypeId": "family_room",
+      "ownerLabel": "Family Room",
+      "sizeCode": "L",
+      "widthMeters": 1.2,
+      "tMeters": 1.808,
+      "positionWorld": {
+        "x": 12.4205,
+        "y": 21.5715
+      },
+      "wallFromWorld": {
+        "x": 14.229000000000001,
+        "y": 21.572
+      },
+      "wallToWorld": {
+        "x": 10.612,
+        "y": 21.571
+      },
+      "wallLengthMeters": 3.617
+    },
+    {
+      "id": "WIN-EW-007-17126,16624_17303,13257-1",
+      "wallId": "EW-007-17126,16624_17303,13257",
+      "ownerTypeId": "kitchen",
+      "ownerLabel": "Kitchen",
+      "sizeCode": "M",
+      "widthMeters": 0.9,
+      "tMeters": 1.686,
+      "positionWorld": {
+        "x": 17.2145,
+        "y": 14.9405
+      },
+      "wallFromWorld": {
+        "x": 17.303,
+        "y": 13.257
+      },
+      "wallToWorld": {
+        "x": 17.126,
+        "y": 16.624
+      },
+      "wallLengthMeters": 3.372
+    },
+    {
+      "id": "WIN-EW-024-17619,7230_17788,4005-1",
+      "wallId": "EW-024-17619,7230_17788,4005",
+      "ownerTypeId": "powder_room",
+      "ownerLabel": "Powder Room",
+      "sizeCode": "XS",
+      "widthMeters": 0.45,
+      "tMeters": 1.615,
+      "positionWorld": {
+        "x": 17.7035,
+        "y": 5.6175
+      },
+      "wallFromWorld": {
+        "x": 17.788,
+        "y": 4.005
+      },
+      "wallToWorld": {
+        "x": 17.619,
+        "y": 7.23
+      },
+      "wallLengthMeters": 3.229
+    },
+    {
+      "id": "WIN-EW-023-14838,4004_17788,4005-1",
+      "wallId": "EW-023-14838,4004_17788,4005",
+      "ownerTypeId": "powder_room",
+      "ownerLabel": "Powder Room",
+      "sizeCode": "XS",
+      "widthMeters": 0.45,
+      "tMeters": 1.475,
+      "positionWorld": {
+        "x": 16.313,
+        "y": 4.0045
+      },
+      "wallFromWorld": {
+        "x": 14.838000000000001,
+        "y": 4.0040000000000004
+      },
+      "wallToWorld": {
+        "x": 17.788,
+        "y": 4.005
+      },
+      "wallLengthMeters": 2.95
+    },
+    {
+      "id": "WIN-EW-005-1729,11110_4637,11111-1",
+      "wallId": "EW-005-1729,11110_4637,11111",
+      "ownerTypeId": "kids_bed",
+      "ownerLabel": "Kids Bed 2",
+      "sizeCode": "M",
+      "widthMeters": 0.9,
+      "tMeters": 1.454,
+      "positionWorld": {
+        "x": 3.183,
+        "y": 11.1105
+      },
+      "wallFromWorld": {
+        "x": 1.729,
+        "y": 11.11
+      },
+      "wallToWorld": {
+        "x": 4.6370000000000005,
+        "y": 11.111
+      },
+      "wallLengthMeters": 2.908
+    },
+    {
+      "id": "WIN-EW-022-11440,6713_11591,4003-1",
+      "wallId": "EW-022-11440,6713_11591,4003",
+      "ownerTypeId": "foyer",
+      "ownerLabel": "Foyer",
+      "sizeCode": "S",
+      "widthMeters": 0.6,
+      "tMeters": 1.357,
+      "positionWorld": {
+        "x": 11.5155,
+        "y": 5.358
+      },
+      "wallFromWorld": {
+        "x": 11.44,
+        "y": 6.713
+      },
+      "wallToWorld": {
+        "x": 11.591000000000001,
+        "y": 4.003
+      },
+      "wallLengthMeters": 2.714
+    },
+    {
+      "id": "WIN-EW-002-14229,21572_16867,21572-1",
+      "wallId": "EW-002-14229,21572_16867,21572",
+      "ownerTypeId": "breakfast_nook",
+      "ownerLabel": "Breakfast Nook",
+      "sizeCode": "M",
+      "widthMeters": 0.9,
+      "tMeters": 1.319,
+      "positionWorld": {
+        "x": 15.548,
+        "y": 21.572
+      },
+      "wallFromWorld": {
+        "x": 16.867,
+        "y": 21.572
+      },
+      "wallToWorld": {
+        "x": 14.229000000000001,
+        "y": 21.572
+      },
+      "wallLengthMeters": 2.638
+    },
+    {
+      "id": "WIN-EW-006-14676,13256_17303,13257-1",
+      "wallId": "EW-006-14676,13256_17303,13257",
+      "ownerTypeId": "kitchen",
+      "ownerLabel": "Kitchen",
+      "sizeCode": "M",
+      "widthMeters": 0.9,
+      "tMeters": 1.313,
+      "positionWorld": {
+        "x": 15.9895,
+        "y": 13.2565
+      },
+      "wallFromWorld": {
+        "x": 14.676,
+        "y": 13.256
+      },
+      "wallToWorld": {
+        "x": 17.303,
+        "y": 13.257
+      },
+      "wallLengthMeters": 2.627
+    },
+    {
+      "id": "WIN-EW-014-14769,11526_17393,11527-1",
+      "wallId": "EW-014-14769,11526_17393,11527",
+      "ownerTypeId": "living",
+      "ownerLabel": "Living Room",
+      "sizeCode": "L",
+      "widthMeters": 1.2,
+      "tMeters": 1.312,
+      "positionWorld": {
+        "x": 16.081,
+        "y": 11.5265
+      },
+      "wallFromWorld": {
+        "x": 17.393,
+        "y": 11.527000000000001
+      },
+      "wallToWorld": {
+        "x": 14.769,
+        "y": 11.526
+      },
+      "wallLengthMeters": 2.624
+    },
+    {
+      "id": "WIN-EW-009-2651,21568_2790,19254-1",
+      "wallId": "EW-009-2651,21568_2790,19254",
+      "ownerTypeId": "master_bath",
+      "ownerLabel": "Master Bath",
+      "sizeCode": "XS",
+      "widthMeters": 0.45,
+      "tMeters": 1.159,
+      "positionWorld": {
+        "x": 2.7205,
+        "y": 20.411
+      },
+      "wallFromWorld": {
+        "x": 2.6510000000000002,
+        "y": 21.568
+      },
+      "wallToWorld": {
+        "x": 2.79,
+        "y": 19.254
+      },
+      "wallLengthMeters": 2.318
+    },
+    {
+      "id": "WIN-EW-001-16867,21572_16988,19258-1",
+      "wallId": "EW-001-16867,21572_16988,19258",
+      "ownerTypeId": "breakfast_nook",
+      "ownerLabel": "Breakfast Nook",
+      "sizeCode": "M",
+      "widthMeters": 0.9,
+      "tMeters": 1.159,
+      "positionWorld": {
+        "x": 16.9275,
+        "y": 20.415
+      },
+      "wallFromWorld": {
+        "x": 16.988,
+        "y": 19.258
+      },
+      "wallToWorld": {
+        "x": 16.867,
+        "y": 21.572
+      },
+      "wallLengthMeters": 2.317
+    }
+  ],
+  "externalWalls": [
+    {
+      "id": "EW-010-10158,4003_5058,4001",
+      "from": {
+        "x": 5.058,
+        "y": 4.001
+      },
+      "to": {
+        "x": 10.158,
+        "y": 4.003
+      },
+      "lengthMeters": 5.1,
+      "ownerTypeId": "garage",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-019-10612,21571_6290,21569",
+      "from": {
+        "x": 10.612,
+        "y": 21.571
+      },
+      "to": {
+        "x": 6.29,
+        "y": 21.569
+      },
+      "lengthMeters": 4.322,
+      "ownerTypeId": "office",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-013-17393,11527_17619,7230",
+      "from": {
+        "x": 17.619,
+        "y": 7.23
+      },
+      "to": {
+        "x": 17.393,
+        "y": 11.527000000000001
+      },
+      "lengthMeters": 4.303,
+      "ownerTypeId": "living",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-018-1479,15225_1729,11110",
+      "from": {
+        "x": 1.479,
+        "y": 15.225
+      },
+      "to": {
+        "x": 1.729,
+        "y": 11.11
+      },
+      "lengthMeters": 4.123,
+      "ownerTypeId": "kids_bed",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-017-1235,19254_1479,15225",
+      "from": {
+        "x": 1.235,
+        "y": 19.254
+      },
+      "to": {
+        "x": 1.479,
+        "y": 15.225
+      },
+      "lengthMeters": 4.036,
+      "ownerTypeId": "master_bed",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-008-2651,21568_6290,21569",
+      "from": {
+        "x": 6.29,
+        "y": 21.569
+      },
+      "to": {
+        "x": 2.6510000000000002,
+        "y": 21.568
+      },
+      "lengthMeters": 3.639,
+      "ownerTypeId": "master_bath",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-015-10612,21571_14229,21572",
+      "from": {
+        "x": 14.229000000000001,
+        "y": 21.572
+      },
+      "to": {
+        "x": 10.612,
+        "y": 21.571
+      },
+      "lengthMeters": 3.617,
+      "ownerTypeId": "family_room",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-007-17126,16624_17303,13257",
+      "from": {
+        "x": 17.303,
+        "y": 13.257
+      },
+      "to": {
+        "x": 17.126,
+        "y": 16.624
+      },
+      "lengthMeters": 3.372,
+      "ownerTypeId": "kitchen",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-021-11591,4003_14838,4004",
+      "from": {
+        "x": 11.591000000000001,
+        "y": 4.003
+      },
+      "to": {
+        "x": 14.838000000000001,
+        "y": 4.0040000000000004
+      },
+      "lengthMeters": 3.247,
+      "ownerTypeId": "foyer",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-012-4867,7226_5058,4001",
+      "from": {
+        "x": 4.867,
+        "y": 7.226
+      },
+      "to": {
+        "x": 5.058,
+        "y": 4.001
+      },
+      "lengthMeters": 3.231,
+      "ownerTypeId": "garage",
+      "ownerKind": "room",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-011-10158,4003_9976,7228",
+      "from": {
+        "x": 10.158,
+        "y": 4.003
+      },
+      "to": {
+        "x": 9.976,
+        "y": 7.228
+      },
+      "lengthMeters": 3.23,
+      "ownerTypeId": "garage",
+      "ownerKind": "room",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-024-17619,7230_17788,4005",
+      "from": {
+        "x": 17.788,
+        "y": 4.005
+      },
+      "to": {
+        "x": 17.619,
+        "y": 7.23
+      },
+      "lengthMeters": 3.229,
+      "ownerTypeId": "powder_room",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-023-14838,4004_17788,4005",
+      "from": {
+        "x": 14.838000000000001,
+        "y": 4.0040000000000004
+      },
+      "to": {
+        "x": 17.788,
+        "y": 4.005
+      },
+      "lengthMeters": 2.95,
+      "ownerTypeId": "powder_room",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-005-1729,11110_4637,11111",
+      "from": {
+        "x": 1.729,
+        "y": 11.11
+      },
+      "to": {
+        "x": 4.6370000000000005,
+        "y": 11.111
+      },
+      "lengthMeters": 2.908,
+      "ownerTypeId": "kids_bed",
+      "ownerKind": "room",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-022-11440,6713_11591,4003",
+      "from": {
+        "x": 11.44,
+        "y": 6.713
+      },
+      "to": {
+        "x": 11.591000000000001,
+        "y": 4.003
+      },
+      "lengthMeters": 2.714,
+      "ownerTypeId": "foyer",
+      "ownerKind": "room",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-002-14229,21572_16867,21572",
+      "from": {
+        "x": 16.867,
+        "y": 21.572
+      },
+      "to": {
+        "x": 14.229000000000001,
+        "y": 21.572
+      },
+      "lengthMeters": 2.638,
+      "ownerTypeId": "breakfast_nook",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-020-16988,19258_17126,16624",
+      "from": {
+        "x": 17.126,
+        "y": 16.624
+      },
+      "to": {
+        "x": 16.988,
+        "y": 19.258
+      },
+      "lengthMeters": 2.638,
+      "ownerTypeId": "laundry",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-006-14676,13256_17303,13257",
+      "from": {
+        "x": 14.676,
+        "y": 13.256
+      },
+      "to": {
+        "x": 17.303,
+        "y": 13.257
+      },
+      "lengthMeters": 2.627,
+      "ownerTypeId": "kitchen",
+      "ownerKind": "room",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-014-14769,11526_17393,11527",
+      "from": {
+        "x": 17.393,
+        "y": 11.527000000000001
+      },
+      "to": {
+        "x": 14.769,
+        "y": 11.526
+      },
+      "lengthMeters": 2.624,
+      "ownerTypeId": "living",
+      "ownerKind": "room",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-003-4727,9602_4867,7226",
+      "from": {
+        "x": 4.727,
+        "y": 9.602
+      },
+      "to": {
+        "x": 4.867,
+        "y": 7.226
+      },
+      "lengthMeters": 2.38,
+      "ownerTypeId": "garage",
+      "ownerKind": "room",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-009-2651,21568_2790,19254",
+      "from": {
+        "x": 2.6510000000000002,
+        "y": 21.568
+      },
+      "to": {
+        "x": 2.79,
+        "y": 19.254
+      },
+      "lengthMeters": 2.318,
+      "ownerTypeId": "master_bath",
+      "ownerKind": "room",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-001-16867,21572_16988,19258",
+      "from": {
+        "x": 16.988,
+        "y": 19.258
+      },
+      "to": {
+        "x": 16.867,
+        "y": 21.572
+      },
+      "lengthMeters": 2.317,
+      "ownerTypeId": "breakfast_nook",
+      "ownerKind": "room",
+      "exteriorKind": "outside"
+    },
+    {
+      "id": "EW-025-14676,13256_14769,11526",
+      "from": {
+        "x": 14.769,
+        "y": 11.526
+      },
+      "to": {
+        "x": 14.676,
+        "y": 13.256
+      },
+      "lengthMeters": 1.732,
+      "ownerTypeId": "hallway",
+      "ownerKind": "hallway",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-016-1235,19254_2790,19254",
+      "from": {
+        "x": 2.79,
+        "y": 19.254
+      },
+      "to": {
+        "x": 1.235,
+        "y": 19.254
+      },
+      "lengthMeters": 1.555,
+      "ownerTypeId": "master_bed",
+      "ownerKind": "room",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-004-4637,11111_4727,9602",
+      "from": {
+        "x": 4.6370000000000005,
+        "y": 11.111
+      },
+      "to": {
+        "x": 4.727,
+        "y": 9.602
+      },
+      "lengthMeters": 1.512,
+      "ownerTypeId": "hallway",
+      "ownerKind": "hallway",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-027-11411,7228_9976,7228",
+      "from": {
+        "x": 9.976,
+        "y": 7.228
+      },
+      "to": {
+        "x": 11.411,
+        "y": 7.228
+      },
+      "lengthMeters": 1.435,
+      "ownerTypeId": "hallway",
+      "ownerKind": "hallway",
+      "exteriorKind": "filler"
+    },
+    {
+      "id": "EW-026-11411,7228_11440,6713",
+      "from": {
+        "x": 11.411,
+        "y": 7.228
+      },
+      "to": {
+        "x": 11.44,
+        "y": 6.713
+      },
+      "lengthMeters": 0.516,
+      "ownerTypeId": "hallway",
+      "ownerKind": "hallway",
+      "exteriorKind": "filler"
+    }
+  ],
+  "metrics": {
+    "totalAreaSqm": 275.8106,
+    "roomCount": 15,
+    "windowCount": 19,
+    "doorCount": 11,
+    "externalWallPerimeterMeters": 78.313,
+    "score": 0.8401
+  }
+}

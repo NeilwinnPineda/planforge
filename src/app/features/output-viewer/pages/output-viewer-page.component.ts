@@ -1,5 +1,6 @@
 import { DecimalPipe, NgFor, NgIf } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import type {
   ConstructionContractCell,
   ConstructionContractExport,
@@ -32,6 +33,7 @@ interface ViewerSummaryRow {
 const VIEWER_WIDTH = 960;
 const VIEWER_HEIGHT = 620;
 const VIEWER_PADDING = 28;
+const DEFAULT_CONTRACT_ASSET = '/wide-family-lot-live-layout-contract.json';
 
 @Component({
   selector: 'app-output-viewer-page',
@@ -41,12 +43,18 @@ const VIEWER_PADDING = 28;
   styleUrl: './output-viewer-page.component.scss',
 })
 export class OutputViewerPageComponent {
+  private readonly http = inject(HttpClient);
+
   protected readonly fileName = signal('No file loaded');
   protected readonly rawJson = signal('');
   protected readonly parseError = signal<string | null>(null);
   protected readonly contract = signal<ConstructionContractExport | null>(null);
   protected readonly viewerWidth = VIEWER_WIDTH;
   protected readonly viewerHeight = VIEWER_HEIGHT;
+
+  constructor() {
+    void this.preloadDefaultContract();
+  }
 
   protected readonly roomCells = computed(() =>
     this.contract()?.cells.filter((cell) => !cell.hallway && !cell.pkg) ?? [],
@@ -253,6 +261,19 @@ export class OutputViewerPageComponent {
       x2: Number(x2.toFixed(2)),
       y2: Number(y2.toFixed(2)),
     };
+  }
+
+  private async preloadDefaultContract(): Promise<void> {
+    try {
+      const text = await this.http.get(DEFAULT_CONTRACT_ASSET, { responseType: 'text' }).toPromise();
+      if (!text) {
+        return;
+      }
+
+      this.loadContractText(text, 'wide-family-lot-live-layout-contract.json');
+    } catch {
+      // Leave the viewer empty if the default export is not available.
+    }
   }
 }
 
