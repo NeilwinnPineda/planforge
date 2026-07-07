@@ -78,6 +78,8 @@ npm run build
 
 ## Contributors
 
+Planforge is being developed by [Neilwinn Pineda](https://github.com/NeilwinnPineda) with AI pair-programming support from [Claude](https://claude.ai) and [Codex](https://openai.com/codex).
+
 See [CONTRIBUTORS.md](CONTRIBUTORS.md)
 
 ## License
